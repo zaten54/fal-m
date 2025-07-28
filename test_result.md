@@ -184,13 +184,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Gemini Vision API Entegrasyonu"
-    - "Kahve Falı Backend API"
-  stuck_tasks:
-    - "Gemini Vision API Entegrasyonu"
-    - "Kahve Falı Backend API"
+    - "Health Check Endpoint"
+  stuck_tasks: []
   test_all: false
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
