@@ -125,7 +125,7 @@ class EmailService:
                     </div>
                     
                     <div style="text-align: center; color: #9CA3AF; font-size: 12px;">
-                        <p>Bu email falım tarafından gönderilmiştir.</p>
+                        <p>Bu email ✨ falım ✨ tarafından gönderilmiştir.</p>
                         <p>Link çalışmıyorsa şu adresi kopyalayın: {verification_url}</p>
                     </div>
                 </body>
