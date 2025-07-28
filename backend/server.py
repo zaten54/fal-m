@@ -946,6 +946,7 @@ async def get_me(current_user: User = Depends(get_current_user)):
         id=current_user.id,
         email=current_user.email,
         is_verified=current_user.is_verified,
+        terms_accepted=current_user.terms_accepted,
         created_at=current_user.created_at
     )
 
