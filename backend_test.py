@@ -15,7 +15,7 @@ from io import BytesIO
 from PIL import Image
 
 # Get backend URL from environment
-BACKEND_URL = "https://298c7a5f-342d-4d02-8801-01745e9e9bc9.preview.emergentagent.com/api"
+BACKEND_URL = "https://6c821355-5472-40cc-b89c-2c3ef6ee838c.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
