@@ -415,7 +415,7 @@ class BackendTester:
         # Test 1: Health Check
         health_ok = self.test_health_endpoint()
         
-        # Test 2: Coffee Reading Creation (includes OpenAI integration)
+        # Test 2: Coffee Reading Creation (includes Gemini integration)
         creation_ok, reading_data = self.test_coffee_reading_creation()
         
         # Test 3: Get Session Readings
@@ -424,8 +424,8 @@ class BackendTester:
         # Test 4: Get Individual Reading
         individual_reading_ok = self.test_get_individual_reading(reading_data)
         
-        # Test 5: OpenAI Integration Quality
-        openai_ok = self.test_openai_integration(reading_data)
+        # Test 5: Gemini Integration Quality
+        gemini_ok = self.test_gemini_integration(reading_data)
         
         # Test 6: MongoDB Persistence
         mongodb_ok = self.test_mongodb_persistence()
