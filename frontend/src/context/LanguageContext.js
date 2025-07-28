@@ -54,7 +54,7 @@ const translations = {
     step3Desc: "AI analizimiz ile detaylı fal yorumunuzu alın",
     
     // Features
-    whyOurApp: "Neden falım?",
+    whyOurApp: "✨ Neden falım? ✨",
     aiAnalysis: "AI Destekli Analiz",
     aiAnalysisDesc: "Gemini Vision AI ile görsel analiz ve geleneksel fal yorumlarının birleşimi",
     traditionalKnowledge: "Geleneksel Bilgi",
