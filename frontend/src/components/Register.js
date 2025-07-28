@@ -192,7 +192,7 @@ const Register = () => {
                 className="mt-1 w-5 h-5 text-apple-purple bg-gray-100 border-gray-300 rounded focus:ring-apple-purple focus:ring-2"
               />
               <label htmlFor="acceptTerms" className="text-apple-sm text-red-700 leading-relaxed">
-                <span className="font-bold">Zorunlu:</span> falım Kullanıcı Sözleşmesi'ni okudum ve kabul ediyorum. 
+                <span className="font-bold">Zorunlu:</span> ✨ falım ✨ Kullanıcı Sözleşmesi'ni okudum ve kabul ediyorum. 
                 Bu platformun sadece eğlence amaçlı olduğunu, hiçbir şekilde maddi/manevi dava açamayacağımı 
                 ve tüm sorumluluktan feragat ettiğimi beyan ederim.
               </label>
