@@ -1329,8 +1329,10 @@ async def create_astrology_reading(reading_data: AstrologyReadingCreate, current
             interpretation=interpretation
         )
         
-        # MongoDB'ye kaydet
-        await db.astrology_readings.insert_one(astrology_reading.dict())
+        # MongoDB'ye kaydet (kullanıcı ID'si de eklenir)
+        reading_dict = astrology_reading.dict()
+        reading_dict["user_id"] = current_user.id
+        await db.astrology_readings.insert_one(reading_dict)
         
         # Response oluştur
         return AstrologyReadingResponse(
