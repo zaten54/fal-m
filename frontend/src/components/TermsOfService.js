@@ -73,7 +73,7 @@ const TermsOfService = () => {
                   <div className="bg-white border border-red-300 rounded-apple p-apple-md mb-apple-md">
                     <h3 className="apple-text-headline text-red-600 mb-apple-sm">3.1 Mutlak Sorumluluk Reddi</h3>
                     <p className="font-bold text-red-700 mb-apple-sm">
-                      KULLANICI, FALIM VE SAHİPLERİNE KARŞI HİÇBİR ŞEKİLDE MADDİ VEYA MANEVİ TAZMINAT DAVASI AÇAMAYACAĞINI, 
+                      KULLANICI, ✨ FALIM ✨ VE SAHİPLERİNE KARŞI HİÇBİR ŞEKİLDE MADDİ VEYA MANEVİ TAZMINAT DAVASI AÇAMAYACAĞINI, 
                       YASAL SÜREÇ BAŞLATAMAYACAĞINI PEŞINEN KABUL VE BEYAN EDER.
                     </p>
                     <ul className="space-y-1 list-disc list-inside text-red-600">
