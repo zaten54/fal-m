@@ -813,6 +813,176 @@ tarot_service = TarotAnalysisService()
 palm_service = PalmAnalysisService()
 astrology_service = AstrologyAnalysisService()
 
+# Authentication Endpoints
+@api_router.post("/auth/register", response_model=UserResponse)
+async def register_user(user_data: UserRegister, background_tasks: BackgroundTasks):
+    """Yeni kullanıcı kaydı"""
+    try:
+        # Email kontrolü
+        existing_user = await db.users.find_one({"email": user_data.email})
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Bu email adresi zaten kayıtlı")
+        
+        # Parolayı hash'le
+        hashed_password = auth_service.hash_password(user_data.password)
+        
+        # Doğrulama token'ı oluştur
+        verification_token = auth_service.generate_verification_token()
+        
+        # Kullanıcı oluştur
+        user = User(
+            email=user_data.email,
+            hashed_password=hashed_password,
+            verification_token=verification_token
+        )
+        
+        # Veritabanına kaydet
+        await db.users.insert_one(user.dict())
+        
+        # Doğrulama emaili gönder (background task)
+        background_tasks.add_task(
+            auth_service.email_service.send_verification_email,
+            user_data.email,
+            verification_token
+        )
+        
+        return UserResponse(
+            id=user.id,
+            email=user.email,
+            is_verified=user.is_verified,
+            created_at=user.created_at
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"User registration error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Kayıt hatası: {str(e)}")
+
+@api_router.post("/auth/login", response_model=Token)
+async def login_user(user_data: UserLogin):
+    """Kullanıcı girişi"""
+    try:
+        # Kullanıcıyı bul
+        user = await db.users.find_one({"email": user_data.email})
+        if not user:
+            raise HTTPException(status_code=401, detail="Email veya parola hatalı")
+        
+        # Parolayı doğrula
+        if not auth_service.verify_password(user_data.password, user["hashed_password"]):
+            raise HTTPException(status_code=401, detail="Email veya parola hatalı")
+        
+        # Email doğrulanmış mı kontrol et
+        if not user["is_verified"]:
+            raise HTTPException(status_code=401, detail="Lütfen önce email adresinizi doğrulayın")
+        
+        # JWT token oluştur
+        access_token = auth_service.create_access_token(
+            data={"sub": user["id"], "email": user["email"]}
+        )
+        
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user=UserResponse(
+                id=user["id"],
+                email=user["email"],
+                is_verified=user["is_verified"],
+                created_at=user["created_at"]
+            )
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"User login error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Giriş hatası: {str(e)}")
+
+@api_router.post("/auth/verify-email")
+async def verify_email(verify_data: VerifyEmail):
+    """Email doğrulama"""
+    try:
+        # Token ile kullanıcıyı bul
+        user = await db.users.find_one({"verification_token": verify_data.token})
+        if not user:
+            raise HTTPException(status_code=400, detail="Geçersiz doğrulama token'ı")
+        
+        # Kullanıcıyı doğrulanmış olarak işaretle
+        await db.users.update_one(
+            {"id": user["id"]},
+            {
+                "$set": {
+                    "is_verified": True,
+                    "verification_token": None,
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+        
+        return {"message": "Email adresiniz başarıyla doğrulandı"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Email verification error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Email doğrulama hatası: {str(e)}")
+
+@api_router.get("/auth/me", response_model=UserResponse)
+async def get_me(current_user: User = Depends(get_current_user)):
+    """Mevcut kullanıcı bilgilerini al"""
+    return UserResponse(
+        id=current_user.id,
+        email=current_user.email,
+        is_verified=current_user.is_verified,
+        created_at=current_user.created_at
+    )
+
+@api_router.post("/auth/resend-verification")
+async def resend_verification_email(user_data: UserLogin, background_tasks: BackgroundTasks):
+    """Doğrulama emailini tekrar gönder"""
+    try:
+        # Kullanıcıyı bul
+        user = await db.users.find_one({"email": user_data.email})
+        if not user:
+            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+        
+        # Parolayı doğrula
+        if not auth_service.verify_password(user_data.password, user["hashed_password"]):
+            raise HTTPException(status_code=401, detail="Parola hatalı")
+        
+        # Zaten doğrulanmış mı kontrol et
+        if user["is_verified"]:
+            raise HTTPException(status_code=400, detail="Email adresi zaten doğrulanmış")
+        
+        # Yeni token oluştur
+        new_verification_token = auth_service.generate_verification_token()
+        
+        # Token'ı güncelle
+        await db.users.update_one(
+            {"id": user["id"]},
+            {
+                "$set": {
+                    "verification_token": new_verification_token,
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+        
+        # Doğrulama emaili gönder (background task)
+        background_tasks.add_task(
+            auth_service.email_service.send_verification_email,
+            user["email"],
+            new_verification_token
+        )
+        
+        return {"message": "Doğrulama emaili tekrar gönderildi"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Resend verification error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Email tekrar gönderme hatası: {str(e)}")
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
