@@ -1282,11 +1282,11 @@ async def get_palm_readings(session_id: str, current_user: User = Depends(get_cu
 
 # Astrology Reading Endpoints
 @api_router.post("/astrology-reading", response_model=AstrologyReadingResponse)
-async def create_astrology_reading(reading_data: AstrologyReadingCreate):
-    """Yeni astroloji okuma oluştur"""
+async def create_astrology_reading(reading_data: AstrologyReadingCreate, current_user: User = Depends(get_current_user)):
+    """Yeni astroloji okuma oluştur - Sadece kayıtlı kullanıcılar"""
     try:
-        # Session ID oluştur eğer yoksa
-        session_id = reading_data.session_id or str(uuid.uuid4())
+        # Session ID oluştur eğer yoksa (kullanıcı ID'si ile bağlantılı)
+        session_id = reading_data.session_id or f"{current_user.id}_{uuid.uuid4()}"
         
         # Burç hesapla
         zodiac_sign = astrology_service.calculate_zodiac_sign(reading_data.birth_date)
