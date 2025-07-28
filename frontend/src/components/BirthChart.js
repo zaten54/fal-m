@@ -117,7 +117,7 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
                     y={pos.y}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    className="text-sm fill-spiritual-amber"
+                    className="text-sm fill-apple-orange"
                     fontSize="18"
                   >
                     {zodiacSymbols[sign]}
@@ -138,7 +138,7 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
                   y={pos.y}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  className="text-xs fill-spiritual-cyan"
+                  className="text-xs fill-apple-blue"
                   fontSize="12"
                 >
                   {index + 1}
