@@ -93,7 +93,59 @@ class TarotReading(BaseModel):
     interpretation: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
-# Tarot Deck Data (Major Arcana + Minor Arcana sample)
+# Palm Reading Models
+class PalmReadingCreate(BaseModel):
+    image_base64: str
+    hand_type: str = "right"  # right, left
+    session_id: Optional[str] = None
+
+class PalmReadingResponse(BaseModel):
+    id: str
+    session_id: str
+    hand_type: str
+    lines_found: List[str]
+    interpretation: str
+    timestamp: datetime
+    confidence_score: Optional[float] = None
+
+class PalmReading(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    image_base64: str
+    hand_type: str
+    lines_found: List[str] = []
+    interpretation: str
+    confidence_score: Optional[float] = None
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+# Astrology Models
+class AstrologyReadingCreate(BaseModel):
+    birth_date: str  # YYYY-MM-DD format
+    birth_time: str  # HH:MM format
+    birth_place: str
+    session_id: Optional[str] = None
+
+class AstrologyReadingResponse(BaseModel):
+    id: str
+    session_id: str
+    birth_date: str
+    birth_time: str
+    birth_place: str
+    zodiac_sign: str
+    planets: dict
+    interpretation: str
+    timestamp: datetime
+
+class AstrologyReading(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    birth_date: str
+    birth_time: str
+    birth_place: str
+    zodiac_sign: str
+    planets: dict = {}
+    interpretation: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
 TAROT_DECK = [
     # Major Arcana
     {"id": 0, "name": "The Fool", "name_tr": "Deli", "suit": "major_arcana", "meaning_upright": "Yeni başlangıçlar, masumiyet, spontanlık", "meaning_reversed": "Dikkatsizlik, aptalca kararlar", "description": "Yeni bir yolculuğun başlangıcı", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
