@@ -68,11 +68,12 @@ export const AuthProvider = ({ children }) => {
   }, [API_BASE_URL]);
 
   // Kullanıcı kaydı
-  const register = async (email, password) => {
+  const register = async (email, password, acceptTerms = false) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         email,
-        password
+        password,
+        accept_terms: acceptTerms
       });
       return { success: true, data: response.data };
     } catch (error) {
