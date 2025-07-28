@@ -37,13 +37,13 @@ const Home = () => {
     {
       id: 'tarot',
       icon: '🃏',
-      path: '#',
+      path: '/tarot-reading',
       titleKey: 'tarot',
       descKey: 'comingSoon',
       gradient: 'from-purple-500 to-violet-600',
       borderColor: 'border-purple-500/30',
       hoverColor: 'hover:bg-purple-500/10',
-      available: false
+      available: true
     },
     {
       id: 'palm',
