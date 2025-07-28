@@ -178,6 +178,44 @@ const Register = () => {
             </ul>
           </div>
 
+          {/* Terms of Service Agreement */}
+          <div className="bg-red-50 border-2 border-red-200 rounded-apple p-apple-md">
+            <h4 className="apple-text-headline text-red-600 mb-apple-sm">📜 Kullanıcı Sözleşmesi</h4>
+            
+            <div className="flex items-start space-x-3 mb-apple-md">
+              <input
+                type="checkbox"
+                id="acceptTerms"
+                {...register('acceptTerms', {
+                  required: 'Kullanıcı sözleşmesini kabul etmelisiniz'
+                })}
+                className="mt-1 w-5 h-5 text-apple-purple bg-gray-100 border-gray-300 rounded focus:ring-apple-purple focus:ring-2"
+              />
+              <label htmlFor="acceptTerms" className="text-apple-sm text-red-700 leading-relaxed">
+                <span className="font-bold">Zorunlu:</span> MysticLens Kullanıcı Sözleşmesi'ni okudum ve kabul ediyorum. 
+                Bu platformun sadece eğlence amaçlı olduğunu, hiçbir şekilde maddi/manevi dava açamayacağımı 
+                ve tüm sorumluluktan feragat ettiğimi beyan ederim.
+              </label>
+            </div>
+            
+            <Link 
+              to="/terms-of-service"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 text-apple-blue hover:text-blue-600 font-apple font-semibold apple-transition text-apple-sm"
+            >
+              <span>📖</span>
+              <span>Kullanıcı Sözleşmesini Oku</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </Link>
+            
+            {errors.acceptTerms && (
+              <p className="text-red-500 text-apple-sm mt-2 font-semibold">{errors.acceptTerms.message}</p>
+            )}
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
