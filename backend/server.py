@@ -746,6 +746,168 @@ async def get_tarot_reading(session_id: str, reading_id: str):
     except Exception as e:
         logging.error(f"Get tarot reading error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Tarot okuma getirme hatası: {str(e)}")
+# Palm Reading Endpoints
+@api_router.post("/palm-reading", response_model=PalmReadingResponse)
+async def create_palm_reading(reading_data: PalmReadingCreate):
+    """Yeni el falı okuma oluştur"""
+    try:
+        # Session ID oluştur eğer yoksa
+        session_id = reading_data.session_id or str(uuid.uuid4())
+        
+        # AI analizi yap
+        analysis = await palm_service.analyze_palm_lines(
+            reading_data.image_base64, 
+            reading_data.hand_type,
+            session_id
+        )
+        
+        # Reading objesi oluştur
+        palm_reading = PalmReading(
+            session_id=session_id,
+            image_base64=reading_data.image_base64,
+            hand_type=reading_data.hand_type,
+            lines_found=analysis["lines_found"],
+            interpretation=analysis["interpretation"],
+            confidence_score=analysis["confidence_score"]
+        )
+        
+        # MongoDB'ye kaydet
+        await db.palm_readings.insert_one(palm_reading.dict())
+        
+        # Response oluştur
+        return PalmReadingResponse(
+            id=palm_reading.id,
+            session_id=palm_reading.session_id,
+            hand_type=palm_reading.hand_type,
+            lines_found=palm_reading.lines_found,
+            interpretation=palm_reading.interpretation,
+            timestamp=palm_reading.timestamp,
+            confidence_score=palm_reading.confidence_score
+        )
+        
+    except Exception as e:
+        logging.error(f"Palm reading creation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"El falı okuma hatası: {str(e)}")
+
+@api_router.get("/palm-reading/{session_id}", response_model=List[PalmReadingResponse])
+async def get_palm_readings(session_id: str):
+    """Belirli bir session'a ait el falı okumalarını getir"""
+    try:
+        readings = await db.palm_readings.find(
+            {"session_id": session_id}
+        ).sort("timestamp", -1).to_list(100)
+        
+        return [
+            PalmReadingResponse(
+                id=reading["id"],
+                session_id=reading["session_id"],
+                hand_type=reading["hand_type"],
+                lines_found=reading["lines_found"],
+                interpretation=reading["interpretation"],
+                timestamp=reading["timestamp"],
+                confidence_score=reading.get("confidence_score")
+            ) for reading in readings
+        ]
+        
+    except Exception as e:
+        logging.error(f"Get palm readings error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"El falı geçmişi getirme hatası: {str(e)}")
+
+# Astrology Reading Endpoints
+@api_router.post("/astrology-reading", response_model=AstrologyReadingResponse)
+async def create_astrology_reading(reading_data: AstrologyReadingCreate):
+    """Yeni astroloji okuma oluştur"""
+    try:
+        # Session ID oluştur eğer yoksa
+        session_id = reading_data.session_id or str(uuid.uuid4())
+        
+        # Burç hesapla
+        zodiac_sign = astrology_service.calculate_zodiac_sign(reading_data.birth_date)
+        
+        # Gezegen bilgileri (basit örnek)
+        planets = {
+            "sun": ZODIAC_SIGNS.get(zodiac_sign, {}).get("name", "Bilinmiyor"),
+            "moon": "Yaklaşık hesaplama gerekli",
+            "rising": "Doğum saati ile hesaplanır"
+        }
+        
+        # Birth info hazırla
+        birth_info = {
+            "birth_date": reading_data.birth_date,
+            "birth_time": reading_data.birth_time,
+            "birth_place": reading_data.birth_place,
+            "zodiac_sign": zodiac_sign
+        }
+        
+        # AI yorumlama
+        interpretation = await astrology_service.generate_astrology_reading(birth_info, session_id)
+        
+        # Reading objesi oluştur
+        astrology_reading = AstrologyReading(
+            session_id=session_id,
+            birth_date=reading_data.birth_date,
+            birth_time=reading_data.birth_time,
+            birth_place=reading_data.birth_place,
+            zodiac_sign=zodiac_sign,
+            planets=planets,
+            interpretation=interpretation
+        )
+        
+        # MongoDB'ye kaydet
+        await db.astrology_readings.insert_one(astrology_reading.dict())
+        
+        # Response oluştur
+        return AstrologyReadingResponse(
+            id=astrology_reading.id,
+            session_id=astrology_reading.session_id,
+            birth_date=astrology_reading.birth_date,
+            birth_time=astrology_reading.birth_time,
+            birth_place=astrology_reading.birth_place,
+            zodiac_sign=astrology_reading.zodiac_sign,
+            planets=astrology_reading.planets,
+            interpretation=astrology_reading.interpretation,
+            timestamp=astrology_reading.timestamp
+        )
+        
+    except Exception as e:
+        logging.error(f"Astrology reading creation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Astroloji okuma hatası: {str(e)}")
+
+@api_router.get("/astrology-reading/{session_id}", response_model=List[AstrologyReadingResponse])
+async def get_astrology_readings(session_id: str):
+    """Belirli bir session'a ait astroloji okumalarını getir"""
+    try:
+        readings = await db.astrology_readings.find(
+            {"session_id": session_id}
+        ).sort("timestamp", -1).to_list(100)
+        
+        return [
+            AstrologyReadingResponse(
+                id=reading["id"],
+                session_id=reading["session_id"],
+                birth_date=reading["birth_date"],
+                birth_time=reading["birth_time"],
+                birth_place=reading["birth_place"],
+                zodiac_sign=reading["zodiac_sign"],
+                planets=reading["planets"],
+                interpretation=reading["interpretation"],
+                timestamp=reading["timestamp"]
+            ) for reading in readings
+        ]
+        
+    except Exception as e:
+        logging.error(f"Get astrology readings error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Astroloji geçmişi getirme hatası: {str(e)}")
+
+@api_router.get("/zodiac-signs")
+async def get_zodiac_signs():
+    """Tüm burç bilgilerini getir"""
+    try:
+        return ZODIAC_SIGNS
+    except Exception as e:
+        logging.error(f"Get zodiac signs error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Burç bilgileri getirme hatası: {str(e)}")
+
 # Health check endpoint
 @api_router.get("/health")
 async def health_check():
