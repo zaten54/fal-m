@@ -1066,12 +1066,13 @@ async def get_coffee_readings(session_id: str, current_user: User = Depends(get_
         raise HTTPException(status_code=500, detail=f"Kahve falı geçmişi getirme hatası: {str(e)}")
 
 @api_router.get("/coffee-reading/{session_id}/{reading_id}", response_model=CoffeeReadingResponse)
-async def get_coffee_reading(session_id: str, reading_id: str):
-    """Belirli bir kahve falı okumasını getir"""
+async def get_coffee_reading(session_id: str, reading_id: str, current_user: User = Depends(get_current_user)):
+    """Belirli bir kahve falı okumasını getir - Sadece kullanıcının kendi okumalarını"""
     try:
         reading = await db.coffee_readings.find_one({
             "id": reading_id,
-            "session_id": session_id
+            "session_id": session_id,
+            "user_id": current_user.id
         })
         
         if not reading:
