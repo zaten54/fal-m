@@ -16,7 +16,7 @@ const TermsOfService = () => {
                 </span>
               </h1>
               <p className="apple-text-body text-apple-gray-600">
-                MysticLens Hizmet Kullanım Şartları ve Koşulları
+                falım Hizmet Kullanım Şartları ve Koşulları
               </p>
               <div className="w-16 h-1 bg-gradient-to-r from-apple-purple to-apple-pink mx-auto rounded-full mt-apple-md"></div>
             </div>
