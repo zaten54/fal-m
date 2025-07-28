@@ -61,15 +61,15 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
         </h3>
         
         {/* SVG Birth Chart */}
-        <div className="flex justify-center mb-6">
-          <svg width="300" height="300" className="drop-shadow-2xl">
+        <div className="flex justify-center mb-apple-xl">
+          <svg width="300" height="300" className="shadow-apple-lg">
             {/* Outer circle (background) */}
             <circle
               cx="150"
               cy="150"
               r="140"
-              fill="rgba(0,0,0,0.3)"
-              stroke="rgba(139, 92, 246, 0.5)"
+              fill="rgba(255,255,255,0.8)"
+              stroke="rgba(175, 82, 222, 0.3)"
               strokeWidth="2"
             />
             
@@ -79,7 +79,7 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
               cy="150"
               r="100"
               fill="none"
-              stroke="rgba(6, 182, 212, 0.3)"
+              stroke="rgba(0, 122, 255, 0.3)"
               strokeWidth="1"
             />
             
@@ -99,7 +99,7 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
                   y1={y1}
                   x2={x2}
                   y2={y2}
-                  stroke="rgba(139, 92, 246, 0.3)"
+                  stroke="rgba(175, 82, 222, 0.2)"
                   strokeWidth="1"
                 />
               );
