@@ -62,7 +62,7 @@ const Login = () => {
             </span>
           </h1>
           <p className="apple-text-body">
-            MysticLens hesabınıza giriş yapın
+            falım hesabınıza giriş yapın
           </p>
         </div>
 
