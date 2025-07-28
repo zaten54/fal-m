@@ -243,7 +243,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Health Check Endpoint"
+    - "5 Dil Desteği Sistemi"
+    - "Futuristik UI/UX Güncellemesi"
+    - "Backend API Entegrasyonu"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
