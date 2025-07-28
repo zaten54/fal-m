@@ -96,14 +96,14 @@ class EmailService:
         try:
             verification_url = f"http://localhost:3000/verify-email?token={verification_token}"
             
-            subject = "falım - Email Adresinizi Doğrulayın"
+            subject = "✨ falım ✨ - Email Adresinizi Doğrulayın"
             
             html_content = f"""
             <html>
                 <body style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #AF52DE; font-size: 32px; margin: 0;">🔮 falım</h1>
-                        <p style="color: #6B7280; font-size: 16px; margin: 10px 0;">Mistik dünyaya hoş geldiniz</p>
+                        <h1 style="color: #AF52DE; font-size: 32px; margin: 0; text-shadow: 0 0 10px rgba(175, 82, 222, 0.3);">🔮 ✨ falım ✨ 🔮</h1>
+                        <p style="color: #6B7280; font-size: 16px; margin: 10px 0;">🌙 Mistik dünyaya hoş geldiniz ⭐</p>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #AF52DE, #007AFF); padding: 30px; border-radius: 16px; color: white; text-align: center; margin-bottom: 30px;">
