@@ -294,6 +294,16 @@ const AstrologyReading = () => {
                   </div>
                 </div>
 
+                {/* Birth Chart Visualization */}
+                {reading.birth_chart && (
+                  <div className="mb-8 relative z-10">
+                    <BirthChart 
+                      birthChart={reading.birth_chart} 
+                      zodiacSigns={zodiacSigns}
+                    />
+                  </div>
+                )}
+
                 {/* Zodiac Sign Display */}
                 <div className="mb-8 relative z-10">
                   <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-violet">
