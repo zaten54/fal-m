@@ -1236,8 +1236,10 @@ async def create_palm_reading(reading_data: PalmReadingCreate, current_user: Use
             confidence_score=analysis["confidence_score"]
         )
         
-        # MongoDB'ye kaydet
-        await db.palm_readings.insert_one(palm_reading.dict())
+        # MongoDB'ye kaydet (kullanıcı ID'si de eklenir)
+        reading_dict = palm_reading.dict()
+        reading_dict["user_id"] = current_user.id
+        await db.palm_readings.insert_one(reading_dict)
         
         # Response oluştur
         return PalmReadingResponse(
