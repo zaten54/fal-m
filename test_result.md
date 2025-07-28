@@ -120,7 +120,7 @@ backend:
         agent: "testing"
         comment: "CRITICAL: API endpoints are properly implemented but failing due to OpenAI quota exceeded error. POST /api/coffee-reading returns HTTP 500 with 'RateLimitError: You exceeded your current quota'. All dependent endpoints (GET session readings, individual readings) fail as no data can be created. Error handling works correctly for invalid requests (HTTP 404, 422). Backend structure is solid but blocked by OpenAI API limits."
 
-  - task: "OpenAI Vision API Entegrasyonu"
+  - task: "Gemini Vision API Entegrasyonu"
     implemented: true
     working: false
     file: "/app/backend/server.py"
@@ -130,7 +130,7 @@ backend:
     status_history:
       - working: "unknown"
         agent: "main"
-        comment: "emergentintegrations kütüphanesi kullanarak OpenAI GPT-4o Vision API entegrasyonu tamamlandı. API key .env dosyasına eklendi. LlmChat sınıfı ile görsel analiz yapılıyor. Kahve telvesi şekillerini tanımlayıp Türk kahve falı geleneklerine uygun yorumlama yapacak sistem prompt oluşturuldu."
+        comment: "OpenAI API quota limiti nedeniyle Gemini API'ye geçiş yapıldı. emergentintegrations kütüphanesi kullanarak Gemini 2.0-flash Vision API entegrasyonu tamamlandı. API key .env dosyasına eklendi. LlmChat sınıfı ile görsel analiz yapılıyor. Kahve telvesi şekillerini tanımlayıp Türk kahve falı geleneklerine uygun yorumlama yapacak sistem prompt güncellemesi yapıldı."
       - working: false
         agent: "testing"
         comment: "CRITICAL: OpenAI integration code is properly implemented with correct LlmChat usage, GPT-4o model selection, and Turkish coffee reading system prompt. However, API calls fail with quota exceeded error: 'You exceeded your current quota, please check your plan and billing details.' The integration architecture is correct but blocked by API limits."
