@@ -513,6 +513,7 @@ async def get_tarot_reading(session_id: str, reading_id: str):
     except Exception as e:
         logging.error(f"Get tarot reading error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Tarot okuma getirme hatası: {str(e)}")
+# Health check endpoint
 @api_router.get("/health")
 async def health_check():
     return {
@@ -520,7 +521,13 @@ async def health_check():
         "timestamp": datetime.utcnow(),
         "services": {
             "database": "connected",
-            "ai_service": "available" if os.environ.get('GEMINI_API_KEY') else "unavailable"
+            "ai_service": "available" if os.environ.get('GEMINI_API_KEY') else "unavailable",
+            "features": {
+                "coffee_reading": True,
+                "tarot_reading": True,
+                "palm_reading": False,
+                "astrology": False
+            }
         }
     }
 
