@@ -50,9 +50,19 @@ const Navigation = () => {
               )}
             </Link>
             
-            <span className="text-gray-400 px-4 py-2 border border-gray-600/30 rounded-full bg-gray-800/20">
-              {t('tarot')} ({t('comingSoon')})
-            </span>
+            <Link 
+              to="/tarot-reading"
+              className={`relative px-4 py-2 rounded-full transition-all duration-300 ${
+                location.pathname === "/tarot-reading" 
+                  ? "text-spiritual-purple neon-text bg-spiritual-purple/10 border border-spiritual-purple/30" 
+                  : "text-white hover:text-spiritual-purple hover:bg-spiritual-purple/5"
+              }`}
+            >
+              {t('tarot')}
+              {location.pathname === "/tarot-reading" && (
+                <div className="absolute inset-0 rounded-full bg-spiritual-purple/20 animate-glow-pulse"></div>
+              )}
+            </Link>
             <span className="text-gray-400 px-4 py-2 border border-gray-600/30 rounded-full bg-gray-800/20">
               {t('palmReading')} ({t('comingSoon')})
             </span>
