@@ -203,6 +203,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ EXCELLENT: Astrology API working perfectly! POST /api/astrology-reading correctly calculates zodiac signs from birth dates (tested: May 15 = Taurus), generates comprehensive astrological interpretations (5038+ characters) using birth date/time/place. GET /api/zodiac-signs returns complete zodiac data for all 12 signs with Turkish names, dates, elements, ruling planets. GET /api/astrology-reading/{session_id} retrieves session history correctly."
+      - working: true
+        agent: "testing"
+        comment: "Minor: Astrology reading creation occasionally fails due to temporary Gemini API overload (503 error: 'The model is overloaded. Please try again later'). This is an external service issue, not a code problem. GET /api/zodiac-signs endpoint works perfectly (12 zodiac signs with complete data), session retrieval works correctly. Core functionality is solid - 2/3 astrology tests passed, failure is temporary external API issue."
 
   - task: "Health Check Endpoint"
     implemented: true
