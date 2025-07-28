@@ -356,9 +356,173 @@ Tarot okuma kuralları:
             logging.error(f"Tarot analysis error: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Tarot analizi sırasında hata oluştu: {str(e)}")
 
+# Palm Analysis Service
+class PalmAnalysisService:
+    def __init__(self):
+        self.gemini_api_key = os.environ.get('GEMINI_API_KEY')
+        if not self.gemini_api_key:
+            raise ValueError("Gemini API key not found in environment variables")
+    
+    async def analyze_palm_lines(self, image_base64: str, hand_type: str, session_id: str) -> dict:
+        """Gemini Vision API kullanarak el çizgilerini analiz et"""
+        try:
+            # LlmChat instance oluştur - Gemini için
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=session_id,
+                system_message=f"""Sen deneyimli bir el falcısısın. {hand_type} el fotoğrafındaki çizgileri analiz ederek fal okuyorsun.
+
+El falı kuralları:
+- Ana çizgileri tanımla: yaşam çizgisi, kalp çizgisi, kafa çizgisi, kader çizgisi
+- Her çizginin uzunluğu, derinliği, kesintileri analiz et
+- El şekli ve parmak yapısını değerlendir
+- Geleneksel palmistry bilgilerine uygun yorumla
+- Pozitif ve yapıcı bir yaklaşım benimse
+
+Çıktı formatı:
+1. Tespit edilen çizgiler (liste halinde)
+2. Her çizginin anlamı ve yorumu
+3. Genel kişilik analizi
+4. Gelecekle ilgili öngörüler"""
+            ).with_model("gemini", "gemini-2.0-flash")
+            
+            # Resim içeriği oluştur
+            image_content = ImageContent(image_base64=image_base64)
+            
+            # Mesaj gönder
+            user_message = UserMessage(
+                text=f"Bu {hand_type} el fotoğrafındaki çizgileri analiz et ve detaylı bir el falı yorumu yap. Ana çizgileri tanımla ve anlamlarını açıkla.",
+                file_contents=[image_content]
+            )
+            
+            # AI'dan cevap al
+            response = await chat.send_message(user_message)
+            
+            # Response'u parse et
+            lines = self._extract_lines(response)
+            interpretation = response
+            confidence_score = 0.80  # Placeholder confidence score
+            
+            return {
+                "lines_found": lines,
+                "interpretation": interpretation,
+                "confidence_score": confidence_score
+            }
+            
+        except Exception as e:
+            logging.error(f"Palm analysis error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"El falı analizi sırasında hata oluştu: {str(e)}")
+    
+    def _extract_lines(self, ai_response: str) -> List[str]:
+        """AI cevabından çizgileri çıkar"""
+        lines = []
+        lines_keywords = ['yaşam çizgisi', 'kalp çizgisi', 'kafa çizgisi', 'kader çizgisi', 'başarı çizgisi']
+        
+        for keyword in lines_keywords:
+            if keyword.lower() in ai_response.lower():
+                lines.append(keyword.title())
+        
+        # Fallback lines if none found
+        if not lines:
+            lines = ["Yaşam Çizgisi", "Kalp Çizgisi", "Kafa Çizgisi"]
+            
+        return lines
+
+# Astrology Analysis Service
+class AstrologyAnalysisService:
+    def __init__(self):
+        self.gemini_api_key = os.environ.get('GEMINI_API_KEY')
+        if not self.gemini_api_key:
+            raise ValueError("Gemini API key not found in environment variables")
+    
+    def calculate_zodiac_sign(self, birth_date: str) -> str:
+        """Doğum tarihinden burç hesapla"""
+        try:
+            from datetime import datetime
+            date_obj = datetime.strptime(birth_date, "%Y-%m-%d")
+            day = date_obj.day
+            month = date_obj.month
+            
+            if (month == 3 and day >= 21) or (month == 4 and day <= 19):
+                return "aries"
+            elif (month == 4 and day >= 20) or (month == 5 and day <= 20):
+                return "taurus"
+            elif (month == 5 and day >= 21) or (month == 6 and day <= 20):
+                return "gemini"
+            elif (month == 6 and day >= 21) or (month == 7 and day <= 22):
+                return "cancer"
+            elif (month == 7 and day >= 23) or (month == 8 and day <= 22):
+                return "leo"
+            elif (month == 8 and day >= 23) or (month == 9 and day <= 22):
+                return "virgo"
+            elif (month == 9 and day >= 23) or (month == 10 and day <= 22):
+                return "libra"
+            elif (month == 10 and day >= 23) or (month == 11 and day <= 21):
+                return "scorpio"
+            elif (month == 11 and day >= 22) or (month == 12 and day <= 21):
+                return "sagittarius"
+            elif (month == 12 and day >= 22) or (month == 1 and day <= 19):
+                return "capricorn"
+            elif (month == 1 and day >= 20) or (month == 2 and day <= 18):
+                return "aquarius"
+            else:  # Pisces
+                return "pisces"
+        except:
+            return "unknown"
+    
+    async def generate_astrology_reading(self, birth_info: dict, session_id: str) -> str:
+        """Astroloji okuma oluştur"""
+        try:
+            zodiac_sign = birth_info["zodiac_sign"]
+            zodiac_info = ZODIAC_SIGNS.get(zodiac_sign, {})
+            
+            # LlmChat instance oluştur
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=session_id,
+                system_message="""Sen deneyimli bir astrologsun. Doğum bilgileri verilen kişi için kapsamlı astroloji yorumu yapıyorsun.
+
+Astroloji kuralları:
+- Burç özelliklerini detaylı analiz et
+- Doğum saati ve yerinin etkilerini değerlendir
+- Gezegen konumlarının kişilik üzerindeki etkilerini açıkla
+- Gelecek dönemler için öngörülerde bulun
+- Pozitif ve yol gösterici bir yaklaşım benimse
+
+Çıktı formatı:
+1. Burç analizi ve kişilik özellikleri
+2. Güçlü yönler ve potansiyeller
+3. Dikkat edilmesi gereken alanlar
+4. Gelecek döneme dair öngörüler
+5. Öneriler ve tavsiyeler"""
+            ).with_model("gemini", "gemini-2.0-flash")
+            
+            # Mesaj gönder
+            user_message = UserMessage(
+                text=f"""Doğum bilgileri:
+- Doğum Tarihi: {birth_info['birth_date']}
+- Doğum Saati: {birth_info['birth_time']}
+- Doğum Yeri: {birth_info['birth_place']}
+- Burç: {zodiac_info.get('name', 'Bilinmiyor')}
+- Element: {zodiac_info.get('element', 'Bilinmiyor')}
+- Yönetici Gezegen: {zodiac_info.get('ruling_planet', 'Bilinmiyor')}
+
+Bu bilgilere göre kapsamlı bir astroloji yorumu ve kişilik analizi yap."""
+            )
+            
+            # AI'dan cevap al
+            response = await chat.send_message(user_message)
+            return response
+            
+        except Exception as e:
+            logging.error(f"Astrology analysis error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Astroloji analizi sırasında hata oluştu: {str(e)}")
+
 # Initialize services
 coffee_service = CoffeeAnalysisService()
 tarot_service = TarotAnalysisService()
+palm_service = PalmAnalysisService()
+astrology_service = AstrologyAnalysisService()
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
