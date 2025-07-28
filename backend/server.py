@@ -1142,8 +1142,10 @@ async def create_tarot_reading(reading_data: TarotReadingCreate, current_user: U
             interpretation=interpretation
         )
         
-        # MongoDB'ye kaydet
-        await db.tarot_readings.insert_one(tarot_reading.dict())
+        # MongoDB'ye kaydet (kullanıcı ID'si de eklenir)
+        reading_dict = tarot_reading.dict()
+        reading_dict["user_id"] = current_user.id
+        await db.tarot_readings.insert_one(reading_dict)
         
         # Response oluştur
         return TarotReadingResponse(
