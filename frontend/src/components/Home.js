@@ -48,24 +48,24 @@ const Home = () => {
     {
       id: 'palm',
       icon: '✋',
-      path: '#',
+      path: '/palm-reading',
       titleKey: 'palmReading',
       descKey: 'comingSoon',
       gradient: 'from-blue-500 to-cyan-600',
       borderColor: 'border-blue-500/30',
       hoverColor: 'hover:bg-blue-500/10',
-      available: false
+      available: true
     },
     {
       id: 'astrology',
       icon: '⭐',
-      path: '#',
+      path: '/astrology-reading',
       titleKey: 'astrology',
       descKey: 'comingSoon',
       gradient: 'from-green-500 to-emerald-600',
       borderColor: 'border-green-500/30',
       hoverColor: 'hover:bg-green-500/10',
-      available: false
+      available: true
     }
   ];
 
