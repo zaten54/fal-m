@@ -822,6 +822,10 @@ astrology_service = AstrologyAnalysisService()
 async def register_user(user_data: UserRegister, background_tasks: BackgroundTasks):
     """Yeni kullanıcı kaydı"""
     try:
+        # Sözleşme onayı kontrolü
+        if not user_data.accept_terms:
+            raise HTTPException(status_code=400, detail="Kullanıcı sözleşmesini kabul etmelisiniz")
+        
         # Email kontrolü
         existing_user = await db.users.find_one({"email": user_data.email})
         if existing_user:
@@ -837,7 +841,9 @@ async def register_user(user_data: UserRegister, background_tasks: BackgroundTas
         user = User(
             email=user_data.email,
             hashed_password=hashed_password,
-            verification_token=verification_token
+            verification_token=verification_token,
+            terms_accepted=True,
+            terms_accepted_at=datetime.utcnow()
         )
         
         # Veritabanına kaydet
@@ -854,6 +860,7 @@ async def register_user(user_data: UserRegister, background_tasks: BackgroundTas
             id=user.id,
             email=user.email,
             is_verified=user.is_verified,
+            terms_accepted=user.terms_accepted,
             created_at=user.created_at
         )
         
