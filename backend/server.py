@@ -146,6 +146,7 @@ class AstrologyReading(BaseModel):
     planets: dict = {}
     interpretation: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+# Tarot Deck Data (Major Arcana + Minor Arcana sample)
 TAROT_DECK = [
     # Major Arcana
     {"id": 0, "name": "The Fool", "name_tr": "Deli", "suit": "major_arcana", "meaning_upright": "Yeni başlangıçlar, masumiyet, spontanlık", "meaning_reversed": "Dikkatsizlik, aptalca kararlar", "description": "Yeni bir yolculuğun başlangıcı", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
@@ -171,6 +172,22 @@ TAROT_DECK = [
     {"id": 20, "name": "Judgement", "name_tr": "Mahkeme", "suit": "major_arcana", "meaning_upright": "Yargı, yeniden doğuş, af", "meaning_reversed": "Kendini yargılama, geçmişte takılı kalma", "description": "Yargı ve yeniden doğuş", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
     {"id": 21, "name": "The World", "name_tr": "Dünya", "suit": "major_arcana", "meaning_upright": "Tamamlanma, başarı, büyük resim", "meaning_reversed": "Eksiklik, hedeflere ulaşamama", "description": "Tamamlanma ve başarı", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"}
 ]
+
+# Zodiac Signs Data
+ZODIAC_SIGNS = {
+    "aries": {"name": "Koç", "dates": "21 Mart - 19 Nisan", "element": "Ateş", "ruling_planet": "Mars"},
+    "taurus": {"name": "Boğa", "dates": "20 Nisan - 20 Mayıs", "element": "Toprak", "ruling_planet": "Venüs"},
+    "gemini": {"name": "İkizler", "dates": "21 Mayıs - 20 Haziran", "element": "Hava", "ruling_planet": "Merkür"},
+    "cancer": {"name": "Yengeç", "dates": "21 Haziran - 22 Temmuz", "element": "Su", "ruling_planet": "Ay"},
+    "leo": {"name": "Aslan", "dates": "23 Temmuz - 22 Ağustos", "element": "Ateş", "ruling_planet": "Güneş"},
+    "virgo": {"name": "Başak", "dates": "23 Ağustos - 22 Eylül", "element": "Toprak", "ruling_planet": "Merkür"},
+    "libra": {"name": "Terazi", "dates": "23 Eylül - 22 Ekim", "element": "Hava", "ruling_planet": "Venüs"},
+    "scorpio": {"name": "Akrep", "dates": "23 Ekim - 21 Kasım", "element": "Su", "ruling_planet": "Plüton"},
+    "sagittarius": {"name": "Yay", "dates": "22 Kasım - 21 Aralık", "element": "Ateş", "ruling_planet": "Jüpiter"},
+    "capricorn": {"name": "Oğlak", "dates": "22 Aralık - 19 Ocak", "element": "Toprak", "ruling_planet": "Satürn"},
+    "aquarius": {"name": "Kova", "dates": "20 Ocak - 18 Şubat", "element": "Hava", "ruling_planet": "Uranüs"},
+    "pisces": {"name": "Balık", "dates": "19 Şubat - 20 Mart", "element": "Su", "ruling_planet": "Neptün"}
+}
 
 
 # Define Models
