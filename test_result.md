@@ -186,5 +186,7 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Kahve falı backend API'si tamamlandı. OpenAI GPT-4o Vision API ile görsel analiz, MongoDB ile veri saklama, session yönetimi mevcut. Test edilmesi gereken 4 ana endpoint var: POST /api/coffee-reading, GET /api/coffee-reading/{session_id}, GET /api/coffee-reading/{session_id}/{reading_id}, GET /api/health. Base64 image upload test edilmeli."
+  - agent: "main"
+    message: "OpenAI API quota limiti nedeniyle Gemini API'ye geçiş yapıldı. Backend kodu Gemini 2.0-flash kullanacak şekilde güncellendi. Gemini API key eklendi. Tekrar test edilmesi gerekiyor."
   - agent: "testing"
     message: "COMPREHENSIVE BACKEND TESTING COMPLETED: Created backend_test.py with 9 comprehensive tests. CRITICAL ISSUE FOUND: OpenAI API quota exceeded blocking all coffee reading functionality. Health check ✅ works, error handling ✅ works, but core AI features ❌ fail due to quota limits. Backend architecture is solid - the issue is external API limits, not code problems. Need new OpenAI API key or quota increase to proceed."
