@@ -7,6 +7,29 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Apple-inspired color palette
+        apple: {
+          gray: {
+            50: '#fafafa',
+            100: '#f5f5f5', 
+            200: '#e5e5e5',
+            300: '#d4d4d4',
+            400: '#a3a3a3',
+            500: '#737373',
+            600: '#525252',
+            700: '#404040',
+            800: '#262626',
+            900: '#171717'
+          },
+          blue: '#007AFF',
+          green: '#34C759', 
+          orange: '#FF9500',
+          red: '#FF3B30',
+          purple: '#AF52DE',
+          pink: '#FF2D92',
+          yellow: '#FFCC00'
+        },
+        // Legacy spiritual colors (keeping for backward compatibility)
         spiritual: {
           purple: '#8b5cf6',
           cyan: '#06b6d4', 
@@ -16,35 +39,67 @@ module.exports = {
           indigo: '#6366f1',
           violet: '#8b5cf6',
           fuchsia: '#d946ef'
-        },
-        cosmic: {
-          dark: '#0f0f23',
-          purple: '#1a0c2e',
-          blue: '#0c1e3e',
-          green: '#0c3e1e'
         }
       },
-      gridTemplateColumns: {
-        '20': 'repeat(20, minmax(0, 1fr))',
+      fontFamily: {
+        'apple': ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
+        'apple-mono': ['SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'monospace']
       },
-      gridTemplateRows: {
-        '20': 'repeat(20, minmax(0, 1fr))',
+      fontSize: {
+        'apple-xs': ['11px', { lineHeight: '1.45' }],
+        'apple-sm': ['14px', { lineHeight: '1.43' }], 
+        'apple-base': ['17px', { lineHeight: '1.47' }],
+        'apple-lg': ['20px', { lineHeight: '1.4' }],
+        'apple-xl': ['24px', { lineHeight: '1.33' }],
+        'apple-2xl': ['32px', { lineHeight: '1.25' }],
+        'apple-3xl': ['40px', { lineHeight: '1.2' }],
+        'apple-4xl': ['48px', { lineHeight: '1.17' }],
+        'apple-5xl': ['64px', { lineHeight: '1.1' }]
+      },
+      spacing: {
+        'apple-xs': '8px',
+        'apple-sm': '16px',
+        'apple-md': '24px', 
+        'apple-lg': '32px',
+        'apple-xl': '48px',
+        'apple-2xl': '64px',
+        'apple-3xl': '96px'
+      },
+      borderRadius: {
+        'apple': '12px',
+        'apple-lg': '16px',
+        'apple-xl': '24px'
+      },
+      boxShadow: {
+        'apple': '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
+        'apple-md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'apple-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+        'apple-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
       },
       animation: {
-        'gradient-xy': 'gradient-xy 15s ease infinite',
-        'float': 'float 6s ease-in-out infinite',
-        'float-slow': 'float-slow 8s ease-in-out infinite',
-        'float-slower': 'float-slower 10s ease-in-out infinite',
-        'scan-vertical': 'scan-vertical 3s linear infinite',
-        'scan-horizontal': 'scan-horizontal 4s linear infinite',
-        'twinkle': 'twinkle 3s ease-in-out infinite',
-        'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-        'holographic': 'holographic 3s ease infinite',
-        'neon-flicker': 'neon-flicker 2s ease-in-out infinite'
+        // Subtle Apple-style animations
+        'fade-in': 'fadeIn 0.5s ease-out',
+        'slide-up': 'slideUp 0.6s ease-out',
+        'scale-in': 'scaleIn 0.4s ease-out',
+        'float-subtle': 'floatSubtle 6s ease-in-out infinite'
       },
-      backgroundImage: {
-        'holographic': 'linear-gradient(45deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
-        'cyber-grid': 'linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)'
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' }
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' }
+        },
+        floatSubtle: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' }
+        }
       }
     },
   },
