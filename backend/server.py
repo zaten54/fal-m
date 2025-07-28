@@ -1002,11 +1002,11 @@ async def get_status_checks():
 
 # Coffee Reading Endpoints
 @api_router.post("/coffee-reading", response_model=CoffeeReadingResponse)
-async def create_coffee_reading(reading_data: CoffeeReadingCreate):
-    """Kahve falı okuma oluştur"""
+async def create_coffee_reading(reading_data: CoffeeReadingCreate, current_user: User = Depends(get_current_user)):
+    """Kahve falı okuma oluştur - Sadece kayıtlı kullanıcılar"""
     try:
-        # Session ID oluştur eğer yoksa
-        session_id = reading_data.session_id or str(uuid.uuid4())
+        # Session ID oluştur eğer yoksa (kullanıcı ID'si ile bağlantılı)
+        session_id = reading_data.session_id or f"{current_user.id}_{uuid.uuid4()}"
         
         # AI analizi yap
         analysis = await coffee_service.analyze_coffee_grounds(
