@@ -35,6 +35,181 @@ app = FastAPI(title="Fal Uygulaması API", description="AI destekli fal okuma uy
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# JWT Configuration
+JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
+JWT_ALGORITHM = os.environ.get('JWT_ALGORITHM', 'HS256')
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRE_MINUTES', 1440))
+
+# SendGrid Configuration
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
+
+# Security
+security = HTTPBearer()
+
+# User Authentication Models
+class User(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: EmailStr
+    hashed_password: str
+    is_verified: bool = False
+    verification_token: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserRegister(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    is_verified: bool
+    created_at: datetime
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserResponse
+
+class VerifyEmail(BaseModel):
+    token: str
+
+# Email Service Classes
+class EmailService:
+    def __init__(self):
+        self.api_key = SENDGRID_API_KEY
+        self.sender_email = SENDER_EMAIL
+        if not self.api_key or not self.sender_email:
+            raise ValueError("SendGrid API key or sender email not configured")
+    
+    async def send_verification_email(self, recipient_email: str, verification_token: str):
+        """Email doğrulama maili gönder"""
+        try:
+            verification_url = f"http://localhost:3000/verify-email?token={verification_token}"
+            
+            subject = "MysticLens - Email Adresinizi Doğrulayın"
+            
+            html_content = f"""
+            <html>
+                <body style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1 style="color: #AF52DE; font-size: 32px; margin: 0;">🔮 MysticLens</h1>
+                        <p style="color: #6B7280; font-size: 16px; margin: 10px 0;">Mistik dünyaya hoş geldiniz</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #AF52DE, #007AFF); padding: 30px; border-radius: 16px; color: white; text-align: center; margin-bottom: 30px;">
+                        <h2 style="margin: 0 0 15px 0; font-size: 24px;">Email Adresinizi Doğrulayın</h2>
+                        <p style="margin: 0; font-size: 16px; opacity: 0.9;">Hesabınızı aktifleştirmek için aşağıdaki butona tıklayın</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <a href="{verification_url}" 
+                           style="display: inline-block; background: #007AFF; color: white; text-decoration: none; padding: 15px 30px; border-radius: 12px; font-weight: 600; font-size: 16px;">
+                            Email Adresimi Doğrula
+                        </a>
+                    </div>
+                    
+                    <div style="background: #F9FAFB; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <p style="margin: 0; color: #6B7280; font-size: 14px;">
+                            <strong>Not:</strong> Bu link güvenlik nedeniyle 24 saat sonra geçersiz hale gelecektir.
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center; color: #9CA3AF; font-size: 12px;">
+                        <p>Bu email MysticLens tarafından gönderilmiştir.</p>
+                        <p>Link çalışmıyorsa şu adresi kopyalayın: {verification_url}</p>
+                    </div>
+                </body>
+            </html>
+            """
+            
+            message = Mail(
+                from_email=self.sender_email,
+                to_emails=recipient_email,
+                subject=subject,
+                html_content=html_content
+            )
+            
+            sg = SendGridAPIClient(self.api_key)
+            response = sg.send(message)
+            
+            return response.status_code == 202
+            
+        except Exception as e:
+            logging.error(f"Email sending error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Email gönderme hatası: {str(e)}")
+
+# Authentication Service
+class AuthService:
+    def __init__(self):
+        self.email_service = EmailService()
+    
+    def hash_password(self, password: str) -> str:
+        """Parolayı hash'le"""
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+    
+    def verify_password(self, password: str, hashed_password: str) -> bool:
+        """Parola doğrula"""
+        return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
+    
+    def create_access_token(self, data: dict) -> str:
+        """JWT token oluştur"""
+        to_encode = data.copy()
+        expire = datetime.utcnow() + timedelta(minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+        to_encode.update({"exp": expire})
+        return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+    
+    def verify_token(self, token: str) -> dict:
+        """JWT token doğrula"""
+        try:
+            payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+            return payload
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(status_code=401, detail="Token süresi dolmuş")
+        except jwt.JWTError:
+            raise HTTPException(status_code=401, detail="Geçersiz token")
+    
+    def generate_verification_token(self) -> str:
+        """Email doğrulama token'ı oluştur"""
+        return str(uuid.uuid4())
+
+# Initialize services
+auth_service = AuthService()
+
+# Authentication dependency
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Mevcut kullanıcıyı al"""
+    try:
+        token = credentials.credentials
+        payload = auth_service.verify_token(token)
+        user_id = payload.get("sub")
+        
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Geçersiz token")
+        
+        # Kullanıcıyı veritabanından al
+        user = await db.users.find_one({"id": user_id})
+        if not user:
+            raise HTTPException(status_code=401, detail="Kullanıcı bulunamadı")
+        
+        return User(**user)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Kimlik doğrulama hatası")
+
+# Optional authentication dependency
+async def get_current_user_optional(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Opsiyonel kullanıcı (token yoksa None döner)"""
+    try:
+        return await get_current_user(credentials)
+    except:
+        return None
+
 
 # Define Models
 class StatusCheck(BaseModel):
