@@ -353,6 +353,409 @@ class BackendTester:
             self.log_test("MongoDB Persistence", False, "", e)
             return False
 
+    def test_tarot_cards_endpoint(self):
+        """Test GET /api/tarot-cards endpoint"""
+        try:
+            response = self.session.get(f"{self.backend_url}/tarot-cards", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, list):
+                    self.log_test("Tarot Cards Endpoint", False, 
+                                "Response is not a list", None)
+                    return False
+                
+                if len(data) == 0:
+                    self.log_test("Tarot Cards Endpoint", False, 
+                                "No tarot cards found", None)
+                    return False
+                
+                # Check first card structure
+                first_card = data[0]
+                required_fields = ["id", "name", "name_tr", "suit", "meaning_upright", "meaning_reversed"]
+                missing_fields = [field for field in required_fields if field not in first_card]
+                
+                if missing_fields:
+                    self.log_test("Tarot Cards Endpoint", False, 
+                                f"Missing fields in card: {missing_fields}", None)
+                    return False
+                
+                details = f"Found {len(data)} tarot cards"
+                self.log_test("Tarot Cards Endpoint", True, details)
+                return True
+                
+            else:
+                self.log_test("Tarot Cards Endpoint", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Tarot Cards Endpoint", False, "", e)
+            return False
+
+    def test_tarot_reading_creation(self):
+        """Test POST /api/tarot-reading endpoint"""
+        try:
+            payload = {
+                "spread_type": "three_card",
+                "session_id": self.test_session_id
+            }
+            
+            response = self.session.post(
+                f"{self.backend_url}/tarot-reading",
+                json=payload,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required response fields
+                required_fields = ["id", "session_id", "spread_type", "cards_drawn", "interpretation", "timestamp"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Tarot Reading Creation", False, 
+                                f"Missing response fields: {missing_fields}", None)
+                    return False, None
+                
+                # Verify session_id matches
+                if data["session_id"] != self.test_session_id:
+                    self.log_test("Tarot Reading Creation", False, 
+                                "Session ID mismatch", None)
+                    return False, None
+                
+                # Check cards_drawn structure
+                cards_drawn = data.get("cards_drawn", [])
+                if len(cards_drawn) != 3:
+                    self.log_test("Tarot Reading Creation", False, 
+                                f"Expected 3 cards, got {len(cards_drawn)}", None)
+                    return False, None
+                
+                # Check interpretation
+                interpretation = data.get("interpretation", "")
+                if not interpretation:
+                    self.log_test("Tarot Reading Creation", False, 
+                                "No interpretation provided", None)
+                    return False, None
+                
+                details = f"ID: {data['id'][:8]}..., Cards: {len(cards_drawn)}, Interpretation length: {len(interpretation)}"
+                self.log_test("Tarot Reading Creation", True, details)
+                return True, data
+                
+            else:
+                self.log_test("Tarot Reading Creation", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False, None
+                
+        except Exception as e:
+            self.log_test("Tarot Reading Creation", False, "", e)
+            return False, None
+
+    def test_tarot_session_readings(self):
+        """Test GET /api/tarot-reading/{session_id} endpoint"""
+        try:
+            response = self.session.get(
+                f"{self.backend_url}/tarot-reading/{self.test_session_id}",
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, list):
+                    self.log_test("Tarot Session Readings", False, 
+                                "Response is not a list", None)
+                    return False
+                
+                details = f"Found {len(data)} tarot readings for session"
+                self.log_test("Tarot Session Readings", True, details)
+                return True
+                
+            else:
+                self.log_test("Tarot Session Readings", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Tarot Session Readings", False, "", e)
+            return False
+
+    def test_palm_reading_creation(self):
+        """Test POST /api/palm-reading endpoint"""
+        try:
+            # Create test hand image
+            test_image_base64 = self.create_test_image_base64()
+            
+            payload = {
+                "image_base64": test_image_base64,
+                "hand_type": "right",
+                "session_id": self.test_session_id
+            }
+            
+            response = self.session.post(
+                f"{self.backend_url}/palm-reading",
+                json=payload,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required response fields
+                required_fields = ["id", "session_id", "hand_type", "lines_found", "interpretation", "timestamp"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Palm Reading Creation", False, 
+                                f"Missing response fields: {missing_fields}", None)
+                    return False, None
+                
+                # Verify session_id matches
+                if data["session_id"] != self.test_session_id:
+                    self.log_test("Palm Reading Creation", False, 
+                                "Session ID mismatch", None)
+                    return False, None
+                
+                # Check hand_type
+                if data["hand_type"] != "right":
+                    self.log_test("Palm Reading Creation", False, 
+                                "Hand type mismatch", None)
+                    return False, None
+                
+                # Check lines and interpretation
+                lines = data.get("lines_found", [])
+                interpretation = data.get("interpretation", "")
+                
+                if not lines or not interpretation:
+                    self.log_test("Palm Reading Creation", False, 
+                                "AI analysis failed - no lines or interpretation", None)
+                    return False, None
+                
+                details = f"ID: {data['id'][:8]}..., Lines: {len(lines)}, Interpretation length: {len(interpretation)}"
+                self.log_test("Palm Reading Creation", True, details)
+                return True, data
+                
+            else:
+                self.log_test("Palm Reading Creation", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False, None
+                
+        except Exception as e:
+            self.log_test("Palm Reading Creation", False, "", e)
+            return False, None
+
+    def test_palm_session_readings(self):
+        """Test GET /api/palm-reading/{session_id} endpoint"""
+        try:
+            response = self.session.get(
+                f"{self.backend_url}/palm-reading/{self.test_session_id}",
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, list):
+                    self.log_test("Palm Session Readings", False, 
+                                "Response is not a list", None)
+                    return False
+                
+                details = f"Found {len(data)} palm readings for session"
+                self.log_test("Palm Session Readings", True, details)
+                return True
+                
+            else:
+                self.log_test("Palm Session Readings", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Palm Session Readings", False, "", e)
+            return False
+
+    def test_astrology_reading_creation(self):
+        """Test POST /api/astrology-reading endpoint"""
+        try:
+            payload = {
+                "birth_date": "1990-05-15",
+                "birth_time": "14:30",
+                "birth_place": "Istanbul, Turkey",
+                "session_id": self.test_session_id
+            }
+            
+            response = self.session.post(
+                f"{self.backend_url}/astrology-reading",
+                json=payload,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required response fields
+                required_fields = ["id", "session_id", "birth_date", "birth_time", "birth_place", "zodiac_sign", "planets", "interpretation", "timestamp"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Astrology Reading Creation", False, 
+                                f"Missing response fields: {missing_fields}", None)
+                    return False, None
+                
+                # Verify session_id matches
+                if data["session_id"] != self.test_session_id:
+                    self.log_test("Astrology Reading Creation", False, 
+                                "Session ID mismatch", None)
+                    return False, None
+                
+                # Check zodiac sign calculation
+                zodiac_sign = data.get("zodiac_sign")
+                if zodiac_sign != "taurus":  # May 15 should be Taurus
+                    self.log_test("Astrology Reading Creation", False, 
+                                f"Incorrect zodiac calculation: expected 'taurus', got '{zodiac_sign}'", None)
+                    return False, None
+                
+                # Check interpretation
+                interpretation = data.get("interpretation", "")
+                if not interpretation:
+                    self.log_test("Astrology Reading Creation", False, 
+                                "No interpretation provided", None)
+                    return False, None
+                
+                details = f"ID: {data['id'][:8]}..., Zodiac: {zodiac_sign}, Interpretation length: {len(interpretation)}"
+                self.log_test("Astrology Reading Creation", True, details)
+                return True, data
+                
+            else:
+                self.log_test("Astrology Reading Creation", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False, None
+                
+        except Exception as e:
+            self.log_test("Astrology Reading Creation", False, "", e)
+            return False, None
+
+    def test_astrology_session_readings(self):
+        """Test GET /api/astrology-reading/{session_id} endpoint"""
+        try:
+            response = self.session.get(
+                f"{self.backend_url}/astrology-reading/{self.test_session_id}",
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, list):
+                    self.log_test("Astrology Session Readings", False, 
+                                "Response is not a list", None)
+                    return False
+                
+                details = f"Found {len(data)} astrology readings for session"
+                self.log_test("Astrology Session Readings", True, details)
+                return True
+                
+            else:
+                self.log_test("Astrology Session Readings", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Astrology Session Readings", False, "", e)
+            return False
+
+    def test_zodiac_signs_endpoint(self):
+        """Test GET /api/zodiac-signs endpoint"""
+        try:
+            response = self.session.get(f"{self.backend_url}/zodiac-signs", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, dict):
+                    self.log_test("Zodiac Signs Endpoint", False, 
+                                "Response is not a dictionary", None)
+                    return False
+                
+                # Check for expected zodiac signs
+                expected_signs = ["aries", "taurus", "gemini", "cancer", "leo", "virgo", 
+                                "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"]
+                
+                missing_signs = [sign for sign in expected_signs if sign not in data]
+                if missing_signs:
+                    self.log_test("Zodiac Signs Endpoint", False, 
+                                f"Missing zodiac signs: {missing_signs}", None)
+                    return False
+                
+                # Check structure of first sign
+                first_sign_data = data["aries"]
+                required_fields = ["name", "dates", "element", "ruling_planet"]
+                missing_fields = [field for field in required_fields if field not in first_sign_data]
+                
+                if missing_fields:
+                    self.log_test("Zodiac Signs Endpoint", False, 
+                                f"Missing fields in zodiac data: {missing_fields}", None)
+                    return False
+                
+                details = f"Found {len(data)} zodiac signs with complete data"
+                self.log_test("Zodiac Signs Endpoint", True, details)
+                return True
+                
+            else:
+                self.log_test("Zodiac Signs Endpoint", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Zodiac Signs Endpoint", False, "", e)
+            return False
+
+    def test_updated_health_check(self):
+        """Test updated health check with all 4 features"""
+        try:
+            response = self.session.get(f"{self.backend_url}/health", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ["status", "timestamp", "services"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Updated Health Check", False, 
+                                f"Missing fields: {missing_fields}", None)
+                    return False
+                
+                # Check services status
+                services = data.get("services", {})
+                features = services.get("features", {})
+                
+                # Check all 4 features are present and active
+                expected_features = ["coffee_reading", "tarot_reading", "palm_reading", "astrology"]
+                missing_features = [feature for feature in expected_features if not features.get(feature)]
+                
+                if missing_features:
+                    self.log_test("Updated Health Check", False, 
+                                f"Inactive features: {missing_features}", None)
+                    return False
+                
+                db_status = services.get("database")
+                ai_status = services.get("ai_service")
+                
+                details = f"Status: {data['status']}, DB: {db_status}, AI: {ai_status}, Features: {len(expected_features)}/4 active"
+                self.log_test("Updated Health Check", True, details)
+                return True
+            else:
+                self.log_test("Updated Health Check", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Updated Health Check", False, "", e)
+            return False
+
     def test_error_handling(self):
         """Test error handling scenarios"""
         try:
