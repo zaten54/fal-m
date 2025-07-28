@@ -115,7 +115,7 @@ const Home = () => {
                       {t(type.titleKey)}
                     </h3>
                     <p className="text-gray-400 text-sm">
-                      {type.id === 'coffee' ? t('step1Desc') : type.id === 'tarot' ? 'Kartlarla geleceği keşfedin' : t('comingSoon')}
+                      {type.id === 'coffee' ? t('step1Desc') : type.id === 'tarot' ? 'Kartlarla geleceği keşfedin' : type.id === 'palm' ? 'El çizgilerinizi analiz edin' : type.id === 'astrology' ? 'Yıldızlardan mesajınızı alın' : t('comingSoon')}
                     </p>
                     
                     {/* Active Indicator */}
