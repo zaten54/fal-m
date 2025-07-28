@@ -8,13 +8,13 @@ import TarotReading from "./components/TarotReading";
 import PalmReading from "./components/PalmReading";
 import AstrologyReading from "./components/AstrologyReading";
 import Navigation from "./components/Navigation";
-import FuturisticBackground from "./components/FuturisticBackground";
+import AppleBackground from "./components/AppleBackground";
 
 function App() {
   return (
     <LanguageProvider>
-      <div className="App relative min-h-screen overflow-hidden">
-        <FuturisticBackground />
+      <div className="App relative min-h-screen">
+        <AppleBackground />
         <BrowserRouter>
           <Navigation />
           <Routes>
