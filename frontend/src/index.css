@@ -123,4 +123,41 @@
     0 0 20px currentColor;
 }
 
+/* Mystical spiritual effects */
+.text-shadow-mystical {
+  text-shadow: 
+    0 0 20px rgba(175, 82, 222, 0.4),
+    0 0 40px rgba(175, 82, 222, 0.2),
+    0 0 60px rgba(0, 122, 255, 0.1);
+}
+
+@keyframes mystical-glow {
+  0%, 100% { 
+    text-shadow: 
+      0 0 20px rgba(175, 82, 222, 0.4),
+      0 0 40px rgba(175, 82, 222, 0.2);
+  }
+  50% { 
+    text-shadow: 
+      0 0 30px rgba(175, 82, 222, 0.6),
+      0 0 60px rgba(175, 82, 222, 0.3),
+      0 0 80px rgba(0, 122, 255, 0.2);
+  }
+}
+
+.animate-mystical-glow {
+  animation: mystical-glow 3s ease-in-out infinite;
+}
+
+@keyframes float-mystical {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(1deg); }
+  50% { transform: translateY(-4px) rotate(0deg); }
+  75% { transform: translateY(-12px) rotate(-1deg); }
+}
+
+.animate-float-mystical {
+  animation: float-mystical 4s ease-in-out infinite;
+}
+
 /* Remove unused legacy animations for cleaner code */
