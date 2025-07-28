@@ -470,32 +470,137 @@ class AstrologyAnalysisService:
         except:
             return "unknown"
     
+    def calculate_birth_chart(self, birth_date: str, birth_time: str, birth_place: str) -> dict:
+        """Doğum haritası hesapla (basitleştirilmiş)"""
+        import random
+        from datetime import datetime
+        
+        try:
+            date_obj = datetime.strptime(birth_date, "%Y-%m-%d")
+            time_parts = birth_time.split(":")
+            hour = int(time_parts[0])
+            minute = int(time_parts[1]) if len(time_parts) > 1 else 0
+            
+            # Basit hesaplamalar (gerçek astroloji hesaplamaları çok karmaşık)
+            # Bu örnek amaçlı basitleştirilmiş versiyonudur
+            
+            # 12 astroloji evi
+            houses = {}
+            house_names = [
+                "Kişilik", "Mal Varlığı", "İletişim", "Aile", "Yaratıcılık", "Sağlık",
+                "İlişkiler", "Dönüşüm", "Felsefe", "Kariyer", "Dostluk", "Spiritüalite"
+            ]
+            
+            for i in range(12):
+                # Her ev için burç hesapla (basitleştirilmiş)
+                house_sign_index = (date_obj.month + hour + i) % 12
+                house_signs = ["aries", "taurus", "gemini", "cancer", "leo", "virgo", 
+                              "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"]
+                
+                houses[f"house_{i+1}"] = {
+                    "name": house_names[i],
+                    "sign": house_signs[house_sign_index],
+                    "degree": (date_obj.day + minute + i * 30) % 360
+                }
+            
+            # Gezegenler (basitleştirilmiş pozisyonlar)
+            planets = {
+                "sun": {
+                    "sign": self.calculate_zodiac_sign(birth_date),
+                    "degree": (date_obj.day * 12 + hour) % 360,
+                    "house": ((date_obj.day + hour) % 12) + 1
+                },
+                "moon": {
+                    "sign": house_signs[(date_obj.day + hour + 2) % 12],
+                    "degree": (date_obj.day * 13 + minute) % 360,
+                    "house": ((date_obj.day + hour + 2) % 12) + 1
+                },
+                "mercury": {
+                    "sign": house_signs[(date_obj.month + hour) % 12],
+                    "degree": (date_obj.month * 30 + hour * 15) % 360,
+                    "house": ((date_obj.month + hour) % 12) + 1
+                },
+                "venus": {
+                    "sign": house_signs[(date_obj.month + date_obj.day) % 12],
+                    "degree": (date_obj.month * 25 + date_obj.day * 5) % 360,
+                    "house": ((date_obj.month + date_obj.day) % 12) + 1
+                },
+                "mars": {
+                    "sign": house_signs[(date_obj.day + minute) % 12],
+                    "degree": (date_obj.day * 18 + minute * 6) % 360,
+                    "house": ((date_obj.day + minute) % 12) + 1
+                },
+                "jupiter": {
+                    "sign": house_signs[(date_obj.year % 12)],
+                    "degree": (date_obj.year % 360),
+                    "house": ((date_obj.year % 12)) + 1
+                }
+            }
+            
+            return {
+                "houses": houses,
+                "planets": planets,
+                "ascendant": {
+                    "sign": house_signs[(hour + minute // 60) % 12],
+                    "degree": (hour * 15 + minute // 4) % 360
+                },
+                "midheaven": {
+                    "sign": house_signs[(hour + 6) % 12],
+                    "degree": (hour * 15 + 90) % 360
+                }
+            }
+            
+        except Exception as e:
+            logging.error(f"Birth chart calculation error: {e}")
+            return {}
+    
     async def generate_astrology_reading(self, birth_info: dict, session_id: str) -> str:
         """Astroloji okuma oluştur"""
         try:
             zodiac_sign = birth_info["zodiac_sign"]
             zodiac_info = ZODIAC_SIGNS.get(zodiac_sign, {})
+            birth_chart = birth_info.get("birth_chart", {})
             
             # LlmChat instance oluştur
             chat = LlmChat(
                 api_key=self.gemini_api_key,
                 session_id=session_id,
-                system_message="""Sen deneyimli bir astrologsun. Doğum bilgileri verilen kişi için kapsamlı astroloji yorumu yapıyorsun.
+                system_message="""Sen deneyimli bir astrologsun. Doğum bilgileri ve doğum haritası verilen kişi için kapsamlı astroloji yorumu yapıyorsun.
 
 Astroloji kuralları:
 - Burç özelliklerini detaylı analiz et
 - Doğum saati ve yerinin etkilerini değerlendir
 - Gezegen konumlarının kişilik üzerindeki etkilerini açıkla
+- Astroloji evlerinin anlamlarını değerlendir
+- Yükseleni ve Orta Gökyüzü'nün etkilerini açıkla
 - Gelecek dönemler için öngörülerde bulun
 - Pozitif ve yol gösterici bir yaklaşım benimse
 
 Çıktı formatı:
-1. Burç analizi ve kişilik özellikleri
-2. Güçlü yönler ve potansiyeller
-3. Dikkat edilmesi gereken alanlar
-4. Gelecek döneme dair öngörüler
-5. Öneriler ve tavsiyeler"""
+1. Ana burç analizi ve kişilik özellikleri
+2. Yükselen burç ve etkisi
+3. Gezegen konumları analizi
+4. Güçlü yönler ve potansiyeller
+5. Dikkat edilmesi gereken alanlar
+6. Gelecek döneme dair öngörüler
+7. Öneriler ve tavsiyeler"""
             ).with_model("gemini", "gemini-2.0-flash")
+            
+            # Chart bilgilerini hazırla
+            chart_info = ""
+            if birth_chart.get("planets"):
+                chart_info += "\nGezegen Konumları:\n"
+                for planet, info in birth_chart["planets"].items():
+                    planet_tr = {
+                        "sun": "Güneş", "moon": "Ay", "mercury": "Merkür", 
+                        "venus": "Venüs", "mars": "Mars", "jupiter": "Jüpiter"
+                    }.get(planet, planet)
+                    sign_name = ZODIAC_SIGNS.get(info["sign"], {}).get("name", info["sign"])
+                    chart_info += f"- {planet_tr}: {sign_name} burcunda, {info['house']}. evde\n"
+            
+            if birth_chart.get("ascendant"):
+                asc_sign = ZODIAC_SIGNS.get(birth_chart["ascendant"]["sign"], {}).get("name", "Bilinmiyor")
+                chart_info += f"\nYükselen: {asc_sign}"
             
             # Mesaj gönder
             user_message = UserMessage(
@@ -503,11 +608,13 @@ Astroloji kuralları:
 - Doğum Tarihi: {birth_info['birth_date']}
 - Doğum Saati: {birth_info['birth_time']}
 - Doğum Yeri: {birth_info['birth_place']}
-- Burç: {zodiac_info.get('name', 'Bilinmiyor')}
+- Ana Burç: {zodiac_info.get('name', 'Bilinmiyor')}
 - Element: {zodiac_info.get('element', 'Bilinmiyor')}
 - Yönetici Gezegen: {zodiac_info.get('ruling_planet', 'Bilinmiyor')}
 
-Bu bilgilere göre kapsamlı bir astroloji yorumu ve kişilik analizi yap."""
+{chart_info}
+
+Bu kapsamlı doğum haritası bilgilerine göre detaylı astroloji yorumu ve kişilik analizi yap."""
             )
             
             # AI'dan cevap al
