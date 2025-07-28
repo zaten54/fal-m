@@ -1009,6 +1009,7 @@ async def get_astrology_readings(session_id: str):
                 birth_place=reading["birth_place"],
                 zodiac_sign=reading["zodiac_sign"],
                 planets=reading["planets"],
+                birth_chart=reading.get("birth_chart", {}),
                 interpretation=reading["interpretation"],
                 timestamp=reading["timestamp"]
             ) for reading in readings
