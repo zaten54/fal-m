@@ -1353,11 +1353,11 @@ async def create_astrology_reading(reading_data: AstrologyReadingCreate, current
         raise HTTPException(status_code=500, detail=f"Astroloji okuma hatası: {str(e)}")
 
 @api_router.get("/astrology-reading/{session_id}", response_model=List[AstrologyReadingResponse])
-async def get_astrology_readings(session_id: str):
-    """Belirli bir session'a ait astroloji okumalarını getir"""
+async def get_astrology_readings(session_id: str, current_user: User = Depends(get_current_user)):
+    """Belirli bir session'a ait astroloji okumalarını getir - Sadece kullanıcının kendi okumalarını"""
     try:
         readings = await db.astrology_readings.find(
-            {"session_id": session_id}
+            {"session_id": session_id, "user_id": current_user.id}
         ).sort("timestamp", -1).to_list(100)
         
         return [
