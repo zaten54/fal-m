@@ -999,7 +999,7 @@ async def resend_verification_email(user_data: UserLogin, background_tasks: Back
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
-    return {"message": "falım API - Hoş Geldiniz"}
+    return {"message": "🔮 ✨ falım ✨ 🔮 - Mistik dünyaya hoş geldiniz"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
