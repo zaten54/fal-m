@@ -63,12 +63,32 @@ const Navigation = () => {
                 <div className="absolute inset-0 rounded-full bg-spiritual-purple/20 animate-glow-pulse"></div>
               )}
             </Link>
-            <span className="text-gray-400 px-4 py-2 border border-gray-600/30 rounded-full bg-gray-800/20">
-              {t('palmReading')} ({t('comingSoon')})
-            </span>
-            <span className="text-gray-400 px-4 py-2 border border-gray-600/30 rounded-full bg-gray-800/20">
-              {t('astrology')} ({t('comingSoon')})
-            </span>
+            <Link 
+              to="/palm-reading"
+              className={`relative px-4 py-2 rounded-full transition-all duration-300 ${
+                location.pathname === "/palm-reading" 
+                  ? "text-spiritual-cyan neon-text bg-spiritual-cyan/10 border border-spiritual-cyan/30" 
+                  : "text-white hover:text-spiritual-cyan hover:bg-spiritual-cyan/5"
+              }`}
+            >
+              {t('palmReading')}
+              {location.pathname === "/palm-reading" && (
+                <div className="absolute inset-0 rounded-full bg-spiritual-cyan/20 animate-glow-pulse"></div>
+              )}
+            </Link>
+            <Link 
+              to="/astrology-reading"
+              className={`relative px-4 py-2 rounded-full transition-all duration-300 ${
+                location.pathname === "/astrology-reading" 
+                  ? "text-spiritual-amber neon-text bg-spiritual-amber/10 border border-spiritual-amber/30" 
+                  : "text-white hover:text-spiritual-amber hover:bg-spiritual-amber/5"
+              }`}
+            >
+              {t('astrology')}
+              {location.pathname === "/astrology-reading" && (
+                <div className="absolute inset-0 rounded-full bg-spiritual-amber/20 animate-glow-pulse"></div>
+              )}
+            </Link>
           </div>
           
           {/* Language Selector */}
