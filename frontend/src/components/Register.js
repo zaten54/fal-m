@@ -17,7 +17,7 @@ const Register = () => {
     setError('');
     setSuccess(false);
 
-    const result = await registerUser(data.email, data.password);
+    const result = await registerUser(data.email, data.password, data.acceptTerms);
 
     if (result.success) {
       setSuccess(true);
