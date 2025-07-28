@@ -1104,11 +1104,11 @@ async def get_tarot_cards():
         raise HTTPException(status_code=500, detail=f"Tarot kartları getirme hatası: {str(e)}")
 
 @api_router.post("/tarot-reading", response_model=TarotReadingResponse)
-async def create_tarot_reading(reading_data: TarotReadingCreate):
-    """Yeni tarot okuma oluştur"""
+async def create_tarot_reading(reading_data: TarotReadingCreate, current_user: User = Depends(get_current_user)):
+    """Yeni tarot okuma oluştur - Sadece kayıtlı kullanıcılar"""
     try:
-        # Session ID oluştur eğer yoksa
-        session_id = reading_data.session_id or str(uuid.uuid4())
+        # Session ID oluştur eğer yoksa (kullanıcı ID'si ile bağlantılı)
+        session_id = reading_data.session_id or f"{current_user.id}_{uuid.uuid4()}"
         
         # Kartları karıştır ve seç
         if reading_data.spread_type == "three_card":
