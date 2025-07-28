@@ -3,8 +3,8 @@ import React from 'react';
 const BirthChart = ({ birthChart, zodiacSigns }) => {
   if (!birthChart || !birthChart.houses || !birthChart.planets) {
     return (
-      <div className="glass-morph-dark rounded-xl p-6 border border-spiritual-violet/20 text-center">
-        <p className="text-gray-400">Doğum haritası bilgileri yükleniyor...</p>
+      <div className="apple-card-elevated text-center">
+        <p className="apple-text-body text-apple-gray-400">Doğum haritası bilgileri yükleniyor...</p>
       </div>
     );
   }
