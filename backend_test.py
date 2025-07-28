@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend API Test Suite for Kahve Falı Application
-Tests all backend endpoints and integrations
+Comprehensive Backend API Test Suite for MysticLens Application
+Tests all backend endpoints including new authentication system
 """
 
 import requests
@@ -13,6 +13,8 @@ import time
 import os
 from io import BytesIO
 from PIL import Image
+import random
+import string
 
 # Get backend URL from environment
 BACKEND_URL = "https://6c821355-5472-40cc-b89c-2c3ef6ee838c.preview.emergentagent.com/api"
@@ -23,6 +25,12 @@ class BackendTester:
         self.session = requests.Session()
         self.test_session_id = str(uuid.uuid4())
         self.test_results = []
+        
+        # Authentication data
+        self.test_user_email = f"test_{uuid.uuid4().hex[:8]}@mysticlens.com"
+        self.test_user_password = "TestPassword123!"
+        self.access_token = None
+        self.user_data = None
         
     def log_test(self, test_name, success, details="", error=None):
         """Log test results"""
