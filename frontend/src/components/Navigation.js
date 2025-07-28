@@ -178,6 +178,7 @@ const Navigation = () => {
                     onClick={() => {
                       changeLanguage(lang.code);
                       setShowLanguageMenu(false);
+                      setShowUserMenu(false);
                     }}
                     className={`w-full flex items-center space-x-3 px-apple-md py-apple-sm text-left apple-transition font-apple ${
                       currentLanguage === lang.code
