@@ -207,11 +207,11 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
         </div>
         
         {/* Legend */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-apple-lg apple-text-sm">
           {/* Planets Legend */}
           <div>
-            <h4 className="text-spiritual-amber font-semibold mb-2">Gezegenler</h4>
-            <div className="space-y-1">
+            <h4 className="apple-text-headline text-apple-orange font-apple font-semibold mb-apple-md">Gezegenler</h4>
+            <div className="apple-card space-y-2">
               {Object.entries(planets).map(([planet, info]) => {
                 const planetNames = {
                   sun: 'Güneş', moon: 'Ay', mercury: 'Merkür',
@@ -220,10 +220,10 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
                 
                 return (
                   <div key={planet} className="flex items-center space-x-2">
-                    <span className="text-spiritual-amber text-lg">
+                    <span className="text-apple-yellow text-apple-lg">
                       {planetSymbols[planet] || '○'}
                     </span>
-                    <span className="text-white text-xs">
+                    <span className="apple-text-body text-apple-gray-700">
                       {planetNames[planet] || planet}: {getZodiacName(info.sign)} ({info.house}. ev)
                     </span>
                   </div>
@@ -234,24 +234,26 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
           
           {/* Houses Legend */}
           <div>
-            <h4 className="text-spiritual-cyan font-semibold mb-2">Astroloji Evleri</h4>
-            <div className="grid grid-cols-2 gap-1 text-xs">
-              {Object.entries(houses).slice(0, 6).map(([houseKey, houseInfo]) => {
-                const houseNum = houseKey.split('_')[1];
-                return (
-                  <div key={houseKey} className="text-gray-300">
-                    <span className="text-spiritual-cyan">{houseNum}.</span> {houseInfo.name}
-                  </div>
-                );
-              })}
+            <h4 className="apple-text-headline text-apple-blue font-apple font-semibold mb-apple-md">Astroloji Evleri</h4>
+            <div className="apple-card">
+              <div className="grid grid-cols-2 gap-2 apple-text-sm">
+                {Object.entries(houses).slice(0, 6).map(([houseKey, houseInfo]) => {
+                  const houseNum = houseKey.split('_')[1];
+                  return (
+                    <div key={houseKey} className="apple-text-body text-apple-gray-600">
+                      <span className="text-apple-blue font-apple font-semibold">{houseNum}.</span> {houseInfo.name}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
         
         {/* Ascendant Info */}
         {ascendant && (
-          <div className="mt-4 p-3 bg-spiritual-emerald/10 border border-spiritual-emerald/20 rounded-lg text-center">
-            <p className="text-spiritual-emerald font-semibold text-sm">
+          <div className="mt-apple-lg apple-card bg-apple-green/5 border border-apple-green/20 text-center">
+            <p className="apple-text-body text-apple-green font-apple font-semibold">
               Yükselen Burç: {getZodiacName(ascendant.sign)} ({ascendant.degree.toFixed(1)}°)
             </p>
           </div>
