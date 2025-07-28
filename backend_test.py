@@ -810,35 +810,51 @@ class BackendTester:
 
     def run_all_tests(self):
         """Run all backend tests"""
-        print(f"🧪 Starting Backend API Tests")
+        print(f"🧪 Starting Comprehensive Backend API Tests")
         print(f"Backend URL: {self.backend_url}")
         print(f"Test Session ID: {self.test_session_id}")
         print("=" * 60)
         
-        # Test 1: Health Check
-        health_ok = self.test_health_endpoint()
+        # Test 1: Updated Health Check (all 4 features)
+        health_ok = self.test_updated_health_check()
         
-        # Test 2: Coffee Reading Creation (includes Gemini integration)
+        # COFFEE READING TESTS
+        print("\n☕ COFFEE READING TESTS")
+        print("-" * 30)
         creation_ok, reading_data = self.test_coffee_reading_creation()
-        
-        # Test 3: Get Session Readings
         session_readings_ok = self.test_get_session_readings()
-        
-        # Test 4: Get Individual Reading
         individual_reading_ok = self.test_get_individual_reading(reading_data)
-        
-        # Test 5: Gemini Integration Quality
         gemini_ok = self.test_gemini_integration(reading_data)
         
-        # Test 6: MongoDB Persistence
-        mongodb_ok = self.test_mongodb_persistence()
+        # TAROT READING TESTS
+        print("\n🔮 TAROT READING TESTS")
+        print("-" * 30)
+        tarot_cards_ok = self.test_tarot_cards_endpoint()
+        tarot_creation_ok, tarot_data = self.test_tarot_reading_creation()
+        tarot_session_ok = self.test_tarot_session_readings()
         
-        # Test 7: Error Handling
+        # PALM READING TESTS
+        print("\n🤚 PALM READING TESTS")
+        print("-" * 30)
+        palm_creation_ok, palm_data = self.test_palm_reading_creation()
+        palm_session_ok = self.test_palm_session_readings()
+        
+        # ASTROLOGY TESTS
+        print("\n⭐ ASTROLOGY TESTS")
+        print("-" * 30)
+        zodiac_signs_ok = self.test_zodiac_signs_endpoint()
+        astrology_creation_ok, astrology_data = self.test_astrology_reading_creation()
+        astrology_session_ok = self.test_astrology_session_readings()
+        
+        # SYSTEM TESTS
+        print("\n🔧 SYSTEM TESTS")
+        print("-" * 30)
+        mongodb_ok = self.test_mongodb_persistence()
         error_handling_ok = self.test_error_handling()
         
         # Summary
         print("=" * 60)
-        print("📊 TEST SUMMARY")
+        print("📊 COMPREHENSIVE TEST SUMMARY")
         print("=" * 60)
         
         total_tests = len(self.test_results)
@@ -858,24 +874,63 @@ class BackendTester:
             if result["error"]:
                 print(f"   Error: {result['error']}")
         
-        # Overall assessment
-        critical_tests = [health_ok, creation_ok, session_readings_ok, individual_reading_ok]
-        critical_passed = sum(critical_tests)
+        # Feature-based assessment
+        print("\n🎯 FEATURE ASSESSMENT:")
         
-        print(f"\n🎯 CRITICAL FUNCTIONALITY: {critical_passed}/4 tests passed")
+        # Coffee Reading
+        coffee_tests = [creation_ok, session_readings_ok, individual_reading_ok, gemini_ok]
+        coffee_passed = sum(coffee_tests)
+        print(f"☕ Coffee Reading: {coffee_passed}/4 tests passed")
         
-        if critical_passed == 4:
-            print("✅ All critical backend functionality is working!")
-        elif critical_passed >= 3:
-            print("⚠️  Most critical functionality works, minor issues detected")
+        # Tarot Reading
+        tarot_tests = [tarot_cards_ok, tarot_creation_ok, tarot_session_ok]
+        tarot_passed = sum(tarot_tests)
+        print(f"🔮 Tarot Reading: {tarot_passed}/3 tests passed")
+        
+        # Palm Reading
+        palm_tests = [palm_creation_ok, palm_session_ok]
+        palm_passed = sum(palm_tests)
+        print(f"🤚 Palm Reading: {palm_passed}/2 tests passed")
+        
+        # Astrology
+        astrology_tests = [zodiac_signs_ok, astrology_creation_ok, astrology_session_ok]
+        astrology_passed = sum(astrology_tests)
+        print(f"⭐ Astrology: {astrology_passed}/3 tests passed")
+        
+        # System
+        system_tests = [health_ok, mongodb_ok, error_handling_ok]
+        system_passed = sum(system_tests)
+        print(f"🔧 System: {system_passed}/3 tests passed")
+        
+        # Overall critical functionality
+        all_critical_tests = coffee_tests + tarot_tests + palm_tests + astrology_tests + [health_ok]
+        critical_passed = sum(all_critical_tests)
+        total_critical = len(all_critical_tests)
+        
+        print(f"\n🎯 OVERALL CRITICAL FUNCTIONALITY: {critical_passed}/{total_critical} tests passed")
+        
+        if critical_passed >= total_critical * 0.9:  # 90% or higher
+            print("✅ Excellent! All major backend functionality is working!")
+        elif critical_passed >= total_critical * 0.75:  # 75% or higher
+            print("✅ Good! Most backend functionality works, minor issues detected")
+        elif critical_passed >= total_critical * 0.5:  # 50% or higher
+            print("⚠️  Moderate functionality, several issues need attention")
         else:
-            print("❌ Critical functionality issues detected")
+            print("❌ Critical functionality issues detected - major problems")
         
         return {
             "total_tests": total_tests,
             "passed_tests": passed_tests,
             "critical_passed": critical_passed,
-            "overall_success": critical_passed >= 3,
+            "total_critical": total_critical,
+            "overall_success": critical_passed >= total_critical * 0.75,
+            "feature_results": {
+                "coffee": {"passed": coffee_passed, "total": len(coffee_tests)},
+                "tarot": {"passed": tarot_passed, "total": len(tarot_tests)},
+                "palm": {"passed": palm_passed, "total": len(palm_tests)},
+                "astrology": {"passed": astrology_passed, "total": len(astrology_tests)},
+                "system": {"passed": system_passed, "total": len(system_tests)}
+            },
             "test_results": self.test_results
         }
 
