@@ -156,8 +156,8 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
                     cx={pos.x}
                     cy={pos.y}
                     r="8"
-                    fill="rgba(245, 158, 11, 0.2)"
-                    stroke="rgba(245, 158, 11, 0.8)"
+                    fill="rgba(255, 204, 0, 0.2)"
+                    stroke="rgba(255, 204, 0, 0.8)"
                     strokeWidth="1"
                   />
                   <text
@@ -165,7 +165,7 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
                     y={pos.y}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    className="text-xs fill-spiritual-amber"
+                    className="text-xs fill-apple-yellow"
                     fontSize="12"
                   >
                     {planetSymbols[planet] || planet.charAt(0).toUpperCase()}
@@ -182,13 +182,13 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
                   y1="150"
                   x2="290"
                   y2="150"
-                  stroke="rgba(16, 185, 129, 0.8)"
+                  stroke="rgba(52, 199, 89, 0.8)"
                   strokeWidth="2"
                 />
                 <text
                   x="295"
                   y="155"
-                  className="text-xs fill-spiritual-emerald"
+                  className="text-xs fill-apple-green"
                   fontSize="10"
                 >
                   ASC
@@ -201,7 +201,7 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
               cx="150"
               cy="150"
               r="3"
-              fill="rgba(139, 92, 246, 0.8)"
+              fill="rgba(175, 82, 222, 0.8)"
             />
           </svg>
         </div>
