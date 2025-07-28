@@ -257,10 +257,10 @@ class BackendTester:
             self.log_test("Get Individual Reading", False, "", e)
             return False
 
-    def test_openai_integration(self, reading_data):
-        """Test OpenAI Vision API integration quality"""
+    def test_gemini_integration(self, reading_data):
+        """Test Gemini Vision API integration quality"""
         if not reading_data:
-            self.log_test("OpenAI Integration Quality", False, 
+            self.log_test("Gemini Integration Quality", False, 
                         "No reading data available for test", None)
             return False
             
@@ -289,15 +289,15 @@ class BackendTester:
             
             if quality_score >= 3:
                 details = f"Quality score: {quality_score}/4, Symbols: {len(symbols)}, Turkish context: {has_turkish_context}"
-                self.log_test("OpenAI Integration Quality", True, details)
+                self.log_test("Gemini Integration Quality", True, details)
                 return True
             else:
                 details = f"Quality score: {quality_score}/4 - Low quality AI response"
-                self.log_test("OpenAI Integration Quality", False, details, None)
+                self.log_test("Gemini Integration Quality", False, details, None)
                 return False
                 
         except Exception as e:
-            self.log_test("OpenAI Integration Quality", False, "", e)
+            self.log_test("Gemini Integration Quality", False, "", e)
             return False
 
     def test_mongodb_persistence(self):
