@@ -5,6 +5,8 @@ import { LanguageProvider } from "./context/LanguageContext";
 import Home from "./components/Home";
 import CoffeeReading from "./components/CoffeeReading";
 import TarotReading from "./components/TarotReading";
+import PalmReading from "./components/PalmReading";
+import AstrologyReading from "./components/AstrologyReading";
 import Navigation from "./components/Navigation";
 import FuturisticBackground from "./components/FuturisticBackground";
 
@@ -19,6 +21,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/coffee-reading" element={<CoffeeReading />} />
             <Route path="/tarot-reading" element={<TarotReading />} />
+            <Route path="/palm-reading" element={<PalmReading />} />
+            <Route path="/astrology-reading" element={<AstrologyReading />} />
           </Routes>
         </BrowserRouter>
       </div>
