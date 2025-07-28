@@ -175,10 +175,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "OpenAI Vision API Entegrasyonu"
+    - "Gemini Vision API Entegrasyonu"
     - "Kahve Falı Backend API"
   stuck_tasks:
-    - "OpenAI Vision API Entegrasyonu"
+    - "Gemini Vision API Entegrasyonu"
     - "Kahve Falı Backend API"
   test_all: false
   test_priority: "stuck_first"
