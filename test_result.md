@@ -175,12 +175,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Kahve Falı Backend API"
     - "OpenAI Vision API Entegrasyonu"
-    - "MongoDB Coffee Reading Models"
-  stuck_tasks: []
+    - "Kahve Falı Backend API"
+  stuck_tasks:
+    - "OpenAI Vision API Entegrasyonu"
+    - "Kahve Falı Backend API"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "main"
