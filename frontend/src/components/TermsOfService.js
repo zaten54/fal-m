@@ -30,12 +30,12 @@ const TermsOfService = () => {
                   <h2 className="apple-text-display text-apple-purple mb-apple-md">1. Genel Hükümler</h2>
                   <div className="bg-apple-blue/5 border border-apple-blue/20 rounded-apple p-apple-md mb-apple-md">
                     <p className="mb-apple-sm">
-                      Bu sözleşme, MysticLens platformunu kullanan tüm kullanıcılar için geçerlidir. 
+                      Bu sözleşme, falım platformunu kullanan tüm kullanıcılar için geçerlidir. 
                       Platforma kayıt olarak bu şartları kabul etmiş sayılırsınız.
                     </p>
                   </div>
                   <ul className="space-y-2 list-disc list-inside">
-                    <li>MysticLens, AI destekli eğlence amaçlı fal ve astroloji hizmetleri sunar</li>
+                    <li>falım, AI destekli eğlence amaçlı fal ve astroloji hizmetleri sunar</li>
                     <li>Tüm yorumlar ve analizler eğlence amaçlıdır, gerçek hayat kararlarınızda referans almamalısınız</li>
                     <li>18 yaş altı kullanıcılar ebeveyn izni ile kullanabilir</li>
                     <li>Hesabınızın güvenliğinden siz sorumlusunuz</li>
