@@ -933,19 +933,27 @@ async def create_astrology_reading(reading_data: AstrologyReadingCreate):
         # Burç hesapla
         zodiac_sign = astrology_service.calculate_zodiac_sign(reading_data.birth_date)
         
-        # Gezegen bilgileri (basit örnek)
-        planets = {
+        # Doğum haritası hesapla
+        birth_chart = astrology_service.calculate_birth_chart(
+            reading_data.birth_date,
+            reading_data.birth_time,
+            reading_data.birth_place
+        )
+        
+        # Gezegen bilgileri (doğum haritasından)
+        planets = birth_chart.get("planets", {
             "sun": ZODIAC_SIGNS.get(zodiac_sign, {}).get("name", "Bilinmiyor"),
             "moon": "Yaklaşık hesaplama gerekli",
             "rising": "Doğum saati ile hesaplanır"
-        }
+        })
         
         # Birth info hazırla
         birth_info = {
             "birth_date": reading_data.birth_date,
             "birth_time": reading_data.birth_time,
             "birth_place": reading_data.birth_place,
-            "zodiac_sign": zodiac_sign
+            "zodiac_sign": zodiac_sign,
+            "birth_chart": birth_chart
         }
         
         # AI yorumlama
