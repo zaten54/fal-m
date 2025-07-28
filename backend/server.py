@@ -398,7 +398,121 @@ async def get_coffee_reading(session_id: str, reading_id: str):
         logging.error(f"Get coffee reading error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Kahve falı getirme hatası: {str(e)}")
 
-# Health check endpoint
+# Tarot Reading Endpoints
+@api_router.get("/tarot-cards", response_model=List[TarotCard])
+async def get_tarot_cards():
+    """Tüm tarot kartlarını getir"""
+    try:
+        return [TarotCard(**card) for card in TAROT_DECK]
+    except Exception as e:
+        logging.error(f"Get tarot cards error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Tarot kartları getirme hatası: {str(e)}")
+
+@api_router.post("/tarot-reading", response_model=TarotReadingResponse)
+async def create_tarot_reading(reading_data: TarotReadingCreate):
+    """Yeni tarot okuma oluştur"""
+    try:
+        # Session ID oluştur eğer yoksa
+        session_id = reading_data.session_id or str(uuid.uuid4())
+        
+        # Kartları karıştır ve seç
+        if reading_data.spread_type == "three_card":
+            num_cards = 3
+        else:
+            num_cards = 3  # Default
+        
+        # Random kart seçimi
+        selected_cards = random.sample(TAROT_DECK, num_cards)
+        
+        # Her kart için ters/düz durumu belirle
+        cards_drawn = []
+        for card in selected_cards:
+            card_data = {
+                "card": card,
+                "position": f"position_{len(cards_drawn) + 1}",
+                "reversed": random.choice([True, False])
+            }
+            cards_drawn.append(card_data)
+        
+        # AI yorumlama
+        interpretation = await tarot_service.interpret_tarot_spread(
+            cards_drawn, reading_data.spread_type, session_id
+        )
+        
+        # Reading objesi oluştur
+        tarot_reading = TarotReading(
+            session_id=session_id,
+            spread_type=reading_data.spread_type,
+            cards_drawn=cards_drawn,
+            interpretation=interpretation
+        )
+        
+        # MongoDB'ye kaydet
+        await db.tarot_readings.insert_one(tarot_reading.dict())
+        
+        # Response oluştur
+        return TarotReadingResponse(
+            id=tarot_reading.id,
+            session_id=tarot_reading.session_id,
+            spread_type=tarot_reading.spread_type,
+            cards_drawn=tarot_reading.cards_drawn,
+            interpretation=tarot_reading.interpretation,
+            timestamp=tarot_reading.timestamp
+        )
+        
+    except Exception as e:
+        logging.error(f"Tarot reading creation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Tarot okuma hatası: {str(e)}")
+
+@api_router.get("/tarot-reading/{session_id}", response_model=List[TarotReadingResponse])
+async def get_tarot_readings(session_id: str):
+    """Belirli bir session'a ait tarot okumalarını getir"""
+    try:
+        readings = await db.tarot_readings.find(
+            {"session_id": session_id}
+        ).sort("timestamp", -1).to_list(100)
+        
+        return [
+            TarotReadingResponse(
+                id=reading["id"],
+                session_id=reading["session_id"],
+                spread_type=reading["spread_type"],
+                cards_drawn=reading["cards_drawn"],
+                interpretation=reading["interpretation"],
+                timestamp=reading["timestamp"]
+            ) for reading in readings
+        ]
+        
+    except Exception as e:
+        logging.error(f"Get tarot readings error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Tarot geçmişi getirme hatası: {str(e)}")
+
+@api_router.get("/tarot-reading/{session_id}/{reading_id}", response_model=TarotReadingResponse)
+async def get_tarot_reading(session_id: str, reading_id: str):
+    """Belirli bir tarot okumasını getir"""
+    try:
+        reading = await db.tarot_readings.find_one({
+            "id": reading_id,
+            "session_id": session_id
+        })
+        
+        if not reading:
+            raise HTTPException(status_code=404, detail="Tarot okuma bulunamadı")
+        
+        return TarotReadingResponse(
+            id=reading["id"],
+            session_id=reading["session_id"],
+            spread_type=reading["spread_type"],
+            cards_drawn=reading["cards_drawn"],
+            interpretation=reading["interpretation"],
+            timestamp=reading["timestamp"]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Get tarot reading error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Tarot okuma getirme hatası: {str(e)}")
 @api_router.get("/health")
 async def health_check():
     return {
