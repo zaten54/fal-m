@@ -967,6 +967,7 @@ async def create_astrology_reading(reading_data: AstrologyReadingCreate):
             birth_place=reading_data.birth_place,
             zodiac_sign=zodiac_sign,
             planets=planets,
+            birth_chart=birth_chart,
             interpretation=interpretation
         )
         
