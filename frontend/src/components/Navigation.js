@@ -79,12 +79,79 @@ const Navigation = () => {
             >
               {t('astrology')}
             </Link>
+            
+            {/* Authentication Buttons */}
+            {isAuthenticated ? (
+              /* User Menu */
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center space-x-2 px-apple-md py-apple-sm bg-apple-purple/10 rounded-apple text-apple-purple hover:bg-apple-purple/20 apple-transition font-apple font-medium"
+                >
+                  <span className="text-lg">👤</span>
+                  <span className="hidden sm:block font-apple text-apple-sm">
+                    {user?.email?.split('@')[0]}
+                  </span>
+                  <svg 
+                    className={`w-4 h-4 apple-transition ${showUserMenu ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showUserMenu && (
+                  <div className="absolute top-full right-0 mt-2 bg-white rounded-apple-lg shadow-apple-lg border border-apple-gray-200 overflow-hidden min-w-[200px] apple-scale-in">
+                    <div className="px-apple-md py-apple-sm border-b border-apple-gray-100">
+                      <p className="font-apple font-semibold text-apple-gray-900 text-apple-sm">
+                        {user?.email}
+                      </p>
+                      <p className="font-apple text-apple-xs text-apple-gray-500">
+                        {user?.is_verified ? '✅ Doğrulanmış' : '⚠️ Doğrulanmamış'}
+                      </p>
+                    </div>
+                    
+                    <button
+                      onClick={() => {
+                        logout();
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full flex items-center space-x-3 px-apple-md py-apple-sm text-left apple-transition font-apple text-red-600 hover:bg-red-50"
+                    >
+                      <span className="text-lg">🚪</span>
+                      <span className="font-apple text-apple-sm">Çıkış Yap</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Login/Register Buttons */
+              <div className="flex items-center space-x-apple-sm">
+                <Link 
+                  to="/login"
+                  className="apple-button-secondary px-apple-md py-apple-sm text-apple-sm"
+                >
+                  Giriş
+                </Link>
+                <Link 
+                  to="/register"
+                  className="apple-button-primary px-apple-md py-apple-sm text-apple-sm"
+                >
+                  Kayıt
+                </Link>
+              </div>
+            )}
           </div>
           
           {/* Language Selector */}
           <div className="relative">
             <button
-              onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+              onClick={() => {
+                setShowLanguageMenu(!showLanguageMenu);
+                setShowUserMenu(false);
+              }}
               className="flex items-center space-x-2 px-apple-md py-apple-sm bg-apple-gray-100 rounded-apple text-apple-gray-700 hover:bg-apple-gray-200 apple-transition font-apple font-medium"
             >
               <span className="text-lg">
