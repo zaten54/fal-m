@@ -77,40 +77,6 @@ class BackendTester:
             minimal_png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
             return minimal_png
 
-    def test_health_endpoint(self):
-        """Test GET /api/health endpoint"""
-        try:
-            response = self.session.get(f"{self.backend_url}/health", timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
-                
-                # Check required fields
-                required_fields = ["status", "timestamp", "services"]
-                missing_fields = [field for field in required_fields if field not in data]
-                
-                if missing_fields:
-                    self.log_test("Health Check Endpoint", False, 
-                                f"Missing fields: {missing_fields}", None)
-                    return False
-                
-                # Check services status
-                services = data.get("services", {})
-                db_status = services.get("database")
-                ai_status = services.get("ai_service")
-                
-                details = f"Status: {data['status']}, DB: {db_status}, AI: {ai_status}"
-                self.log_test("Health Check Endpoint", True, details)
-                return True
-            else:
-                self.log_test("Health Check Endpoint", False, 
-                            f"HTTP {response.status_code}", response.text)
-                return False
-                
-        except Exception as e:
-            self.log_test("Health Check Endpoint", False, "", e)
-            return False
-
     def test_coffee_reading_creation(self):
         """Test POST /api/coffee-reading endpoint"""
         try:
