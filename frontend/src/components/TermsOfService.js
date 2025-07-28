@@ -45,7 +45,7 @@ const TermsOfService = () => {
                 {/* 2. Hizmet Kapsamı */}
                 <section>
                   <h2 className="apple-text-display text-apple-purple mb-apple-md">2. Hizmet Kapsamı</h2>
-                  <p className="mb-apple-md">MysticLens aşağıdaki hizmetleri sunar:</p>
+                  <p className="mb-apple-md">falım aşağıdaki hizmetleri sunar:</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-apple-md">
                     <div className="apple-card">
                       <h4 className="apple-text-headline text-apple-orange mb-2">☕ Kahve Falı</h4>
