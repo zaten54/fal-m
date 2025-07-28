@@ -1213,11 +1213,11 @@ async def get_tarot_reading(session_id: str, reading_id: str, current_user: User
         raise HTTPException(status_code=500, detail=f"Tarot okuma getirme hatası: {str(e)}")
 # Palm Reading Endpoints
 @api_router.post("/palm-reading", response_model=PalmReadingResponse)
-async def create_palm_reading(reading_data: PalmReadingCreate):
-    """Yeni el falı okuma oluştur"""
+async def create_palm_reading(reading_data: PalmReadingCreate, current_user: User = Depends(get_current_user)):
+    """Yeni el falı okuma oluştur - Sadece kayıtlı kullanıcılar"""
     try:
-        # Session ID oluştur eğer yoksa
-        session_id = reading_data.session_id or str(uuid.uuid4())
+        # Session ID oluştur eğer yoksa (kullanıcı ID'si ile bağlantılı)
+        session_id = reading_data.session_id or f"{current_user.id}_{uuid.uuid4()}"
         
         # AI analizi yap
         analysis = await palm_service.analyze_palm_lines(
