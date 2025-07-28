@@ -13,6 +13,7 @@ from datetime import datetime
 import base64
 from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
 import asyncio
+import random
 
 
 ROOT_DIR = Path(__file__).parent
@@ -28,6 +29,96 @@ app = FastAPI(title="Fal Uygulaması API", description="AI destekli fal okuma uy
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+
+# Define Models
+class StatusCheck(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    client_name: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+class StatusCheckCreate(BaseModel):
+    client_name: str
+
+# Coffee Reading Models
+class CoffeeReadingCreate(BaseModel):
+    image_base64: str
+    session_id: Optional[str] = None
+
+class CoffeeReadingResponse(BaseModel):
+    id: str
+    session_id: str
+    symbols_found: List[str]
+    interpretation: str
+    timestamp: datetime
+    confidence_score: Optional[float] = None
+
+class CoffeeReading(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    image_base64: str
+    symbols_found: List[str] = []
+    interpretation: str
+    confidence_score: Optional[float] = None
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+# Tarot Models
+class TarotCard(BaseModel):
+    id: int
+    name: str
+    name_tr: str
+    suit: str  # major_arcana, cups, wands, swords, pentacles
+    meaning_upright: str
+    meaning_reversed: str
+    description: str
+    image_url: str
+
+class TarotReadingCreate(BaseModel):
+    spread_type: str = "three_card"  # three_card, celtic_cross
+    session_id: Optional[str] = None
+
+class TarotReadingResponse(BaseModel):
+    id: str
+    session_id: str
+    spread_type: str
+    cards_drawn: List[dict]  # [{"card": TarotCard, "position": str, "reversed": bool}]
+    interpretation: str
+    timestamp: datetime
+
+class TarotReading(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    spread_type: str
+    cards_drawn: List[dict] = []
+    interpretation: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+# Tarot Deck Data (Major Arcana + Minor Arcana sample)
+TAROT_DECK = [
+    # Major Arcana
+    {"id": 0, "name": "The Fool", "name_tr": "Deli", "suit": "major_arcana", "meaning_upright": "Yeni başlangıçlar, masumiyet, spontanlık", "meaning_reversed": "Dikkatsizlik, aptalca kararlar", "description": "Yeni bir yolculuğun başlangıcı", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 1, "name": "The Magician", "name_tr": "Büyücü", "suit": "major_arcana", "meaning_upright": "Güç, beceri, konsantrasyon", "meaning_reversed": "Manipülasyon, kötü niyet", "description": "İç gücü ve yaratıcılığı temsil eder", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 2, "name": "The High Priestess", "name_tr": "Yüksek Rahibe", "suit": "major_arcana", "meaning_upright": "Sezgi, gizem, bilinçaltı", "meaning_reversed": "Sırların açığa çıkması", "description": "İç bilgelik ve sezgileri temsil eder", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 3, "name": "The Empress", "name_tr": "İmparatoriçe", "suit": "major_arcana", "meaning_upright": "Bereket, annelik, yaratıcılık", "meaning_reversed": "Boşa harcama, aşırılık", "description": "Doğurganlık ve bolluk", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 4, "name": "The Emperor", "name_tr": "İmparator", "suit": "major_arcana", "meaning_upright": "Otorite, yapı, kontrol", "meaning_reversed": "Tiranlık, katılık", "description": "Güç ve liderlik", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 5, "name": "The Hierophant", "name_tr": "Papaz", "suit": "major_arcana", "meaning_upright": "Gelenek, eğitim, öğretmenlik", "meaning_reversed": "Dogma, uyumsuzluk", "description": "Spiritüel rehberlik", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 6, "name": "The Lovers", "name_tr": "Aşıklar", "suit": "major_arcana", "meaning_upright": "Aşk, uyum, ilişkiler", "meaning_reversed": "Uyumsuzluk, yanlış seçimler", "description": "Aşk ve bağlılık", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 7, "name": "The Chariot", "name_tr": "Savaş Arabası", "suit": "major_arcana", "meaning_upright": "Zafer, kararlılık, kontrol", "meaning_reversed": "Kontrol kaybı, yenilgi", "description": "İrade gücü ve zafer", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 8, "name": "Strength", "name_tr": "Güç", "suit": "major_arcana", "meaning_upright": "İç güç, cesaret, sabır", "meaning_reversed": "Zayıflık, şüphe", "description": "İç güç ve cesaret", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 9, "name": "The Hermit", "name_tr": "Ermiş", "suit": "major_arcana", "meaning_upright": "İç arayış, rehberlik, bilgelik", "meaning_reversed": "İzolasyon, yalnızlık", "description": "İç arayış ve bilgelik", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 10, "name": "Wheel of Fortune", "name_tr": "Kader Çarkı", "suit": "major_arcana", "meaning_upright": "Şans, kader, döngüler", "meaning_reversed": "Kötü şans, kontrol dışı olaylar", "description": "Kader ve değişim", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 11, "name": "Justice", "name_tr": "Adalet", "suit": "major_arcana", "meaning_upright": "Adalet, denge, hakikat", "meaning_reversed": "Adaletsizlik, dengesizlik", "description": "Adalet ve denge", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 12, "name": "The Hanged Man", "name_tr": "Asılan Adam", "suit": "major_arcana", "meaning_upright": "Fedakarlık, yeni bakış açısı", "meaning_reversed": "Direnç, eski kalıplar", "description": "Fedakarlık ve yeni perspektif", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 13, "name": "Death", "name_tr": "Ölüm", "suit": "major_arcana", "meaning_upright": "Dönüşüm, yenilenme, bitiş", "meaning_reversed": "Direnç, durağanlık", "description": "Dönüşüm ve yenilenme", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 14, "name": "Temperance", "name_tr": "Denge", "suit": "major_arcana", "meaning_upright": "Denge, sabır, uyum", "meaning_reversed": "Dengesizlik, aşırılık", "description": "Denge ve ölçülülük", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 15, "name": "The Devil", "name_tr": "Şeytan", "suit": "major_arcana", "meaning_upright": "Bağımlılık, kısıtlama, maddi dünya", "meaning_reversed": "Özgürleşme, farkındalık", "description": "Bağımlılık ve kısıtlamalar", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 16, "name": "The Tower", "name_tr": "Kule", "suit": "major_arcana", "meaning_upright": "Ani değişim, yıkım, aydınlanma", "meaning_reversed": "İç çöküş, kaçınma", "description": "Ani değişim ve yıkım", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 17, "name": "The Star", "name_tr": "Yıldız", "suit": "major_arcana", "meaning_upright": "Umut, ilham, rehberlik", "meaning_reversed": "Umutsuzluk, kayıp", "description": "Umut ve ilham", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 18, "name": "The Moon", "name_tr": "Ay", "suit": "major_arcana", "meaning_upright": "Sezgi, yanılsama, bilinçaltı", "meaning_reversed": "Açıklık, gerçeğin ortaya çıkması", "description": "Sezgi ve gizem", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"},
+    {"id": 19, "name": "The Sun", "name_tr": "Güneş", "suit": "major_arcana", "meaning_upright": "Mutluluk, başarı, enerji", "meaning_reversed": "Geçici mutluluksuzluk", "description": "Mutluluk ve başarı", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 20, "name": "Judgement", "name_tr": "Mahkeme", "suit": "major_arcana", "meaning_upright": "Yargı, yeniden doğuş, af", "meaning_reversed": "Kendini yargılama, geçmişte takılı kalma", "description": "Yargı ve yeniden doğuş", "image_url": "https://images.unsplash.com/photo-1551292831-023188c04451?w=400"},
+    {"id": 21, "name": "The World", "name_tr": "Dünya", "suit": "major_arcana", "meaning_upright": "Tamamlanma, başarı, büyük resim", "meaning_reversed": "Eksiklik, hedeflere ulaşamama", "description": "Tamamlanma ve başarı", "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"}
+]
 
 
 # Define Models
