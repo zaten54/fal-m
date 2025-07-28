@@ -19,9 +19,9 @@ export const AuthProvider = ({ children }) => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   // Token yönetimi
-  const getToken = () => localStorage.getItem('mysticlens_token');
-  const setToken = (token) => localStorage.setItem('mysticlens_token', token);
-  const removeToken = () => localStorage.removeItem('mysticlens_token');
+  const getToken = () => localStorage.getItem('falim_token');
+  const setToken = (token) => localStorage.setItem('falim_token', token);
+  const removeToken = () => localStorage.removeItem('falim_token');
 
   // Axios interceptor - token'ı her istekle gönder
   useEffect(() => {
