@@ -899,6 +899,7 @@ async def login_user(user_data: UserLogin):
                 id=user["id"],
                 email=user["email"],
                 is_verified=user["is_verified"],
+                terms_accepted=user.get("terms_accepted", False),
                 created_at=user["created_at"]
             )
         )
