@@ -72,9 +72,10 @@ const Home = () => {
           <div className="mb-apple-xl apple-fade-in">
             <h1 className="apple-text-display mb-apple-md">
               <span className="text-apple-4xl mr-4 animate-float-subtle">🔮</span>
-              <span className="bg-gradient-to-r from-apple-blue via-apple-purple to-apple-blue bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-apple-purple via-apple-pink via-apple-blue to-apple-purple bg-clip-text text-transparent animate-pulse text-shadow-mystical">
                 {t('title')}
               </span>
+              <span className="text-apple-4xl ml-4 animate-float-subtle">✨</span>
             </h1>
             <p className="apple-text-headline text-apple-gray-600 mb-apple-lg max-w-3xl mx-auto">
               {t('subtitle')}
