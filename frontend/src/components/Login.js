@@ -62,7 +62,7 @@ const Login = () => {
             </span>
           </h1>
           <p className="apple-text-body">
-            falım hesabınıza giriş yapın
+            ✨ falım ✨ hesabınıza giriş yapın
           </p>
         </div>
 
