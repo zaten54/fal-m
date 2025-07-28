@@ -83,7 +83,7 @@ const Register = () => {
             </span>
           </h1>
           <p className="apple-text-body">
-            falım'a katılın ve mistik dünyaya adım atın
+            ✨ falım ✨'a katılın ve mistik dünyaya adım atın 🌙
           </p>
         </div>
 
