@@ -133,6 +133,7 @@ class AstrologyReadingResponse(BaseModel):
     birth_place: str
     zodiac_sign: str
     planets: dict
+    birth_chart: dict
     interpretation: str
     timestamp: datetime
 
@@ -144,6 +145,7 @@ class AstrologyReading(BaseModel):
     birth_place: str
     zodiac_sign: str
     planets: dict = {}
+    birth_chart: dict = {}
     interpretation: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 # Tarot Deck Data (Major Arcana + Minor Arcana sample)
