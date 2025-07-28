@@ -1,19 +1,24 @@
-from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, BackgroundTasks
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 import base64
 from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
 import asyncio
 import random
+import bcrypt
+import jwt
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 
 ROOT_DIR = Path(__file__).parent
