@@ -103,7 +103,7 @@ const TermsOfService = () => {
                     <p className="text-red-700 font-semibold">
                       Bu platform sadece eğlence amaçlıdır. Fal yorumlarına dayanarak alınan kararlardan, 
                       yaşanan zararlardan, psikolojik etkilerden veya herhangi bir olumsuzluktan 
-                      falım ve sahipleri hiçbir şekilde sorumlu tutulamaz.
+                      ✨ falım ✨ ve sahipleri hiçbir şekilde sorumlu tutulamaz.
                     </p>
                   </div>
                 </section>
