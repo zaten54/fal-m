@@ -49,12 +49,15 @@ const BirthChart = ({ birthChart, zodiacSigns }) => {
   };
 
   return (
-    <div className="glass-morph-dark rounded-xl p-6 border border-spiritual-violet/20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-spiritual-violet/10 via-spiritual-amber/10 to-spiritual-cyan/10 animate-holographic"></div>
+    <div className="apple-card-elevated relative overflow-hidden apple-scale-in">
+      <div className="absolute inset-0 bg-gradient-to-br from-apple-blue/5 via-apple-purple/5 to-apple-pink/5"></div>
       
       <div className="relative z-10">
-        <h3 className="text-2xl font-semibold text-white mb-6 text-center neon-text spiritual-violet">
-          🌟 Doğum Haritası
+        <h3 className="apple-text-display text-center mb-apple-xl">
+          <span className="text-apple-yellow text-apple-3xl mr-3 animate-float-subtle">🌟</span>
+          <span className="bg-gradient-to-r from-apple-purple to-apple-pink bg-clip-text text-transparent">
+            Doğum Haritası
+          </span>
         </h3>
         
         {/* SVG Birth Chart */}
