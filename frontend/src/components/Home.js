@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -8,6 +9,7 @@ const API = `${BACKEND_URL}/api`;
 
 const Home = () => {
   const { t } = useLanguage();
+  const { isAuthenticated, user } = useAuth();
   
   const helloWorldApi = async () => {
     try {
