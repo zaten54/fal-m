@@ -91,88 +91,66 @@ const TarotReading = () => {
   const CardBack = ({ onClick, isSelected, cardId, isAnimating }) => (
     <div
       onClick={onClick}
-      className={`relative w-24 h-36 md:w-32 md:h-48 cursor-pointer transition-all duration-500 hover:scale-110 ${
-        isSelected ? 'ring-4 ring-spiritual-amber animate-glow-pulse' : ''
+      className={`relative w-20 h-32 md:w-24 md:h-36 cursor-pointer apple-transition apple-hover-lift ${
+        isSelected ? 'ring-2 ring-apple-purple' : ''
       } ${isAnimating ? 'animate-bounce' : ''}`}
     >
       {/* Card Back Design */}
-      <div className="w-full h-full bg-gradient-to-br from-indigo-900 via-purple-900 to-violet-900 rounded-xl border-2 border-spiritual-cyan/30 relative overflow-hidden">
-        {/* Mystical Pattern */}
-        <div className="absolute inset-2 border border-spiritual-amber/40 rounded-lg flex items-center justify-center">
-          <div className="text-spiritual-amber text-2xl animate-float">
-            🔮
-          </div>
+      <div className="w-full h-full bg-gradient-to-br from-apple-purple/20 to-apple-blue/20 rounded-apple border border-apple-purple/30 flex items-center justify-center shadow-apple">
+        <div className="text-apple-purple text-2xl">
+          🔮
         </div>
-        
-        {/* Holographic Effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-        
-        {/* Corner Decorations */}
-        <div className="absolute top-1 left-1 w-3 h-3 border-t-2 border-l-2 border-spiritual-cyan/50"></div>
-        <div className="absolute top-1 right-1 w-3 h-3 border-t-2 border-r-2 border-spiritual-cyan/50"></div>
-        <div className="absolute bottom-1 left-1 w-3 h-3 border-b-2 border-l-2 border-spiritual-cyan/50"></div>
-        <div className="absolute bottom-1 right-1 w-3 h-3 border-b-2 border-r-2 border-spiritual-cyan/50"></div>
       </div>
-      
-      {/* Selection Glow */}
-      {isSelected && (
-        <div className="absolute inset-0 rounded-xl bg-spiritual-amber/20 animate-pulse"></div>
-      )}
     </div>
   );
 
   const positions = ["Geçmiş", "Şimdi", "Gelecek"];
 
   return (
-    <div className="min-h-screen relative pt-20">
-      <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-apple-gray-50 pt-apple-3xl">
+      <div className="apple-container">
         <div className="max-w-6xl mx-auto">
-          {/* Futuristic Header */}
-          <div className="text-center mb-12 relative">
-            <div className="glass-morph rounded-3xl p-8 border border-spiritual-purple/20 relative overflow-hidden">
-              <div className="absolute inset-0 cyber-grid opacity-10"></div>
-              
-              <h1 className="text-6xl font-bold text-white mb-4 font-serif relative z-10">
-                <span className="animate-float text-5xl mr-4">🃏</span>
-                <span className="bg-gradient-to-r from-spiritual-purple via-spiritual-rose to-spiritual-purple bg-clip-text text-transparent animate-holographic neon-text">
-                  Tarot
-                </span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-6 animate-neon-flicker">
-                Kartları seçin ve geleceğinizi keşfedin
-              </p>
-              
-              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-spiritual-purple to-transparent mx-auto rounded-full animate-holographic"></div>
-            </div>
+          {/* Header */}
+          <div className="text-center mb-apple-3xl apple-fade-in">
+            <h1 className="apple-text-display mb-apple-md">
+              <span className="text-apple-purple text-apple-4xl mr-4 animate-float-subtle">🃏</span>
+              <span className="bg-gradient-to-r from-apple-purple to-apple-pink bg-clip-text text-transparent">
+                Tarot
+              </span>
+            </h1>
+            <p className="apple-text-headline text-apple-gray-600 mb-apple-lg max-w-2xl mx-auto">
+              Kartları seçin ve geleceğinizi keşfedin
+            </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-apple-purple to-apple-pink mx-auto rounded-full"></div>
           </div>
 
           {!reading && !showDeck && (
-            <div className="text-center mb-12">
-              <div className="glass-morph rounded-2xl p-8 border border-spiritual-purple/20 max-w-2xl mx-auto">
+            <div className="text-center mb-apple-xl">
+              <div className="apple-card-elevated max-w-2xl mx-auto apple-slide-up">
                 <div 
-                  className="w-48 h-48 mx-auto mb-8 bg-cover bg-center rounded-xl border border-spiritual-purple/30 relative overflow-hidden"
+                  className="w-48 h-48 mx-auto mb-apple-lg bg-cover bg-center rounded-apple-lg shadow-apple-lg relative overflow-hidden"
                   style={{
                     backgroundImage: `url('https://images.unsplash.com/photo-1671013033034-5ea58e9c5008?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwxfHxteXN0aWNhbCUyMGNhcmRzfGVufDB8fHx8MTc1MzcwMzE1OXww&ixlib=rb-4.1.0&q=85')`
                   }}
                 >
-                  <div className="absolute inset-0 bg-black/40"></div>
+                  <div className="absolute inset-0 bg-black/20 rounded-apple-lg"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-6xl animate-float">🔮</span>
+                    <span className="text-6xl animate-float-subtle">🔮</span>
                   </div>
                 </div>
                 
-                <h3 className="text-3xl font-bold text-white mb-4 neon-text">
+                <h3 className="apple-text-display mb-apple-md">
                   Tarot Okumaya Başlayın
                 </h3>
-                <p className="text-gray-300 mb-8 leading-relaxed">
+                <p className="apple-text-body mb-apple-lg">
                   3 kart seçerek geçmişiniz, şimdiki durumunuz ve geleceğiniz hakkında rehberlik alın
                 </p>
                 
                 <button
                   onClick={startReading}
-                  className="px-10 py-4 holographic-btn text-white font-bold text-xl rounded-full hover:scale-110 transition-all duration-300 flex items-center space-x-3 mx-auto shadow-2xl relative overflow-hidden"
+                  className="apple-button-primary px-apple-xl py-apple-md text-apple-lg apple-hover-lift flex items-center space-x-2 mx-auto"
                 >
-                  <span className="text-2xl animate-glow-pulse">🃏</span>
+                  <span className="text-xl">🃏</span>
                   <span>Kartları Karıştır</span>
                 </button>
               </div>
@@ -180,26 +158,26 @@ const TarotReading = () => {
           )}
 
           {showDeck && !reading && (
-            <div className="mb-12">
-              <div className="glass-morph rounded-2xl p-8 border border-spiritual-purple/20">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">
+            <div className="mb-apple-xl">
+              <div className="apple-card-elevated apple-scale-in">
+                <div className="text-center mb-apple-lg">
+                  <h3 className="apple-text-headline mb-apple-md">
                     3 Kart Seçin ({selectedCards.length}/3)
                   </h3>
-                  <p className="text-gray-300">
+                  <p className="apple-text-body">
                     Sezgilerinizi dinleyerek 3 kart seçin
                   </p>
                 </div>
                 
                 {/* Selected Cards Display */}
                 {selectedCards.length > 0 && (
-                  <div className="flex justify-center gap-4 mb-8">
+                  <div className="flex justify-center gap-4 mb-apple-lg">
                     {selectedCards.map((card, index) => (
                       <div key={card.id} className="text-center">
-                        <div className="w-20 h-30 bg-gradient-to-br from-spiritual-amber/20 to-spiritual-rose/20 border border-spiritual-amber/30 rounded-lg flex items-center justify-center mb-2">
-                          <span className="text-2xl">{index + 1}</span>
+                        <div className="w-16 h-24 bg-apple-purple/10 border border-apple-purple/30 rounded-apple flex items-center justify-center mb-2">
+                          <span className="text-lg font-apple font-bold">{index + 1}</span>
                         </div>
-                        <p className="text-sm text-spiritual-amber">{positions[index]}</p>
+                        <p className="apple-text-caption text-apple-purple">{positions[index]}</p>
                       </div>
                     ))}
                   </div>
@@ -222,41 +200,26 @@ const TarotReading = () => {
           )}
 
           {isLoading && (
-            <div className="text-center py-20">
-              <div className="glass-morph rounded-2xl p-12 border border-spiritual-purple/20 max-w-md mx-auto">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-spiritual-purple mx-auto mb-6"></div>
-                <h3 className="text-2xl font-bold text-white mb-4">Kartlar Okunuyor...</h3>
-                <p className="text-gray-300">AI kartlarınızı analiz ediyor</p>
+            <div className="text-center py-apple-3xl">
+              <div className="apple-card max-w-md mx-auto">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-apple-purple mx-auto mb-apple-lg"></div>
+                <h3 className="apple-text-headline mb-apple-md">Kartlar Okunuyor...</h3>
+                <p className="apple-text-body">AI kartlarınızı analiz ediyor</p>
               </div>
             </div>
           )}
 
           {reading && (
-            <div className="space-y-8">
-              <div className="glass-morph border border-spiritual-emerald/20 rounded-3xl p-8 relative overflow-hidden">
-                {/* Success Animation Background */}
-                <div className="absolute inset-0">
-                  {Array.from({ length: 30 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-1 h-1 bg-spiritual-emerald rounded-full animate-twinkle"
-                      style={{
-                        top: `${Math.random() * 100}%`,
-                        left: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 2}s`
-                      }}
-                    ></div>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center mb-8 relative z-10">
-                  <h2 className="text-4xl font-bold text-white neon-text flex items-center">
-                    <span className="text-3xl animate-glow-pulse mr-3">🃏</span>
+            <div className="space-y-apple-xl">
+              <div className="apple-card-elevated apple-scale-in">
+                <div className="flex justify-between items-center mb-apple-xl">
+                  <h2 className="apple-text-display text-apple-green flex items-center">
+                    <span className="text-apple-3xl mr-3">🃏</span>
                     Tarot Okuma Sonucu
                   </h2>
                   <button
                     onClick={resetReading}
-                    className="px-6 py-3 glass-morph-dark text-white rounded-full hover:bg-spiritual-cyan/20 hover:border-spiritual-cyan/50 transition-all duration-300 border border-gray-600/30 hover:scale-110"
+                    className="apple-button-secondary"
                   >
                     Yeni Okuma
                   </button>
@@ -264,35 +227,31 @@ const TarotReading = () => {
 
                 {/* Cards Display */}
                 {reading.cards_drawn && reading.cards_drawn.length > 0 && (
-                  <div className="mb-8 relative z-10">
-                    <h3 className="text-2xl font-semibold text-white mb-6 neon-text spiritual-amber text-center">
+                  <div className="mb-apple-xl">
+                    <h3 className="apple-text-headline mb-apple-lg text-center text-apple-purple">
                       Seçilen Kartlar
                     </h3>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-apple-lg">
                       {reading.cards_drawn.map((cardData, index) => (
                         <div key={index} className="text-center">
-                          <div className="glass-morph-dark rounded-xl p-4 border border-spiritual-purple/20 relative overflow-hidden hover:scale-105 transition-all duration-300">
-                            <div className="absolute inset-0 bg-gradient-to-br from-spiritual-purple/10 via-spiritual-cyan/5 to-spiritual-amber/10 animate-holographic"></div>
-                            
-                            <div className="relative z-10">
-                              <h4 className="text-lg font-bold text-spiritual-amber mb-2">
-                                {positions[index]}
-                              </h4>
-                              <h5 className="text-xl font-semibold text-white mb-2">
-                                {cardData.card.name_tr}
-                              </h5>
-                              <p className="text-sm text-gray-400 mb-3">
-                                ({cardData.card.name})
+                          <div className="apple-card apple-hover-lift apple-transition">
+                            <h4 className="apple-text-headline text-apple-purple mb-apple-sm">
+                              {positions[index]}
+                            </h4>
+                            <h5 className="apple-text-headline mb-apple-sm">
+                              {cardData.card.name_tr}
+                            </h5>
+                            <p className="apple-text-caption text-apple-gray-500 mb-apple-sm">
+                              ({cardData.card.name})
+                            </p>
+                            <p className="apple-text-caption text-apple-blue mb-apple-md">
+                              {cardData.reversed ? "Ters" : "Düz"}
+                            </p>
+                            <div className="bg-apple-gray-50 rounded-apple p-apple-md">
+                              <p className="apple-text-body">
+                                {cardData.reversed ? cardData.card.meaning_reversed : cardData.card.meaning_upright}
                               </p>
-                              <p className="text-sm text-spiritual-cyan">
-                                {cardData.reversed ? "Ters" : "Düz"}
-                              </p>
-                              <div className="mt-4 p-3 bg-black/20 rounded-lg">
-                                <p className="text-sm text-gray-300">
-                                  {cardData.reversed ? cardData.card.meaning_reversed : cardData.card.meaning_upright}
-                                </p>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -302,29 +261,26 @@ const TarotReading = () => {
                 )}
 
                 {/* Interpretation */}
-                <div className="mb-8 relative z-10">
-                  <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-purple">
+                <div className="mb-apple-xl">
+                  <h3 className="apple-text-headline mb-apple-md text-apple-blue">
                     Tarot Yorumu
                   </h3>
-                  <div className="glass-morph-dark rounded-2xl p-6 border border-spiritual-purple/20 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-spiritual-purple/5 via-spiritual-cyan/5 to-spiritual-amber/5 animate-holographic"></div>
-                    <p className="text-gray-200 leading-relaxed whitespace-pre-wrap relative z-10 text-lg">
+                  <div className="bg-apple-blue/5 border border-apple-blue/10 rounded-apple-lg p-apple-lg">
+                    <p className="apple-text-body whitespace-pre-wrap leading-relaxed">
                       {reading.interpretation}
                     </p>
                   </div>
                 </div>
 
                 {/* Metadata */}
-                <div className="text-center text-gray-400 text-sm border-t border-spiritual-emerald/20 pt-6 relative z-10">
-                  <div className="flex justify-center items-center space-x-6">
-                    <p className="flex items-center space-x-2">
-                      <span>🕐</span>
-                      <span>Okuma Tarihi: {new Date(reading.timestamp).toLocaleString('tr-TR')}</span>
-                    </p>
-                    <p className="flex items-center space-x-2">
-                      <span>🃏</span>
-                      <span>Spread: {reading.spread_type === 'three_card' ? '3 Kart' : reading.spread_type}</span>
-                    </p>
+                <div className="text-center apple-text-caption text-apple-gray-500 border-t border-apple-gray-200 pt-apple-lg">
+                  <div className="flex justify-center items-center space-x-apple-lg">
+                    <span>
+                      Okuma Tarihi: {new Date(reading.timestamp).toLocaleString('tr-TR')}
+                    </span>
+                    <span>
+                      Spread: {reading.spread_type === 'three_card' ? '3 Kart' : reading.spread_type}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -332,8 +288,8 @@ const TarotReading = () => {
           )}
 
           {error && (
-            <div className="mt-6 p-4 glass-morph-dark border border-spiritual-rose/50 rounded-xl text-spiritual-rose text-center animate-glow-pulse">
-              <span className="neon-text">{error}</span>
+            <div className="mt-apple-lg p-apple-md bg-red-50 border border-red-200 rounded-apple text-red-600 text-center">
+              {error}
             </div>
           )}
         </div>

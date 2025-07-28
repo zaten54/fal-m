@@ -119,88 +119,61 @@ const CoffeeReading = () => {
   };
 
   return (
-    <div className="min-h-screen relative pt-20">
-      <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-apple-gray-50 pt-apple-3xl">
+      <div className="apple-container">
         <div className="max-w-4xl mx-auto">
-          {/* Futuristic Header */}
-          <div className="text-center mb-12 relative">
-            <div className="glass-morph rounded-3xl p-8 border border-spiritual-amber/20 relative overflow-hidden">
-              {/* Cyber Grid Overlay */}
-              <div className="absolute inset-0 cyber-grid opacity-10"></div>
-              
-              <h1 className="text-6xl font-bold text-white mb-4 font-serif relative z-10">
-                <span className="animate-float text-5xl mr-4">☕</span>
-                <span className="bg-gradient-to-r from-spiritual-amber via-spiritual-rose to-spiritual-amber bg-clip-text text-transparent animate-holographic neon-text">
-                  {t('coffeeReadingTitle')}
-                </span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-6 animate-neon-flicker">
-                {t('coffeeReadingSubtitle')}
-              </p>
-              
-              {/* Holographic Divider */}
-              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-spiritual-amber to-transparent mx-auto rounded-full animate-holographic"></div>
-            </div>
+          {/* Header */}
+          <div className="text-center mb-apple-3xl apple-fade-in">
+            <h1 className="apple-text-display mb-apple-md">
+              <span className="text-apple-orange text-apple-4xl mr-4 animate-float-subtle">☕</span>
+              <span className="bg-gradient-to-r from-apple-orange to-apple-red bg-clip-text text-transparent">
+                {t('coffeeReadingTitle')}
+              </span>
+            </h1>
+            <p className="apple-text-headline text-apple-gray-600 mb-apple-lg max-w-2xl mx-auto">
+              {t('coffeeReadingSubtitle')}
+            </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-apple-orange to-apple-red mx-auto rounded-full"></div>
           </div>
 
           {!reading ? (
-            <div className="glass-morph border border-spiritual-cyan/20 rounded-3xl p-8 relative overflow-hidden">
-              {/* Animated Background Pattern */}
-              <div className="absolute inset-0 opacity-5">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-2 h-2 bg-spiritual-cyan rounded-full animate-twinkle"
-                    style={{
-                      top: `${Math.random() * 100}%`,
-                      left: `${Math.random() * 100}%`,
-                      animationDelay: `${Math.random() * 3}s`
-                    }}
-                  ></div>
-                ))}
-              </div>
-              
+            <div className="apple-card-elevated mb-apple-xl apple-slide-up">
               {/* File Upload Area */}
               <div
-                className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+                className={`border-2 border-dashed rounded-apple-lg p-apple-3xl text-center apple-transition ${
                   dragActive
-                    ? "border-spiritual-amber bg-spiritual-amber/10 shadow-2xl shadow-spiritual-amber/20"
-                    : "border-spiritual-cyan/50 hover:border-spiritual-amber hover:bg-spiritual-amber/5"
+                    ? "border-apple-orange bg-apple-orange/5"
+                    : "border-apple-gray-300 hover:border-apple-orange"
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                {/* Holographic Border Effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-spiritual-cyan/20 via-spiritual-purple/20 to-spiritual-amber/20 animate-holographic opacity-50"></div>
-                
                 {previewImage ? (
-                  <div className="space-y-6 relative z-10">
+                  <div className="space-y-apple-lg">
                     <div className="relative inline-block">
                       <img
                         src={previewImage}
                         alt={t('coffeeReadingTitle')}
-                        className="max-w-sm max-h-64 mx-auto rounded-xl shadow-2xl border border-spiritual-amber/30"
+                        className="max-w-sm max-h-64 mx-auto rounded-apple-lg shadow-apple-lg"
                       />
-                      {/* Glowing Frame */}
-                      <div className="absolute inset-0 rounded-xl border-2 border-spiritual-amber/50 animate-glow-pulse"></div>
                     </div>
                     
-                    <div className="flex justify-center space-x-4">
+                    <div className="flex justify-center space-x-apple-md">
                       <button
                         onClick={analyzeCoffee}
                         disabled={isLoading}
-                        className="px-8 py-4 holographic-btn text-white font-bold text-lg rounded-full hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-3 shadow-2xl relative overflow-hidden"
+                        className="apple-button-primary px-apple-xl py-apple-md text-apple-lg apple-hover-lift disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                       >
                         {isLoading ? (
                           <>
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                             <span>{t('analyzing')}...</span>
                           </>
                         ) : (
                           <>
-                            <span className="text-2xl animate-glow-pulse">🔮</span>
+                            <span className="text-xl">🔮</span>
                             <span>{t('readMyFortune')}</span>
                           </>
                         )}
@@ -208,32 +181,32 @@ const CoffeeReading = () => {
                       
                       <button
                         onClick={resetReading}
-                        className="px-6 py-4 glass-morph-dark text-white rounded-full hover:bg-spiritual-rose/20 hover:border-spiritual-rose/50 transition-all duration-300 border border-gray-600/30"
+                        className="apple-button-secondary"
                       >
                         {t('change')}
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-6 relative z-10">
-                    <div className="text-8xl text-spiritual-cyan animate-float mb-6">📸</div>
+                  <div className="space-y-apple-lg">
+                    <div className="text-6xl text-apple-orange mb-apple-lg">📸</div>
                     <div>
-                      <h3 className="text-3xl font-semibold text-white mb-4 neon-text">
+                      <h3 className="apple-text-headline mb-apple-md">
                         {t('uploadPhoto')}
                       </h3>
-                      <p className="text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                      <p className="apple-text-body mb-apple-lg max-w-2xl mx-auto">
                         {t('uploadDescription')}
                       </p>
                       
                       <button
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-10 py-4 holographic-btn text-white font-bold text-xl rounded-full hover:scale-110 transition-all duration-300 flex items-center space-x-3 mx-auto shadow-2xl relative overflow-hidden"
+                        className="apple-button-primary px-apple-xl py-apple-md text-apple-lg apple-hover-lift flex items-center space-x-2 mx-auto"
                       >
-                        <span className="text-2xl">📁</span>
+                        <span className="text-xl">📁</span>
                         <span>{t('selectFile')}</span>
                       </button>
                       
-                      <p className="text-sm text-gray-400 mt-6 animate-pulse">
+                      <p className="apple-text-caption mt-apple-md">
                         {t('dragDropText')}
                       </p>
                     </div>
@@ -250,26 +223,26 @@ const CoffeeReading = () => {
               </div>
 
               {error && (
-                <div className="mt-6 p-4 glass-morph-dark border border-spiritual-rose/50 rounded-xl text-spiritual-rose text-center animate-glow-pulse">
-                  <span className="neon-text">{error}</span>
+                <div className="mt-apple-lg p-apple-md bg-red-50 border border-red-200 rounded-apple text-red-600 text-center">
+                  {error}
                 </div>
               )}
 
-              {/* Futuristic Instructions */}
-              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Instructions */}
+              <div className="mt-apple-3xl grid grid-cols-1 md:grid-cols-3 gap-apple-lg">
                 {[
-                  { step: '1️⃣', titleKey: 'step1Title', descKey: 'step1Desc', color: 'spiritual-amber' },
-                  { step: '2️⃣', titleKey: 'step2Title', descKey: 'step2Desc', color: 'spiritual-cyan' },
-                  { step: '3️⃣', titleKey: 'step3Title', descKey: 'step3Desc', color: 'spiritual-purple' }
+                  { step: '1', titleKey: 'step1Title', descKey: 'step1Desc', color: 'apple-orange' },
+                  { step: '2', titleKey: 'step2Title', descKey: 'step2Desc', color: 'apple-blue' },
+                  { step: '3', titleKey: 'step3Title', descKey: 'step3Desc', color: 'apple-green' }
                 ].map((instruction, index) => (
-                  <div key={index} className="text-center group">
-                    <div className={`w-16 h-16 glass-morph rounded-full flex items-center justify-center mx-auto mb-4 border border-${instruction.color}/30 group-hover:animate-glow-pulse transition-all duration-500`}>
-                      <span className="text-3xl animate-float">{instruction.step}</span>
+                  <div key={index} className="text-center apple-scale-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className={`w-12 h-12 bg-${instruction.color}/10 rounded-full flex items-center justify-center mx-auto mb-apple-md text-${instruction.color} font-apple font-bold text-apple-lg`}>
+                      {instruction.step}
                     </div>
-                    <h4 className={`text-white font-semibold mb-2 text-lg neon-text ${instruction.color}`}>
+                    <h4 className={`apple-text-headline mb-apple-sm text-${instruction.color}`}>
                       {t(instruction.titleKey)}
                     </h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="apple-text-body">
                       {t(instruction.descKey)}
                     </p>
                   </div>
@@ -277,32 +250,17 @@ const CoffeeReading = () => {
               </div>
             </div>
           ) : (
-            /* Futuristic Reading Results */
-            <div className="space-y-8">
-              <div className="glass-morph border border-spiritual-emerald/20 rounded-3xl p-8 relative overflow-hidden">
-                {/* Success Animation Background */}
-                <div className="absolute inset-0">
-                  {Array.from({ length: 30 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-1 h-1 bg-spiritual-emerald rounded-full animate-twinkle"
-                      style={{
-                        top: `${Math.random() * 100}%`,
-                        left: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 2}s`
-                      }}
-                    ></div>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center mb-8 relative z-10">
-                  <h2 className="text-4xl font-bold text-white neon-text flex items-center">
-                    <span className="text-3xl animate-glow-pulse mr-3">🔮</span>
+            /* Reading Results */
+            <div className="space-y-apple-xl">
+              <div className="apple-card-elevated apple-scale-in">
+                <div className="flex justify-between items-center mb-apple-xl">
+                  <h2 className="apple-text-display text-apple-green flex items-center">
+                    <span className="text-apple-3xl mr-3">🔮</span>
                     {t('fortuneReady')}
                   </h2>
                   <button
                     onClick={resetReading}
-                    className="px-6 py-3 glass-morph-dark text-white rounded-full hover:bg-spiritual-cyan/20 hover:border-spiritual-cyan/50 transition-all duration-300 border border-gray-600/30 hover:scale-110"
+                    className="apple-button-secondary"
                   >
                     {t('newReading')}
                   </button>
@@ -310,15 +268,15 @@ const CoffeeReading = () => {
 
                 {/* Symbols Found */}
                 {reading.symbols_found && reading.symbols_found.length > 0 && (
-                  <div className="mb-8 relative z-10">
-                    <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-amber">
+                  <div className="mb-apple-xl">
+                    <h3 className="apple-text-headline mb-apple-md text-apple-orange">
                       {t('symbolsFound')}
                     </h3>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2">
                       {reading.symbols_found.map((symbol, index) => (
                         <span
                           key={index}
-                          className="px-4 py-2 glass-morph border border-spiritual-amber/30 text-spiritual-amber rounded-full text-sm hover:animate-glow-pulse transition-all duration-300 hover:scale-105 cursor-pointer"
+                          className="px-apple-md py-apple-sm bg-apple-orange/10 border border-apple-orange/20 text-apple-orange rounded-apple text-apple-sm font-apple font-medium"
                         >
                           {symbol}
                         </span>
@@ -328,30 +286,27 @@ const CoffeeReading = () => {
                 )}
 
                 {/* Interpretation */}
-                <div className="mb-8 relative z-10">
-                  <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-purple">
+                <div className="mb-apple-xl">
+                  <h3 className="apple-text-headline mb-apple-md text-apple-blue">
                     {t('interpretation')}
                   </h3>
-                  <div className="glass-morph-dark rounded-2xl p-6 border border-spiritual-purple/20 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-spiritual-purple/5 via-spiritual-cyan/5 to-spiritual-amber/5 animate-holographic"></div>
-                    <p className="text-gray-200 leading-relaxed whitespace-pre-wrap relative z-10 text-lg">
+                  <div className="bg-apple-blue/5 border border-apple-blue/10 rounded-apple-lg p-apple-lg">
+                    <p className="apple-text-body whitespace-pre-wrap leading-relaxed">
                       {reading.interpretation}
                     </p>
                   </div>
                 </div>
 
                 {/* Metadata */}
-                <div className="text-center text-gray-400 text-sm border-t border-spiritual-emerald/20 pt-6 relative z-10">
-                  <div className="flex justify-center items-center space-x-6">
-                    <p className="flex items-center space-x-2">
-                      <span>🕐</span>
-                      <span>{t('readingDate')}: {new Date(reading.timestamp).toLocaleString('tr-TR')}</span>
-                    </p>
+                <div className="text-center apple-text-caption text-apple-gray-500 border-t border-apple-gray-200 pt-apple-lg">
+                  <div className="flex justify-center items-center space-x-apple-lg">
+                    <span>
+                      {t('readingDate')}: {new Date(reading.timestamp).toLocaleString('tr-TR')}
+                    </span>
                     {reading.confidence_score && (
-                      <p className="flex items-center space-x-2">
-                        <span>⭐</span>
-                        <span>{t('reliability')}: {(reading.confidence_score * 100).toFixed(0)}%</span>
-                      </p>
+                      <span>
+                        {t('reliability')}: {(reading.confidence_score * 100).toFixed(0)}%
+                      </span>
                     )}
                   </div>
                 </div>
