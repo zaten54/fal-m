@@ -1162,11 +1162,11 @@ async def create_tarot_reading(reading_data: TarotReadingCreate, current_user: U
         raise HTTPException(status_code=500, detail=f"Tarot okuma hatası: {str(e)}")
 
 @api_router.get("/tarot-reading/{session_id}", response_model=List[TarotReadingResponse])
-async def get_tarot_readings(session_id: str):
-    """Belirli bir session'a ait tarot okumalarını getir"""
+async def get_tarot_readings(session_id: str, current_user: User = Depends(get_current_user)):
+    """Belirli bir session'a ait tarot okumalarını getir - Sadece kullanıcının kendi okumalarını"""
     try:
         readings = await db.tarot_readings.find(
-            {"session_id": session_id}
+            {"session_id": session_id, "user_id": current_user.id}
         ).sort("timestamp", -1).to_list(100)
         
         return [
