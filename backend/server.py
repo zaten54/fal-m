@@ -920,8 +920,8 @@ async def health_check():
             "features": {
                 "coffee_reading": True,
                 "tarot_reading": True,
-                "palm_reading": False,
-                "astrology": False
+                "palm_reading": True,
+                "astrology": True
             }
         }
     }
