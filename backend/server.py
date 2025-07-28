@@ -228,8 +228,68 @@ Kahve falı kuralları:
             
         return symbols[:10]  # Max 10 symbol
 
-# Initialize service
+# Tarot Analysis Service
+class TarotAnalysisService:
+    def __init__(self):
+        self.gemini_api_key = os.environ.get('GEMINI_API_KEY')
+        if not self.gemini_api_key:
+            raise ValueError("Gemini API key not found in environment variables")
+    
+    async def interpret_tarot_spread(self, cards_drawn: List[dict], spread_type: str, session_id: str) -> str:
+        """Tarot kartlarını yorumla"""
+        try:
+            # Cards bilgisini hazırla
+            cards_info = ""
+            positions = {
+                "three_card": ["Geçmiş", "Şimdi", "Gelecek"]
+            }
+            
+            for i, card_data in enumerate(cards_drawn):
+                card = card_data["card"]
+                position = positions[spread_type][i] if i < len(positions[spread_type]) else f"Pozisyon {i+1}"
+                reversed = card_data["reversed"]
+                
+                cards_info += f"\n{position}: {card['name_tr']} ({card['name']})"
+                cards_info += f"\nDurum: {'Ters' if reversed else 'Düz'}"
+                cards_info += f"\nAnlamı: {card['meaning_reversed'] if reversed else card['meaning_upright']}"
+                cards_info += f"\nAçıklama: {card['description']}\n"
+            
+            # LlmChat instance oluştur
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=session_id,
+                system_message="""Sen deneyimli bir tarot okuyucususun. Çekilen kartları analiz ederek kapsamlı ve anlam dolu yorumlar yapıyorsun.
+
+Tarot okuma kuralları:
+- Her kartın pozisyondaki özel anlamını değerlendir
+- Kartlar arasındaki bağlantıları ve hikayeyi oluştur
+- Hem bireysel kart anlamlarını hem de genel mesajı ver
+- Yapıcı ve yol gösterici tavsiyelerde bulun
+- Mistik ama gerçekçi bir ton kullan
+- Türk kültürüne uygun şekilde yorumla
+
+Çıktı formatı:
+1. Kart analizi (her kart için ayrı değerlendirme)
+2. Genel mesaj ve hikaye
+3. Pratik öneriler ve tavsiyeleri"""
+            ).with_model("gemini", "gemini-2.0-flash")
+            
+            # Mesaj gönder
+            user_message = UserMessage(
+                text=f"Bu tarot kartlarını {spread_type} yayılımı için yorumla:\n{cards_info}\n\nDetaylı bir tarot yorumu ve rehberlik yap."
+            )
+            
+            # AI'dan cevap al
+            response = await chat.send_message(user_message)
+            return response
+            
+        except Exception as e:
+            logging.error(f"Tarot analysis error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Tarot analizi sırasında hata oluştu: {str(e)}")
+
+# Initialize services
 coffee_service = CoffeeAnalysisService()
+tarot_service = TarotAnalysisService()
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
