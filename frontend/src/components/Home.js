@@ -82,19 +82,61 @@ const Home = () => {
             <p className="apple-text-body max-w-2xl mx-auto">
               {t('description')}
             </p>
+            
+            {/* Authentication Status */}
+            {isAuthenticated ? (
+              <div className="mt-apple-lg bg-apple-green/10 border border-apple-green/20 rounded-apple-lg p-apple-md max-w-md mx-auto">
+                <p className="text-apple-green font-apple font-semibold flex items-center justify-center space-x-2">
+                  <span>✅</span>
+                  <span>Hoş geldiniz, {user?.email?.split('@')[0]}!</span>
+                </p>
+              </div>
+            ) : (
+              <div className="mt-apple-lg bg-apple-blue/10 border border-apple-blue/20 rounded-apple-lg p-apple-md max-w-md mx-auto">
+                <p className="text-apple-blue font-apple font-semibold mb-apple-sm">
+                  🔐 Fal özelliklerini kullanmak için giriş yapın
+                </p>
+                <div className="flex justify-center space-x-apple-sm">
+                  <Link 
+                    to="/login"
+                    className="apple-button-secondary px-apple-md py-apple-sm text-apple-sm"
+                  >
+                    Giriş Yap
+                  </Link>
+                  <Link 
+                    to="/register"
+                    className="apple-button-primary px-apple-md py-apple-sm text-apple-sm"
+                  >
+                    Kayıt Ol
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
           
           {/* CTA Button */}
           <div className="mb-apple-3xl apple-slide-up">
-            <Link 
-              to="/coffee-reading"
-              className="apple-button-primary inline-flex items-center space-x-2 text-apple-lg px-apple-xl py-apple-md shadow-apple-lg apple-hover-lift"
-            >
-              <span>{t('startCoffeeReading')}</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
+            {isAuthenticated ? (
+              <Link 
+                to="/coffee-reading"
+                className="apple-button-primary inline-flex items-center space-x-2 text-apple-lg px-apple-xl py-apple-md shadow-apple-lg apple-hover-lift"
+              >
+                <span>{t('startCoffeeReading')}</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            ) : (
+              <Link 
+                to="/register"
+                className="apple-button-primary inline-flex items-center space-x-2 text-apple-lg px-apple-xl py-apple-md shadow-apple-lg apple-hover-lift"
+              >
+                <span>Hemen Başlayın</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            )}
           </div>
         </div>
       </section>
