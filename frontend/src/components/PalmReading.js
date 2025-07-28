@@ -121,66 +121,46 @@ const PalmReading = () => {
   };
 
   return (
-    <div className="min-h-screen relative pt-20">
-      <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-apple-gray-50 pt-apple-3xl">
+      <div className="apple-container">
         <div className="max-w-4xl mx-auto">
-          {/* Futuristic Header */}
-          <div className="text-center mb-12 relative">
-            <div className="glass-morph rounded-3xl p-8 border border-spiritual-blue/20 relative overflow-hidden">
-              <div className="absolute inset-0 cyber-grid opacity-10"></div>
-              
-              <h1 className="text-6xl font-bold text-white mb-4 font-serif relative z-10">
-                <span className="animate-float text-5xl mr-4">✋</span>
-                <span className="bg-gradient-to-r from-spiritual-cyan via-spiritual-emerald to-spiritual-cyan bg-clip-text text-transparent animate-holographic neon-text">
-                  El Falı
-                </span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-6 animate-neon-flicker">
-                Elinizin fotoğrafını yükleyin, AI ile çizgilerinizi okuyalım
-              </p>
-              
-              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-spiritual-cyan to-transparent mx-auto rounded-full animate-holographic"></div>
-            </div>
+          {/* Header */}
+          <div className="text-center mb-apple-3xl apple-fade-in">
+            <h1 className="apple-text-display mb-apple-md">
+              <span className="text-apple-green text-apple-4xl mr-4 animate-float-subtle">✋</span>
+              <span className="bg-gradient-to-r from-apple-green to-apple-blue bg-clip-text text-transparent">
+                El Falı
+              </span>
+            </h1>
+            <p className="apple-text-headline text-apple-gray-600 mb-apple-lg max-w-2xl mx-auto">
+              Elinizin fotoğrafını yükleyin, AI ile çizgilerinizi okuyalım
+            </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-apple-green to-apple-blue mx-auto rounded-full"></div>
           </div>
 
           {!reading ? (
-            <div className="glass-morph border border-spiritual-cyan/20 rounded-3xl p-8 relative overflow-hidden">
-              {/* Animated Background Pattern */}
-              <div className="absolute inset-0 opacity-5">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-2 h-2 bg-spiritual-emerald rounded-full animate-twinkle"
-                    style={{
-                      top: `${Math.random() * 100}%`,
-                      left: `${Math.random() * 100}%`,
-                      animationDelay: `${Math.random() * 3}s`
-                    }}
-                  ></div>
-                ))}
-              </div>
-              
+            <div className="apple-card-elevated mb-apple-xl apple-slide-up">
               {/* Hand Type Selection */}
-              <div className="mb-6 text-center relative z-10">
-                <h3 className="text-xl font-semibold text-white mb-4">Hangi elinizi okutmak istiyorsunuz?</h3>
-                <div className="flex justify-center space-x-4">
+              <div className="mb-apple-lg text-center">
+                <h3 className="apple-text-headline mb-apple-md">Hangi elinizi okutmak istiyorsunuz?</h3>
+                <div className="flex justify-center space-x-apple-md">
                   <button
                     onClick={() => setHandType("right")}
-                    className={`px-6 py-3 rounded-full transition-all duration-300 ${
+                    className={`px-apple-lg py-apple-md rounded-apple font-apple font-medium apple-transition ${
                       handType === "right"
-                        ? "bg-spiritual-cyan/20 border-spiritual-cyan/50 text-spiritual-cyan neon-text"
-                        : "bg-gray-800/20 border-gray-600/30 text-gray-400 hover:text-white"
-                    } border`}
+                        ? "bg-apple-green text-white shadow-apple"
+                        : "bg-apple-gray-100 text-apple-gray-700 hover:bg-apple-gray-200"
+                    }`}
                   >
                     Sağ El
                   </button>
                   <button
                     onClick={() => setHandType("left")}
-                    className={`px-6 py-3 rounded-full transition-all duration-300 ${
+                    className={`px-apple-lg py-apple-md rounded-apple font-apple font-medium apple-transition ${
                       handType === "left"
-                        ? "bg-spiritual-cyan/20 border-spiritual-cyan/50 text-spiritual-cyan neon-text"
-                        : "bg-gray-800/20 border-gray-600/30 text-gray-400 hover:text-white"
-                    } border`}
+                        ? "bg-apple-green text-white shadow-apple"
+                        : "bg-apple-gray-100 text-apple-gray-700 hover:bg-apple-gray-200"
+                    }`}
                   >
                     Sol El
                   </button>
@@ -189,51 +169,46 @@ const PalmReading = () => {
               
               {/* File Upload Area */}
               <div
-                className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+                className={`border-2 border-dashed rounded-apple-lg p-apple-3xl text-center apple-transition ${
                   dragActive
-                    ? "border-spiritual-cyan bg-spiritual-cyan/10 shadow-2xl shadow-spiritual-cyan/20"
-                    : "border-spiritual-emerald/50 hover:border-spiritual-cyan hover:bg-spiritual-cyan/5"
+                    ? "border-apple-green bg-apple-green/5"
+                    : "border-apple-gray-300 hover:border-apple-green"
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                {/* Holographic Border Effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-spiritual-cyan/20 via-spiritual-emerald/20 to-spiritual-cyan/20 animate-holographic opacity-50"></div>
-                
                 {previewImage ? (
-                  <div className="space-y-6 relative z-10">
+                  <div className="space-y-apple-lg">
                     <div className="relative inline-block">
                       <img
                         src={previewImage}
                         alt="El fotoğrafı"
-                        className="max-w-sm max-h-64 mx-auto rounded-xl shadow-2xl border border-spiritual-emerald/30"
+                        className="max-w-sm max-h-64 mx-auto rounded-apple-lg shadow-apple-lg"
                       />
-                      {/* Glowing Frame */}
-                      <div className="absolute inset-0 rounded-xl border-2 border-spiritual-emerald/50 animate-glow-pulse"></div>
                     </div>
                     
-                    <div className="text-center mb-4">
-                      <span className="px-4 py-2 bg-spiritual-cyan/20 border border-spiritual-cyan/30 text-spiritual-cyan rounded-full text-sm">
+                    <div className="text-center mb-apple-md">
+                      <span className="px-apple-md py-apple-sm bg-apple-green/10 border border-apple-green/20 text-apple-green rounded-apple text-apple-sm font-apple font-medium">
                         {handType === "right" ? "Sağ El" : "Sol El"} Seçildi
                       </span>
                     </div>
                     
-                    <div className="flex justify-center space-x-4">
+                    <div className="flex justify-center space-x-apple-md">
                       <button
                         onClick={analyzePalm}
                         disabled={isLoading}
-                        className="px-8 py-4 holographic-btn text-white font-bold text-lg rounded-full hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-3 shadow-2xl relative overflow-hidden"
+                        className="apple-button-primary px-apple-xl py-apple-md text-apple-lg apple-hover-lift disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                       >
                         {isLoading ? (
                           <>
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                             <span>Analiz Ediliyor...</span>
                           </>
                         ) : (
                           <>
-                            <span className="text-2xl animate-glow-pulse">✋</span>
+                            <span className="text-xl">✋</span>
                             <span>El Falımı Oku</span>
                           </>
                         )}
@@ -241,32 +216,32 @@ const PalmReading = () => {
                       
                       <button
                         onClick={resetReading}
-                        className="px-6 py-4 glass-morph-dark text-white rounded-full hover:bg-spiritual-rose/20 hover:border-spiritual-rose/50 transition-all duration-300 border border-gray-600/30"
+                        className="apple-button-secondary"
                       >
                         Değiştir
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-6 relative z-10">
-                    <div className="text-8xl text-spiritual-emerald animate-float mb-6">✋</div>
+                  <div className="space-y-apple-lg">
+                    <div className="text-6xl text-apple-green mb-apple-lg">✋</div>
                     <div>
-                      <h3 className="text-3xl font-semibold text-white mb-4 neon-text">
+                      <h3 className="apple-text-headline mb-apple-md">
                         El Fotoğrafı Yükleyin
                       </h3>
-                      <p className="text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                      <p className="apple-text-body mb-apple-lg max-w-2xl mx-auto">
                         Elinizin avuç içinin net bir fotoğrafını çekin. Çizgiler belirgin şekilde görünmelidir.
                       </p>
                       
                       <button
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-10 py-4 holographic-btn text-white font-bold text-xl rounded-full hover:scale-110 transition-all duration-300 flex items-center space-x-3 mx-auto shadow-2xl relative overflow-hidden"
+                        className="apple-button-primary px-apple-xl py-apple-md text-apple-lg apple-hover-lift flex items-center space-x-2 mx-auto"
                       >
-                        <span className="text-2xl">📁</span>
+                        <span className="text-xl">📁</span>
                         <span>Fotoğraf Seç</span>
                       </button>
                       
-                      <p className="text-sm text-gray-400 mt-6 animate-pulse">
+                      <p className="apple-text-caption mt-apple-md">
                         Veya fotoğrafı buraya sürükleyip bırakın
                       </p>
                     </div>
@@ -283,26 +258,26 @@ const PalmReading = () => {
               </div>
 
               {error && (
-                <div className="mt-6 p-4 glass-morph-dark border border-spiritual-rose/50 rounded-xl text-spiritual-rose text-center animate-glow-pulse">
-                  <span className="neon-text">{error}</span>
+                <div className="mt-apple-lg p-apple-md bg-red-50 border border-red-200 rounded-apple text-red-600 text-center">
+                  {error}
                 </div>
               )}
 
-              {/* Futuristic Instructions */}
-              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Instructions */}
+              <div className="mt-apple-3xl grid grid-cols-1 md:grid-cols-3 gap-apple-lg">
                 {[
-                  { step: '1️⃣', title: 'El Seçimi', desc: 'Dominant elinizi (sağ veya sol) seçin', color: 'spiritual-cyan' },
-                  { step: '2️⃣', title: 'Fotoğraf Çekimi', desc: 'Avuç içinizin net bir fotoğrafını çekin', color: 'spiritual-emerald' },
-                  { step: '3️⃣', title: 'Analiz', desc: 'AI çizgilerinizi analiz ederek fal yorumu yapar', color: 'spiritual-purple' }
+                  { step: '1', title: 'El Seçimi', desc: 'Dominant elinizi (sağ veya sol) seçin', color: 'apple-green' },
+                  { step: '2', title: 'Fotoğraf Çekimi', desc: 'Avuç içinizin net bir fotoğrafını çekin', color: 'apple-blue' },
+                  { step: '3', title: 'Analiz', desc: 'AI çizgilerinizi analiz ederek fal yorumu yapar', color: 'apple-purple' }
                 ].map((instruction, index) => (
-                  <div key={index} className="text-center group">
-                    <div className={`w-16 h-16 glass-morph rounded-full flex items-center justify-center mx-auto mb-4 border border-${instruction.color}/30 group-hover:animate-glow-pulse transition-all duration-500`}>
-                      <span className="text-3xl animate-float">{instruction.step}</span>
+                  <div key={index} className="text-center apple-scale-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className={`w-12 h-12 bg-${instruction.color}/10 rounded-full flex items-center justify-center mx-auto mb-apple-md text-${instruction.color} font-apple font-bold text-apple-lg`}>
+                      {instruction.step}
                     </div>
-                    <h4 className={`text-white font-semibold mb-2 text-lg neon-text ${instruction.color}`}>
+                    <h4 className={`apple-text-headline mb-apple-sm text-${instruction.color}`}>
                       {instruction.title}
                     </h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="apple-text-body">
                       {instruction.desc}
                     </p>
                   </div>
@@ -310,55 +285,40 @@ const PalmReading = () => {
               </div>
             </div>
           ) : (
-            /* Futuristic Reading Results */
-            <div className="space-y-8">
-              <div className="glass-morph border border-spiritual-emerald/20 rounded-3xl p-8 relative overflow-hidden">
-                {/* Success Animation Background */}
-                <div className="absolute inset-0">
-                  {Array.from({ length: 30 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-1 h-1 bg-spiritual-emerald rounded-full animate-twinkle"
-                      style={{
-                        top: `${Math.random() * 100}%`,
-                        left: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 2}s`
-                      }}
-                    ></div>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center mb-8 relative z-10">
-                  <h2 className="text-4xl font-bold text-white neon-text flex items-center">
-                    <span className="text-3xl animate-glow-pulse mr-3">✋</span>
+            /* Reading Results */
+            <div className="space-y-apple-xl">
+              <div className="apple-card-elevated apple-scale-in">
+                <div className="flex justify-between items-center mb-apple-xl">
+                  <h2 className="apple-text-display text-apple-green flex items-center">
+                    <span className="text-apple-3xl mr-3">✋</span>
                     El Falı Sonucu
                   </h2>
                   <button
                     onClick={resetReading}
-                    className="px-6 py-3 glass-morph-dark text-white rounded-full hover:bg-spiritual-cyan/20 hover:border-spiritual-cyan/50 transition-all duration-300 border border-gray-600/30 hover:scale-110"
+                    className="apple-button-secondary"
                   >
                     Yeni Okuma
                   </button>
                 </div>
 
                 {/* Hand Type Display */}
-                <div className="mb-6 text-center relative z-10">
-                  <span className="px-4 py-2 bg-spiritual-cyan/20 border border-spiritual-cyan/30 text-spiritual-cyan rounded-full">
+                <div className="mb-apple-lg text-center">
+                  <span className="px-apple-md py-apple-sm bg-apple-green/10 border border-apple-green/20 text-apple-green rounded-apple font-apple font-medium">
                     {reading.hand_type === "right" ? "Sağ El" : "Sol El"} Analizi
                   </span>
                 </div>
 
                 {/* Lines Found */}
                 {reading.lines_found && reading.lines_found.length > 0 && (
-                  <div className="mb-8 relative z-10">
-                    <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-amber">
+                  <div className="mb-apple-xl">
+                    <h3 className="apple-text-headline mb-apple-md text-apple-blue">
                       Tespit Edilen Çizgiler
                     </h3>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2">
                       {reading.lines_found.map((line, index) => (
                         <span
                           key={index}
-                          className="px-4 py-2 glass-morph border border-spiritual-emerald/30 text-spiritual-emerald rounded-full text-sm hover:animate-glow-pulse transition-all duration-300 hover:scale-105 cursor-pointer"
+                          className="px-apple-md py-apple-sm bg-apple-blue/10 border border-apple-blue/20 text-apple-blue rounded-apple text-apple-sm font-apple font-medium"
                         >
                           {line}
                         </span>
@@ -368,30 +328,27 @@ const PalmReading = () => {
                 )}
 
                 {/* Interpretation */}
-                <div className="mb-8 relative z-10">
-                  <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-purple">
+                <div className="mb-apple-xl">
+                  <h3 className="apple-text-headline mb-apple-md text-apple-purple">
                     El Falı Yorumu
                   </h3>
-                  <div className="glass-morph-dark rounded-2xl p-6 border border-spiritual-purple/20 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-spiritual-emerald/5 via-spiritual-cyan/5 to-spiritual-purple/5 animate-holographic"></div>
-                    <p className="text-gray-200 leading-relaxed whitespace-pre-wrap relative z-10 text-lg">
+                  <div className="bg-apple-purple/5 border border-apple-purple/10 rounded-apple-lg p-apple-lg">
+                    <p className="apple-text-body whitespace-pre-wrap leading-relaxed">
                       {reading.interpretation}
                     </p>
                   </div>
                 </div>
 
                 {/* Metadata */}
-                <div className="text-center text-gray-400 text-sm border-t border-spiritual-emerald/20 pt-6 relative z-10">
-                  <div className="flex justify-center items-center space-x-6">
-                    <p className="flex items-center space-x-2">
-                      <span>🕐</span>
-                      <span>Okuma Tarihi: {new Date(reading.timestamp).toLocaleString('tr-TR')}</span>
-                    </p>
+                <div className="text-center apple-text-caption text-apple-gray-500 border-t border-apple-gray-200 pt-apple-lg">
+                  <div className="flex justify-center items-center space-x-apple-lg">
+                    <span>
+                      Okuma Tarihi: {new Date(reading.timestamp).toLocaleString('tr-TR')}
+                    </span>
                     {reading.confidence_score && (
-                      <p className="flex items-center space-x-2">
-                        <span>⭐</span>
-                        <span>Güvenilirlik: {(reading.confidence_score * 100).toFixed(0)}%</span>
-                      </p>
+                      <span>
+                        Güvenilirlik: {(reading.confidence_score * 100).toFixed(0)}%
+                      </span>
                     )}
                   </div>
                 </div>

@@ -98,142 +98,120 @@ const AstrologyReading = () => {
   };
 
   return (
-    <div className="min-h-screen relative pt-20">
-      <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-apple-gray-50 pt-apple-3xl">
+      <div className="apple-container">
         <div className="max-w-4xl mx-auto">
-          {/* Futuristic Header */}
-          <div className="text-center mb-12 relative">
-            <div className="glass-morph rounded-3xl p-8 border border-spiritual-violet/20 relative overflow-hidden">
-              <div className="absolute inset-0 cyber-grid opacity-10"></div>
-              
-              <h1 className="text-6xl font-bold text-white mb-4 font-serif relative z-10">
-                <span className="animate-float text-5xl mr-4">⭐</span>
-                <span className="bg-gradient-to-r from-spiritual-violet via-spiritual-amber to-spiritual-violet bg-clip-text text-transparent animate-holographic neon-text">
-                  Astroloji
-                </span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-6 animate-neon-flicker">
-                Doğum bilgilerinizle yıldızlardan mesajınızı alın
-              </p>
-              
-              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-spiritual-violet to-transparent mx-auto rounded-full animate-holographic"></div>
-            </div>
+          {/* Header */}
+          <div className="text-center mb-apple-3xl apple-fade-in">
+            <h1 className="apple-text-display mb-apple-md">
+              <span className="text-apple-yellow text-apple-4xl mr-4 animate-float-subtle">⭐</span>
+              <span className="bg-gradient-to-r from-apple-yellow via-apple-orange to-apple-red bg-clip-text text-transparent">
+                Astroloji
+              </span>
+            </h1>
+            <p className="apple-text-headline text-apple-gray-600 mb-apple-lg max-w-2xl mx-auto">
+              Doğum bilgilerinizle yıldızlardan mesajınızı alın
+            </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-apple-yellow to-apple-red mx-auto rounded-full"></div>
           </div>
 
           {!reading ? (
-            <div className="glass-morph border border-spiritual-violet/20 rounded-3xl p-8 relative overflow-hidden">
-              {/* Animated Background Pattern */}
-              <div className="absolute inset-0 opacity-5">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-2 h-2 bg-spiritual-amber rounded-full animate-twinkle"
-                    style={{
-                      top: `${Math.random() * 100}%`,
-                      left: `${Math.random() * 100}%`,
-                      animationDelay: `${Math.random() * 3}s`
-                    }}
-                  ></div>
-                ))}
-              </div>
+            <div className="apple-card-elevated apple-slide-up">
+              <h3 className="apple-text-display text-center mb-apple-xl">
+                Doğum Bilgilerinizi Girin
+              </h3>
               
-              <div className="relative z-10">
-                <h3 className="text-3xl font-bold text-white mb-8 text-center neon-text">
-                  Doğum Bilgilerinizi Girin
-                </h3>
-                
-                {/* Birth Information Form */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  {/* Birth Date */}
-                  <div className="space-y-2">
-                    <label htmlFor="birth_date" className="block text-spiritual-amber font-semibold text-lg">
-                      Doğum Tarihi
-                    </label>
-                    <input
-                      type="date"
-                      id="birth_date"
-                      name="birth_date"
-                      value={formData.birth_date}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 glass-morph-dark border border-spiritual-violet/30 rounded-xl text-white focus:border-spiritual-violet focus:outline-none focus:ring-2 focus:ring-spiritual-violet/50 transition-all duration-300"
-                    />
-                  </div>
-                  
-                  {/* Birth Time */}
-                  <div className="space-y-2">
-                    <label htmlFor="birth_time" className="block text-spiritual-amber font-semibold text-lg">
-                      Doğum Saati
-                    </label>
-                    <input
-                      type="time"
-                      id="birth_time"
-                      name="birth_time"
-                      value={formData.birth_time}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 glass-morph-dark border border-spiritual-violet/30 rounded-xl text-white focus:border-spiritual-violet focus:outline-none focus:ring-2 focus:ring-spiritual-violet/50 transition-all duration-300"
-                    />
-                  </div>
-                </div>
-                
-                {/* Birth Place */}
-                <div className="space-y-2 mb-8">
-                  <label htmlFor="birth_place" className="block text-spiritual-amber font-semibold text-lg">
-                    Doğum Yeri
+              {/* Birth Information Form */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-apple-lg mb-apple-xl">
+                {/* Birth Date */}
+                <div className="space-y-2">
+                  <label htmlFor="birth_date" className="block text-apple-yellow font-apple font-semibold text-apple-lg">
+                    Doğum Tarihi
                   </label>
                   <input
-                    type="text"
-                    id="birth_place"
-                    name="birth_place"
-                    value={formData.birth_place}
+                    type="date"
+                    id="birth_date"
+                    name="birth_date"
+                    value={formData.birth_date}
                     onChange={handleInputChange}
-                    placeholder="Şehir, Ülke (örn: İstanbul, Türkiye)"
-                    className="w-full px-4 py-3 glass-morph-dark border border-spiritual-violet/30 rounded-xl text-white placeholder-gray-400 focus:border-spiritual-violet focus:outline-none focus:ring-2 focus:ring-spiritual-violet/50 transition-all duration-300"
+                    className="apple-input"
                   />
                 </div>
-
-                {/* Generate Button */}
-                <div className="text-center">
-                  <button
-                    onClick={generateReading}
-                    disabled={isLoading}
-                    className="px-10 py-4 holographic-btn text-white font-bold text-xl rounded-full hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-3 mx-auto shadow-2xl relative overflow-hidden"
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                        <span>Yıldızlar Okunuyor...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-2xl animate-glow-pulse">⭐</span>
-                        <span>Astroloji Haritası Oluştur</span>
-                      </>
-                    )}
-                  </button>
+                
+                {/* Birth Time */}
+                <div className="space-y-2">
+                  <label htmlFor="birth_time" className="block text-apple-yellow font-apple font-semibold text-apple-lg">
+                    Doğum Saati
+                  </label>
+                  <input
+                    type="time"
+                    id="birth_time"
+                    name="birth_time"
+                    value={formData.birth_time}
+                    onChange={handleInputChange}
+                    className="apple-input"
+                  />
                 </div>
+              </div>
+              
+              {/* Birth Place */}
+              <div className="space-y-2 mb-apple-xl">
+                <label htmlFor="birth_place" className="block text-apple-yellow font-apple font-semibold text-apple-lg">
+                  Doğum Yeri
+                </label>
+                <input
+                  type="text"
+                  id="birth_place"
+                  name="birth_place"
+                  value={formData.birth_place}
+                  onChange={handleInputChange}
+                  placeholder="Şehir, Ülke (örn: İstanbul, Türkiye)"
+                  className="apple-input"
+                />
+              </div>
+
+              {/* Generate Button */}
+              <div className="text-center">
+                <button
+                  onClick={generateReading}
+                  disabled={isLoading}
+                  className="apple-button-primary px-apple-xl py-apple-md text-apple-lg apple-hover-lift disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 mx-auto"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      <span>Yıldızlar Okunuyor...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-xl">⭐</span>
+                      <span>Astroloji Haritası Oluştur</span>
+                    </>
+                  )}
+                </button>
               </div>
 
               {error && (
-                <div className="mt-6 p-4 glass-morph-dark border border-spiritual-rose/50 rounded-xl text-spiritual-rose text-center animate-glow-pulse">
-                  <span className="neon-text">{error}</span>
+                <div className="mt-apple-lg p-apple-md bg-red-50 border border-red-200 rounded-apple text-red-600 text-center">
+                  {error}
                 </div>
               )}
 
               {/* Instructions */}
-              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="mt-apple-3xl grid grid-cols-1 md:grid-cols-3 gap-apple-lg">
                 {[
-                  { step: '🗓️', title: 'Doğum Tarihi', desc: 'Tam doğum tarihinizi girin', color: 'spiritual-amber' },
-                  { step: '🕐', title: 'Doğum Saati', desc: 'Mümkün olduğunca kesin saati belirtin', color: 'spiritual-violet' },
-                  { step: '🌍', title: 'Doğum Yeri', desc: 'Doğduğunuz şehir ve ülkeyi yazın', color: 'spiritual-cyan' }
+                  { step: '📅', title: 'Doğum Tarihi', desc: 'Tam doğum tarihinizi girin', color: 'apple-yellow' },
+                  { step: '🕐', title: 'Doğum Saati', desc: 'Mümkün olduğunca kesin saati belirtin', color: 'apple-orange' },
+                  { step: '🌍', title: 'Doğum Yeri', desc: 'Doğduğunuz şehir ve ülkeyi yazın', color: 'apple-red' }
                 ].map((instruction, index) => (
-                  <div key={index} className="text-center group">
-                    <div className={`w-16 h-16 glass-morph rounded-full flex items-center justify-center mx-auto mb-4 border border-${instruction.color}/30 group-hover:animate-glow-pulse transition-all duration-500`}>
-                      <span className="text-3xl animate-float">{instruction.step}</span>
+                  <div key={index} className="text-center apple-scale-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className={`w-16 h-16 bg-${instruction.color}/10 rounded-apple flex items-center justify-center mx-auto mb-apple-md apple-hover-lift apple-transition`}>
+                      <span className="text-apple-2xl">{instruction.step}</span>
                     </div>
-                    <h4 className={`text-white font-semibold mb-2 text-lg neon-text ${instruction.color}`}>
+                    <h4 className={`apple-text-headline mb-apple-sm text-${instruction.color}`}>
                       {instruction.title}
                     </h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="apple-text-body">
                       {instruction.desc}
                     </p>
                   </div>
@@ -241,62 +219,47 @@ const AstrologyReading = () => {
               </div>
             </div>
           ) : (
-            /* Futuristic Reading Results */
-            <div className="space-y-8">
-              <div className="glass-morph border border-spiritual-emerald/20 rounded-3xl p-8 relative overflow-hidden">
-                {/* Success Animation Background */}
-                <div className="absolute inset-0">
-                  {Array.from({ length: 50 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-1 h-1 bg-spiritual-amber rounded-full animate-twinkle"
-                      style={{
-                        top: `${Math.random() * 100}%`,
-                        left: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 3}s`
-                      }}
-                    ></div>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center mb-8 relative z-10">
-                  <h2 className="text-4xl font-bold text-white neon-text flex items-center">
-                    <span className="text-3xl animate-glow-pulse mr-3">⭐</span>
+            /* Reading Results */
+            <div className="space-y-apple-xl">
+              <div className="apple-card-elevated apple-scale-in">
+                <div className="flex justify-between items-center mb-apple-xl">
+                  <h2 className="apple-text-display text-apple-green flex items-center">
+                    <span className="text-apple-3xl mr-3">⭐</span>
                     Astroloji Haritanız
                   </h2>
                   <button
                     onClick={resetReading}
-                    className="px-6 py-3 glass-morph-dark text-white rounded-full hover:bg-spiritual-cyan/20 hover:border-spiritual-cyan/50 transition-all duration-300 border border-gray-600/30 hover:scale-110"
+                    className="apple-button-secondary"
                   >
                     Yeni Okuma
                   </button>
                 </div>
 
                 {/* Birth Information Display */}
-                <div className="mb-8 relative z-10">
-                  <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-amber">
+                <div className="mb-apple-xl">
+                  <h3 className="apple-text-headline mb-apple-md text-apple-orange">
                     Doğum Bilgileri
                   </h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="glass-morph-dark rounded-xl p-4 border border-spiritual-violet/20 text-center">
-                      <p className="text-spiritual-amber font-semibold mb-1">Doğum Tarihi</p>
-                      <p className="text-white">{new Date(reading.birth_date).toLocaleDateString('tr-TR')}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-apple-md">
+                    <div className="apple-card text-center">
+                      <p className="apple-text-caption text-apple-orange font-apple font-semibold mb-1">Doğum Tarihi</p>
+                      <p className="apple-text-body">{new Date(reading.birth_date).toLocaleDateString('tr-TR')}</p>
                     </div>
-                    <div className="glass-morph-dark rounded-xl p-4 border border-spiritual-violet/20 text-center">
-                      <p className="text-spiritual-amber font-semibold mb-1">Doğum Saati</p>
-                      <p className="text-white">{reading.birth_time}</p>
+                    <div className="apple-card text-center">
+                      <p className="apple-text-caption text-apple-orange font-apple font-semibold mb-1">Doğum Saati</p>
+                      <p className="apple-text-body">{reading.birth_time}</p>
                     </div>
-                    <div className="glass-morph-dark rounded-xl p-4 border border-spiritual-violet/20 text-center">
-                      <p className="text-spiritual-amber font-semibold mb-1">Doğum Yeri</p>
-                      <p className="text-white">{reading.birth_place}</p>
+                    <div className="apple-card text-center">
+                      <p className="apple-text-caption text-apple-orange font-apple font-semibold mb-1">Doğum Yeri</p>
+                      <p className="apple-text-body">{reading.birth_place}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Birth Chart Visualization */}
                 {reading.birth_chart && (
-                  <div className="mb-8 relative z-10">
+                  <div className="mb-apple-xl">
                     <BirthChart 
                       birthChart={reading.birth_chart} 
                       zodiacSigns={zodiacSigns}
@@ -305,30 +268,28 @@ const AstrologyReading = () => {
                 )}
 
                 {/* Zodiac Sign Display */}
-                <div className="mb-8 relative z-10">
-                  <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-violet">
+                <div className="mb-apple-xl">
+                  <h3 className="apple-text-headline mb-apple-md text-apple-purple">
                     Burç Bilgisi
                   </h3>
                   
-                  <div className="glass-morph-dark rounded-xl p-6 border border-spiritual-violet/20 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-spiritual-violet/10 via-spiritual-amber/10 to-spiritual-violet/10 animate-holographic"></div>
-                    
-                    <div className="relative z-10 text-center">
-                      <h4 className="text-3xl font-bold text-spiritual-amber mb-2">
+                  <div className="apple-card bg-apple-purple/5 border border-apple-purple/10">
+                    <div className="text-center">
+                      <h4 className="apple-text-display text-apple-purple mb-apple-sm">
                         {getZodiacInfo(reading.zodiac_sign).name || "Bilinmiyor"}
                       </h4>
-                      <p className="text-gray-300 mb-4">
+                      <p className="apple-text-body text-apple-gray-600 mb-apple-md">
                         {getZodiacInfo(reading.zodiac_sign).dates || ""}
                       </p>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-apple-md">
                         <div className="text-center">
-                          <p className="text-spiritual-cyan font-semibold">Element</p>
-                          <p className="text-white">{getZodiacInfo(reading.zodiac_sign).element || "Bilinmiyor"}</p>
+                          <p className="apple-text-caption text-apple-blue font-apple font-semibold">Element</p>
+                          <p className="apple-text-body">{getZodiacInfo(reading.zodiac_sign).element || "Bilinmiyor"}</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-spiritual-cyan font-semibold">Yönetici Gezegen</p>
-                          <p className="text-white">{getZodiacInfo(reading.zodiac_sign).ruling_planet || "Bilinmiyor"}</p>
+                          <p className="apple-text-caption text-apple-blue font-apple font-semibold">Yönetici Gezegen</p>
+                          <p className="apple-text-body">{getZodiacInfo(reading.zodiac_sign).ruling_planet || "Bilinmiyor"}</p>
                         </div>
                       </div>
                     </div>
@@ -336,29 +297,26 @@ const AstrologyReading = () => {
                 </div>
 
                 {/* Interpretation */}
-                <div className="mb-8 relative z-10">
-                  <h3 className="text-2xl font-semibold text-white mb-4 neon-text spiritual-purple">
+                <div className="mb-apple-xl">
+                  <h3 className="apple-text-headline mb-apple-md text-apple-blue">
                     Astroloji Yorumu
                   </h3>
-                  <div className="glass-morph-dark rounded-2xl p-6 border border-spiritual-purple/20 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-spiritual-purple/5 via-spiritual-amber/5 to-spiritual-cyan/5 animate-holographic"></div>
-                    <p className="text-gray-200 leading-relaxed whitespace-pre-wrap relative z-10 text-lg">
+                  <div className="bg-apple-blue/5 border border-apple-blue/10 rounded-apple-lg p-apple-lg">
+                    <p className="apple-text-body whitespace-pre-wrap leading-relaxed">
                       {reading.interpretation}
                     </p>
                   </div>
                 </div>
 
                 {/* Metadata */}
-                <div className="text-center text-gray-400 text-sm border-t border-spiritual-emerald/20 pt-6 relative z-10">
-                  <div className="flex justify-center items-center space-x-6">
-                    <p className="flex items-center space-x-2">
-                      <span>🕐</span>
-                      <span>Okuma Tarihi: {new Date(reading.timestamp).toLocaleString('tr-TR')}</span>
-                    </p>
-                    <p className="flex items-center space-x-2">
-                      <span>⭐</span>
-                      <span>Burç: {getZodiacInfo(reading.zodiac_sign).name || "Bilinmiyor"}</span>
-                    </p>
+                <div className="text-center apple-text-caption text-apple-gray-500 border-t border-apple-gray-200 pt-apple-lg">
+                  <div className="flex justify-center items-center space-x-apple-lg">
+                    <span>
+                      Okuma Tarihi: {new Date(reading.timestamp).toLocaleString('tr-TR')}
+                    </span>
+                    <span>
+                      Burç: {getZodiacInfo(reading.zodiac_sign).name || "Bilinmiyor"}
+                    </span>
                   </div>
                 </div>
               </div>
