@@ -64,16 +64,16 @@ class CoffeeReading(BaseModel):
 # AI Analysis Service
 class CoffeeAnalysisService:
     def __init__(self):
-        self.api_key = os.environ.get('OPENAI_API_KEY')
-        if not self.api_key:
-            raise ValueError("OpenAI API key not found in environment variables")
+        self.gemini_api_key = os.environ.get('GEMINI_API_KEY')
+        if not self.gemini_api_key:
+            raise ValueError("Gemini API key not found in environment variables")
     
     async def analyze_coffee_grounds(self, image_base64: str, session_id: str) -> dict:
-        """OpenAI Vision API kullanarak kahve telvesinanaliz et"""
+        """Gemini Vision API kullanarak kahve telvesinanaliz et"""
         try:
-            # LlmChat instance oluştur
+            # LlmChat instance oluştur - Gemini için
             chat = LlmChat(
-                api_key=self.api_key,
+                api_key=self.gemini_api_key,
                 session_id=session_id,
                 system_message="""Sen deneyimli bir kahve falcısısın. Kahve fincanındaki telveler şekillerin ve desenlerin analiz ederek fal okuyorsun.
 
@@ -88,7 +88,7 @@ Kahve falı kuralları:
 1. Gözlemlenen semboller/şekiller (liste halinde)
 2. Genel yorum ve yorumlama (2-3 paragraf)
 3. Öneriler ve tavsiyeler"""
-            ).with_model("openai", "gpt-4o")
+            ).with_model("gemini", "gemini-2.0-flash")
             
             # Resim içeriği oluştur
             image_content = ImageContent(image_base64=image_base64)
