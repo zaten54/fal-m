@@ -54,12 +54,15 @@ class User(BaseModel):
     hashed_password: str
     is_verified: bool = False
     verification_token: Optional[str] = None
+    terms_accepted: bool = False
+    terms_accepted_at: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserRegister(BaseModel):
     email: EmailStr
     password: str
+    accept_terms: bool
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -69,6 +72,7 @@ class UserResponse(BaseModel):
     id: str
     email: str
     is_verified: bool
+    terms_accepted: bool
     created_at: datetime
 
 class Token(BaseModel):
