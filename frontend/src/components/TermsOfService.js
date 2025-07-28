@@ -151,7 +151,7 @@ const TermsOfService = () => {
                 <section>
                   <h2 className="apple-text-display text-apple-purple mb-apple-md">7. Sözleşme Değişiklikleri</h2>
                   <p>
-                    MysticLens bu sözleşmeyi istediği zaman değiştirme hakkını saklı tutar. 
+                    falım bu sözleşmeyi istediği zaman değiştirme hakkını saklı tutar. 
                     Değişiklikler platforma yayınlandığı anda yürürlüğe girer. 
                     Platformu kullanmaya devam ederek değişiklikleri kabul etmiş sayılırsınız.
                   </p>
