@@ -21,9 +21,9 @@ const translations = {
     comingSoon: "Yakında",
     
     // Home Page
-    title: "falım",
-    subtitle: "AI destekli fal uygulaması ile geleceğinizi keşfedin",
-    description: "Kahve falı, tarot, el falı ve astroloji - Yapay zeka ile desteklenen geleneksel fal yorumları",
+    title: "✨ falım ✨",
+    subtitle: "🔮 Mistik AI ile geleceğinizi keşfedin 🌙",
+    description: "☕ Kahve falı • 🃏 Tarot • 🤚 El falı • ⭐ Astroloji - Yapay zeka ile desteklenen kadim bilgelik",
     startCoffeeReading: "Kahve Falına Başla",
     
     // Coffee Reading
