@@ -255,7 +255,7 @@ async def health_check():
         "timestamp": datetime.utcnow(),
         "services": {
             "database": "connected",
-            "ai_service": "available" if os.environ.get('OPENAI_API_KEY') else "unavailable"
+            "ai_service": "available" if os.environ.get('GEMINI_API_KEY') else "unavailable"
         }
     }
 
