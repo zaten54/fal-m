@@ -96,13 +96,13 @@ class EmailService:
         try:
             verification_url = f"http://localhost:3000/verify-email?token={verification_token}"
             
-            subject = "MysticLens - Email Adresinizi Doğrulayın"
+            subject = "falım - Email Adresinizi Doğrulayın"
             
             html_content = f"""
             <html>
                 <body style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #AF52DE; font-size: 32px; margin: 0;">🔮 MysticLens</h1>
+                        <h1 style="color: #AF52DE; font-size: 32px; margin: 0;">🔮 falım</h1>
                         <p style="color: #6B7280; font-size: 16px; margin: 10px 0;">Mistik dünyaya hoş geldiniz</p>
                     </div>
                     
@@ -125,7 +125,7 @@ class EmailService:
                     </div>
                     
                     <div style="text-align: center; color: #9CA3AF; font-size: 12px;">
-                        <p>Bu email MysticLens tarafından gönderilmiştir.</p>
+                        <p>Bu email falım tarafından gönderilmiştir.</p>
                         <p>Link çalışmıyorsa şu adresi kopyalayın: {verification_url}</p>
                     </div>
                 </body>
