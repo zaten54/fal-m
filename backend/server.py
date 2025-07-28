@@ -1257,11 +1257,11 @@ async def create_palm_reading(reading_data: PalmReadingCreate, current_user: Use
         raise HTTPException(status_code=500, detail=f"El falı okuma hatası: {str(e)}")
 
 @api_router.get("/palm-reading/{session_id}", response_model=List[PalmReadingResponse])
-async def get_palm_readings(session_id: str):
-    """Belirli bir session'a ait el falı okumalarını getir"""
+async def get_palm_readings(session_id: str, current_user: User = Depends(get_current_user)):
+    """Belirli bir session'a ait el falı okumalarını getir - Sadece kullanıcının kendi okumalarını"""
     try:
         readings = await db.palm_readings.find(
-            {"session_id": session_id}
+            {"session_id": session_id, "user_id": current_user.id}
         ).sort("timestamp", -1).to_list(100)
         
         return [
