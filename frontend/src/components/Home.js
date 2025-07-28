@@ -29,9 +29,7 @@ const Home = () => {
       path: '/coffee-reading',
       titleKey: 'coffeeReading',
       descKey: 'step1Desc',
-      gradient: 'from-amber-500 to-orange-600',
-      borderColor: 'border-amber-500/30',
-      hoverColor: 'hover:bg-amber-500/10',
+      color: 'apple-orange',
       available: true
     },
     {
@@ -40,9 +38,7 @@ const Home = () => {
       path: '/tarot-reading',
       titleKey: 'tarot',
       descKey: 'comingSoon',
-      gradient: 'from-purple-500 to-violet-600',
-      borderColor: 'border-purple-500/30',
-      hoverColor: 'hover:bg-purple-500/10',
+      color: 'apple-purple',
       available: true
     },
     {
@@ -51,9 +47,7 @@ const Home = () => {
       path: '/palm-reading',
       titleKey: 'palmReading',
       descKey: 'comingSoon',
-      gradient: 'from-blue-500 to-cyan-600',
-      borderColor: 'border-blue-500/30',
-      hoverColor: 'hover:bg-blue-500/10',
+      color: 'apple-green',
       available: true
     },
     {
@@ -62,163 +56,164 @@ const Home = () => {
       path: '/astrology-reading',
       titleKey: 'astrology',
       descKey: 'comingSoon',
-      gradient: 'from-green-500 to-emerald-600',
-      borderColor: 'border-green-500/30',
-      hoverColor: 'hover:bg-green-500/10',
+      color: 'apple-yellow',
       available: true
     }
   ];
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen bg-apple-gray-50">
       {/* Hero Section */}
-      <div className="relative">
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-20">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Holographic Title */}
-            <div className="mb-8 relative">
-              <h1 className="text-8xl md:text-9xl font-bold mb-6 font-serif relative">
-                <span className="text-6xl md:text-7xl animate-float mr-4">🔮</span>
-                <span className="bg-gradient-to-r from-spiritual-cyan via-spiritual-purple to-spiritual-amber bg-clip-text text-transparent animate-holographic neon-text">
-                  {t('title')}
-                </span>
-              </h1>
-              {/* Cyber Grid Overlay */}
-              <div className="absolute inset-0 cyber-grid opacity-20 rounded-3xl"></div>
-            </div>
-            
-            <div className="glass-morph rounded-3xl p-8 mb-12 border border-spiritual-cyan/20">
-              <p className="text-2xl md:text-3xl text-gray-200 mb-6 leading-relaxed animate-neon-flicker">
-                {t('subtitle')}
-              </p>
-              <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto opacity-90">
-                {t('description')}
-              </p>
-            </div>
-            
-            {/* Fortune Type Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {fortuneTypes.map((type) => (
-                type.available ? (
-                  <Link 
-                    key={type.id}
-                    to={type.path} 
-                    className={`group glass-morph border ${type.borderColor} rounded-xl p-6 ${type.hoverColor} transition-all duration-500 hover:scale-110 hover:rotate-3 hover:shadow-2xl hover:shadow-${type.id === 'coffee' ? 'amber' : type.id === 'tarot' ? 'purple' : type.id === 'palm' ? 'blue' : 'green'}-500/20 relative overflow-hidden`}
-                  >
-                    {/* Holographic Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 group-hover:translate-x-full transition-transform duration-1000"></div>
-                    
-                    <div className="text-6xl mb-4 animate-float group-hover:animate-glow-pulse">
-                      {type.icon}
-                    </div>
-                    <h3 className="text-xl font-semibold text-white mb-2 neon-text">
-                      {t(type.titleKey)}
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      {type.id === 'coffee' ? t('step1Desc') : type.id === 'tarot' ? 'Kartlarla geleceği keşfedin' : type.id === 'palm' ? 'El çizgilerinizi analiz edin' : type.id === 'astrology' ? 'Yıldızlardan mesajınızı alın' : t('comingSoon')}
-                    </p>
-                    
-                    {/* Active Indicator */}
-                    <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-glow-pulse"></div>
-                  </Link>
-                ) : (
-                  <div 
-                    key={type.id}
-                    className="group glass-morph-dark border border-gray-600/30 rounded-xl p-6 transition-all duration-300 opacity-50 cursor-not-allowed relative"
-                  >
-                    <div className="text-6xl mb-4 grayscale">
-                      {type.icon}
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-400 mb-2">
-                      {t(type.titleKey)}
-                    </h3>
-                    <p className="text-gray-500 text-sm">
-                      {t('comingSoon')}...
-                    </p>
-                    
-                    {/* Coming Soon Badge */}
-                    <div className="absolute top-2 right-2 px-2 py-1 bg-gray-700/50 text-gray-400 text-xs rounded-full">
-                      Soon
-                    </div>
-                  </div>
-                )
-              ))}
-            </div>
-            
-            {/* Main CTA */}
+      <section className="apple-section pt-apple-3xl">
+        <div className="apple-container text-center">
+          {/* Main Title */}
+          <div className="mb-apple-xl apple-fade-in">
+            <h1 className="apple-text-display mb-apple-md">
+              <span className="text-apple-4xl mr-4 animate-float-subtle">🔮</span>
+              <span className="bg-gradient-to-r from-apple-blue via-apple-purple to-apple-blue bg-clip-text text-transparent">
+                {t('title')}
+              </span>
+            </h1>
+            <p className="apple-text-headline text-apple-gray-600 mb-apple-lg max-w-3xl mx-auto">
+              {t('subtitle')}
+            </p>
+            <p className="apple-text-body max-w-2xl mx-auto">
+              {t('description')}
+            </p>
+          </div>
+          
+          {/* CTA Button */}
+          <div className="mb-apple-3xl apple-slide-up">
             <Link 
               to="/coffee-reading"
-              className="inline-flex items-center px-10 py-5 holographic-btn text-white font-bold text-xl rounded-full hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-amber-500/30 group relative overflow-hidden"
+              className="apple-button-primary inline-flex items-center space-x-2 text-apple-lg px-apple-xl py-apple-md shadow-apple-lg apple-hover-lift"
             >
-              <span className="relative z-10 flex items-center">
-                {t('startCoffeeReading')}
-                <svg className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </span>
+              <span>{t('startCoffeeReading')}</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
             </Link>
           </div>
         </div>
-      </div>
+      </section>
+      
+      {/* Fortune Types Grid */}
+      <section className="apple-section">
+        <div className="apple-container">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-apple-lg">
+            {fortuneTypes.map((type, index) => (
+              <Link 
+                key={type.id}
+                to={type.path} 
+                className="apple-card apple-hover-lift apple-transition group"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="text-center">
+                  <div className={`text-6xl mb-apple-md group-hover:scale-110 apple-transition text-${type.color}`}>
+                    {type.icon}
+                  </div>
+                  <h3 className="apple-text-headline mb-apple-sm">
+                    {t(type.titleKey)}
+                  </h3>
+                  <p className="apple-text-body">
+                    {type.id === 'coffee' ? t('step1Desc') : 
+                     type.id === 'tarot' ? 'Kartlarla geleceği keşfedin' : 
+                     type.id === 'palm' ? 'El çizgilerinizi analiz edin' : 
+                     type.id === 'astrology' ? 'Yıldızlardan mesajınızı alın' : 
+                     t('comingSoon')}
+                  </p>
+                  
+                  {/* Status Indicator */}
+                  <div className="mt-apple-md">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-apple font-medium bg-${type.color}/10 text-${type.color}`}>
+                      <div className={`w-2 h-2 bg-${type.color} rounded-full mr-2`}></div>
+                      Aktif
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
       
       {/* Features Section */}
-      <div className="py-20 px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-5xl font-bold text-center text-white mb-16 neon-text animate-neon-flicker">
-            {t('whyOurApp')}
-          </h2>
+      <section className="apple-section bg-white">
+        <div className="apple-container">
+          <div className="text-center mb-apple-3xl">
+            <h2 className="apple-text-display mb-apple-lg">
+              {t('whyOurApp')}
+            </h2>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-apple-xl">
             {[
               {
                 icon: (
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  <svg className="w-12 h-12 text-apple-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                 ),
                 titleKey: 'aiAnalysis',
                 descKey: 'aiAnalysisDesc',
-                gradient: 'from-purple-500 to-pink-500',
-                color: 'spiritual-purple'
+                color: 'apple-blue'
               },
               {
                 icon: (
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  <svg className="w-12 h-12 text-apple-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 ),
                 titleKey: 'traditionalKnowledge',
                 descKey: 'traditionalKnowledgeDesc',
-                gradient: 'from-blue-500 to-cyan-500',
-                color: 'spiritual-cyan'
+                color: 'apple-green'
               },
               {
                 icon: (
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg className="w-12 h-12 text-apple-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 ),
                 titleKey: 'privacySecurity',
                 descKey: 'privacySecurityDesc',
-                gradient: 'from-green-500 to-teal-500',
-                color: 'spiritual-emerald'
+                color: 'apple-purple'
               }
             ].map((feature, index) => (
-              <div key={index} className="text-center group">
-                <div className={`w-20 h-20 bg-gradient-to-r ${feature.gradient} rounded-full flex items-center justify-center mx-auto mb-6 animate-float group-hover:animate-glow-pulse transition-all duration-500 group-hover:scale-110`}>
+              <div key={index} className="text-center apple-scale-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                <div className={`w-20 h-20 bg-${feature.color}/10 rounded-apple-xl flex items-center justify-center mx-auto mb-apple-lg apple-hover-lift apple-transition`}>
                   {feature.icon}
                 </div>
-                <h3 className={`text-2xl font-semibold text-white mb-4 neon-text spiritual-${feature.color.split('-')[1]}`}>
+                <h3 className={`apple-text-headline mb-apple-md text-${feature.color}`}>
                   {t(feature.titleKey)}
                 </h3>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="apple-text-body">
                   {t(feature.descKey)}
                 </p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
+      
+      {/* CTA Section */}
+      <section className="apple-section">
+        <div className="apple-container text-center">
+          <div className="apple-card-elevated max-w-2xl mx-auto">
+            <h2 className="apple-text-headline mb-apple-md">
+              Falınıza Başlamaya Hazır mısınız?
+            </h2>
+            <p className="apple-text-body mb-apple-lg">
+              AI destekli fal yorumlarımızla geleceğinizi keşfedin
+            </p>
+            <Link 
+              to="/coffee-reading"
+              className="apple-button-primary text-apple-lg px-apple-xl py-apple-md"
+            >
+              Hemen Başlayın
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
