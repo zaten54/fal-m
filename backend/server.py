@@ -1014,7 +1014,7 @@ async def create_coffee_reading(reading_data: CoffeeReadingCreate, current_user:
             session_id
         )
         
-        # Reading objesi oluştur
+        # Reading objesi oluştur (kullanıcı ID'si ile birlikte)
         coffee_reading = CoffeeReading(
             session_id=session_id,
             image_base64=reading_data.image_base64,
@@ -1023,8 +1023,10 @@ async def create_coffee_reading(reading_data: CoffeeReadingCreate, current_user:
             confidence_score=analysis["confidence_score"]
         )
         
-        # MongoDB'ye kaydet
-        await db.coffee_readings.insert_one(coffee_reading.dict())
+        # MongoDB'ye kaydet (kullanıcı ID'si de eklenir)
+        reading_dict = coffee_reading.dict()
+        reading_dict["user_id"] = current_user.id
+        await db.coffee_readings.insert_one(reading_dict)
         
         # Response oluştur
         return CoffeeReadingResponse(
