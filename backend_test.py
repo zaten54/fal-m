@@ -1002,6 +1002,353 @@ class BackendTester:
             self.log_test("Zodiac Signs Endpoint", False, "", e)
             return False
 
+    # ==================== DAILY HOROSCOPE TESTS ====================
+    
+    def test_daily_horoscope_today(self):
+        """Test GET /api/daily-horoscope/today endpoint"""
+        try:
+            response = self.session.get(f"{self.backend_url}/daily-horoscope/today", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, list):
+                    self.log_test("Daily Horoscope Today", False, 
+                                "Response is not a list", None)
+                    return False
+                
+                # Should have 12 horoscopes (one for each zodiac sign)
+                if len(data) != 12:
+                    self.log_test("Daily Horoscope Today", False, 
+                                f"Expected 12 horoscopes, got {len(data)}", None)
+                    return False
+                
+                # Check structure of first horoscope
+                first_horoscope = data[0]
+                required_fields = ["id", "zodiac_sign", "date", "content", "language", "timestamp"]
+                missing_fields = [field for field in required_fields if field not in first_horoscope]
+                
+                if missing_fields:
+                    self.log_test("Daily Horoscope Today", False, 
+                                f"Missing fields in horoscope: {missing_fields}", None)
+                    return False
+                
+                # Check content quality
+                content = first_horoscope.get("content", "")
+                if len(content) < 30:  # Should be meaningful content
+                    self.log_test("Daily Horoscope Today", False, 
+                                "Horoscope content too short", None)
+                    return False
+                
+                # Check date is today
+                from datetime import datetime
+                today = datetime.now().strftime("%Y-%m-%d")
+                if first_horoscope.get("date") != today:
+                    self.log_test("Daily Horoscope Today", False, 
+                                f"Date mismatch: expected {today}, got {first_horoscope.get('date')}", None)
+                    return False
+                
+                details = f"Found {len(data)} horoscopes for today, content length: {len(content)} chars"
+                self.log_test("Daily Horoscope Today", True, details)
+                return True
+                
+            else:
+                self.log_test("Daily Horoscope Today", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Daily Horoscope Today", False, "", e)
+            return False
+
+    def test_daily_horoscope_specific_zodiac(self):
+        """Test GET /api/daily-horoscope/{zodiac_sign} endpoint"""
+        try:
+            # Test with a specific zodiac sign
+            zodiac_sign = "aries"
+            response = self.session.get(f"{self.backend_url}/daily-horoscope/{zodiac_sign}", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required response fields
+                required_fields = ["id", "zodiac_sign", "date", "content", "language", "timestamp"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Daily Horoscope Specific Zodiac", False, 
+                                f"Missing response fields: {missing_fields}", None)
+                    return False
+                
+                # Verify zodiac sign matches
+                if data["zodiac_sign"] != zodiac_sign:
+                    self.log_test("Daily Horoscope Specific Zodiac", False, 
+                                f"Zodiac sign mismatch: expected {zodiac_sign}, got {data['zodiac_sign']}", None)
+                    return False
+                
+                # Check content quality
+                content = data.get("content", "")
+                if len(content) < 30:
+                    self.log_test("Daily Horoscope Specific Zodiac", False, 
+                                "Horoscope content too short", None)
+                    return False
+                
+                # Check date is today
+                from datetime import datetime
+                today = datetime.now().strftime("%Y-%m-%d")
+                if data.get("date") != today:
+                    self.log_test("Daily Horoscope Specific Zodiac", False, 
+                                f"Date mismatch: expected {today}, got {data.get('date')}", None)
+                    return False
+                
+                details = f"Zodiac: {zodiac_sign}, Date: {data['date']}, Content length: {len(content)} chars"
+                self.log_test("Daily Horoscope Specific Zodiac", True, details)
+                return True
+                
+            else:
+                self.log_test("Daily Horoscope Specific Zodiac", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Daily Horoscope Specific Zodiac", False, "", e)
+            return False
+
+    def test_daily_horoscope_history(self):
+        """Test GET /api/daily-horoscope/history/{zodiac_sign} endpoint"""
+        try:
+            zodiac_sign = "taurus"
+            response = self.session.get(f"{self.backend_url}/daily-horoscope/history/{zodiac_sign}", timeout=15)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, list):
+                    self.log_test("Daily Horoscope History", False, 
+                                "Response is not a list", None)
+                    return False
+                
+                # Should have at least some history (might be empty if no previous data)
+                if len(data) > 0:
+                    # Check structure of first history entry
+                    first_entry = data[0]
+                    required_fields = ["id", "zodiac_sign", "date", "content", "language", "timestamp"]
+                    missing_fields = [field for field in required_fields if field not in first_entry]
+                    
+                    if missing_fields:
+                        self.log_test("Daily Horoscope History", False, 
+                                    f"Missing fields in history entry: {missing_fields}", None)
+                        return False
+                    
+                    # Verify zodiac sign matches
+                    if first_entry["zodiac_sign"] != zodiac_sign:
+                        self.log_test("Daily Horoscope History", False, 
+                                    f"Zodiac sign mismatch in history", None)
+                        return False
+                
+                details = f"Found {len(data)} history entries for {zodiac_sign}"
+                self.log_test("Daily Horoscope History", True, details)
+                return True
+                
+            else:
+                self.log_test("Daily Horoscope History", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Daily Horoscope History", False, "", e)
+            return False
+
+    def test_admin_generate_daily_horoscopes(self):
+        """Test POST /api/admin/generate-daily-horoscopes endpoint"""
+        try:
+            # Test generating horoscopes for today
+            response = self.session.post(f"{self.backend_url}/admin/generate-daily-horoscopes", timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check response structure
+                if "message" not in data:
+                    self.log_test("Admin Generate Daily Horoscopes", False, 
+                                "Missing message in response", None)
+                    return False
+                
+                message = data.get("message", "")
+                
+                # Should indicate successful generation or that horoscopes already exist
+                success_indicators = ["oluşturuldu", "generated", "zaten mevcut", "already exist"]
+                if not any(indicator in message.lower() for indicator in success_indicators):
+                    self.log_test("Admin Generate Daily Horoscopes", False, 
+                                f"Unexpected response message: {message}", None)
+                    return False
+                
+                details = f"Admin generation response: {message}"
+                self.log_test("Admin Generate Daily Horoscopes", True, details)
+                return True
+                
+            else:
+                self.log_test("Admin Generate Daily Horoscopes", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Admin Generate Daily Horoscopes", False, "", e)
+            return False
+
+    def test_user_profile_update_favorite_zodiac(self):
+        """Test PUT /api/auth/profile endpoint for favorite zodiac update"""
+        try:
+            # This test requires authentication, so we'll test the endpoint structure
+            # without actual authentication (expecting 401/403)
+            
+            payload = {
+                "favorite_zodiac_sign": "leo"
+            }
+            
+            response = self.session.put(
+                f"{self.backend_url}/auth/profile",
+                json=payload,
+                timeout=10
+            )
+            
+            # Should fail with 401 or 403 due to missing authentication
+            if response.status_code in [401, 403]:
+                self.log_test("User Profile Update (No Auth)", True, 
+                            f"Correctly rejected unauthenticated request with HTTP {response.status_code}")
+                return True
+            else:
+                self.log_test("User Profile Update (No Auth)", False, 
+                            f"Expected HTTP 401/403, got {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("User Profile Update (No Auth)", False, "", e)
+            return False
+
+    def test_multilingual_horoscope_support(self):
+        """Test multilingual support for daily horoscopes"""
+        try:
+            # Test different languages
+            languages = ["tr", "en", "de", "fr", "es"]
+            results = []
+            
+            for lang in languages:
+                response = self.session.get(
+                    f"{self.backend_url}/daily-horoscope/gemini?language={lang}", 
+                    timeout=30
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    content = data.get("content", "")
+                    if len(content) > 20:  # Meaningful content
+                        results.append(f"✅ {lang.upper()}")
+                    else:
+                        results.append(f"❌ {lang.upper()} (short content)")
+                else:
+                    results.append(f"❌ {lang.upper()} (HTTP {response.status_code})")
+            
+            # At least Turkish should work
+            turkish_works = any("✅ TR" in result for result in results)
+            
+            if turkish_works:
+                details = f"Language support: {', '.join(results)}"
+                self.log_test("Multilingual Horoscope Support", True, details)
+                return True
+            else:
+                details = f"No working languages: {', '.join(results)}"
+                self.log_test("Multilingual Horoscope Support", False, details, None)
+                return False
+                
+        except Exception as e:
+            self.log_test("Multilingual Horoscope Support", False, "", e)
+            return False
+
+    def test_gemini_horoscope_generation_quality(self):
+        """Test Gemini API integration for horoscope generation quality"""
+        try:
+            # Test generating a horoscope for a specific zodiac
+            zodiac_sign = "scorpio"
+            response = self.session.get(f"{self.backend_url}/daily-horoscope/{zodiac_sign}", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                content = data.get("content", "")
+                
+                # Quality checks
+                quality_score = 0
+                
+                # Length check (should be substantial)
+                if len(content) >= 50:
+                    quality_score += 1
+                
+                # Turkish language check
+                turkish_words = ["bugün", "gün", "enerji", "aşk", "kariyer", "sağlık", "dikkat", "önemli"]
+                if any(word in content.lower() for word in turkish_words):
+                    quality_score += 1
+                
+                # Positive/motivational tone check
+                positive_words = ["başarı", "şans", "fırsat", "güzel", "olumlu", "iyi", "pozitif"]
+                if any(word in content.lower() for word in positive_words):
+                    quality_score += 1
+                
+                # Zodiac-specific content (should mention the zodiac somehow)
+                zodiac_names = {"scorpio": "akrep", "aries": "koç", "taurus": "boğa"}
+                zodiac_name = zodiac_names.get(zodiac_sign, zodiac_sign)
+                if zodiac_name in content.lower() or zodiac_sign in content.lower():
+                    quality_score += 1
+                
+                if quality_score >= 3:
+                    details = f"Quality score: {quality_score}/4, Content length: {len(content)} chars"
+                    self.log_test("Gemini Horoscope Generation Quality", True, details)
+                    return True
+                else:
+                    details = f"Low quality score: {quality_score}/4, Content: {content[:100]}..."
+                    self.log_test("Gemini Horoscope Generation Quality", False, details, None)
+                    return False
+                
+            else:
+                self.log_test("Gemini Horoscope Generation Quality", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Gemini Horoscope Generation Quality", False, "", e)
+            return False
+
+    def test_scheduled_task_system_health(self):
+        """Test if scheduled task system is properly configured"""
+        try:
+            # Check health endpoint for scheduler status
+            response = self.session.get(f"{self.backend_url}/health", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Look for scheduler or background task indicators in health check
+                services = data.get("services", {})
+                
+                # The scheduler should be running in background
+                # We can't directly test the scheduler, but we can verify the system is healthy
+                if data.get("status") == "healthy":
+                    details = "System healthy - scheduler should be running in background"
+                    self.log_test("Scheduled Task System Health", True, details)
+                    return True
+                else:
+                    self.log_test("Scheduled Task System Health", False, 
+                                f"System not healthy: {data.get('status')}", None)
+                    return False
+                
+            else:
+                self.log_test("Scheduled Task System Health", False, 
+                            f"Health check failed: HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Scheduled Task System Health", False, "", e)
+            return False
+
     def test_updated_health_check(self):
         """Test updated health check with all 4 features"""
         try:
