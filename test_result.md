@@ -102,7 +102,102 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "AI destekli fal uygulaması geliştirme - Kahve falı, tarot, el falı ve astroloji özelliklerini içeren web uygulaması. OpenAI GPT-4o Vision API kullanarak görsel analiz ve yorumlama."
+user_problem_statement: "Günlük burç yorumları sistemi geliştirme - 12 burç için her gün saat 06:00'da otomatik yenilenen günlük burç yorumları, kullanıcılar kendi burçlarını takip edebilsin, ana sayfada günlük yorumlar görünsün, çoklu dil desteği."
+
+backend:
+  - task: "Daily Horoscope Models ve API"
+    implemented: true
+    working: "unknown"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "unknown"
+        agent: "main"
+        comment: "DailyHoroscope modeli, API endpoint'leri (/api/daily-horoscope/today, /api/daily-horoscope/{zodiac_sign}, /api/daily-horoscope/history/{zodiac_sign}, /api/admin/generate-daily-horoscopes) ve scheduled task sistemi eklendi. Her gün saat 06:00'da otomatik çalışacak sistem kuruldu. Çoklu dil desteği (tr, en, de, fr, es) mevcut."
+
+  - task: "User Profile Update API"
+    implemented: true
+    working: "unknown"  
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "unknown"
+        agent: "main"
+        comment: "Kullanıcı profil güncelleme API'si (/api/auth/profile PUT endpoint) eklendi. Favori burç seçimi için UserProfileUpdate modeli ve User modeline favorite_zodiac_sign field'ı eklendi. UserResponse modeli güncellendi."
+
+  - task: "Scheduled Task System"
+    implemented: true
+    working: "unknown"
+    file: "/app/backend/server.py" 
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "unknown"
+        agent: "main"
+        comment: "DailyHoroscopeScheduler sınıfı ile scheduled task sistemi kuruldu. Her gün 06:00'da çalışacak cron job implementasyonu tamamlandı. Background thread ile sürekli çalışan scheduler başlatıldı. Schedule paketi requirements.txt'e eklendi."
+
+frontend:
+  - task: "Ana Sayfa Günlük Burç Bölümü"
+    implemented: true
+    working: "unknown"
+    file: "/app/frontend/src/components/Home.js"
+    stuck_count: 0
+    priority: "high"  
+    needs_retesting: true
+    status_history:
+      - working: "unknown"
+        agent: "main"
+        comment: "Home.js'ye günlük burç yorumları bölümü eklendi. Tüm burçlar için grid görünümü, favori burç özel gösterimi, loading states, zodiac icons ve renkli tasarım implementasyonu tamamlandı. API entegrasyonu yapıldı."
+
+  - task: "Kullanıcı Profil Sayfası"
+    implemented: true
+    working: "unknown"
+    file: "/app/frontend/src/components/Profile.js"
+    stuck_count: 0 
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "unknown"
+        agent: "main"
+        comment: "Profile.js sayfası oluşturuldu. 12 burç seçimi grid'i, favori burç güncelleme fonksiyonu, burç geçmişi görüntüleme, responsive tasarım ve Apple design language implementasyonu tamamlandı. AuthContext'e updateUser ve token fonksiyonları eklendi."
+
+  - task: "Navigation ve Routing"
+    implemented: true
+    working: "unknown"
+    file: "/app/frontend/src/App.js, /app/frontend/src/components/Navigation.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true  
+    status_history:
+      - working: "unknown"
+        agent: "main"
+        comment: "App.js'ye /profile route'u eklendi (ProtectedRoute ile korumalı). Navigation.js'ye user menu'ye 'Profil Ayarları' linki eklendi. AuthContext'de token ve updateUser fonksiyonları expose edildi."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.1"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Daily Horoscope Models ve API"
+    - "User Profile Update API"  
+    - "Scheduled Task System"
+    - "Ana Sayfa Günlük Burç Bölümü"
+    - "Kullanıcı Profil Sayfası"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "🌟 Günlük burç yorumları sistemi geliştirme tamamlandı! Backend: DailyHoroscope modeli, 4 API endpoint'i, scheduled task sistemi (saat 06:00'da), çoklu dil desteği, kullanıcı profil güncelleme API'si. Frontend: Ana sayfa burç bölümü, Profile sayfası, navigation güncellemeleri. Şimdi backend API'larını test etmek gerekiyor."
 
 backend:
   - task: "Kahve Falı Backend API"
