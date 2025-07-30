@@ -840,6 +840,86 @@ Bu kapsamlı doğum haritası bilgilerine göre detaylı astroloji yorumu ve ki�
             logging.error(f"Astrology analysis error: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Astroloji analizi sırasında hata oluştu: {str(e)}")
 
+    async def generate_daily_horoscope(self, zodiac_sign: str, date: str, language: str = "tr") -> str:
+        """Günlük burç yorumu oluştur"""
+        try:
+            zodiac_info = ZODIAC_SIGNS.get(zodiac_sign, {})
+            session_id = f"daily_horoscope_{zodiac_sign}_{date}"
+            
+            # Dil seçimini kontrol et
+            language_prompts = {
+                "tr": "Türkçe",
+                "en": "İngilizce", 
+                "de": "Almanca",
+                "fr": "Fransızca",
+                "es": "İspanyolca"
+            }
+            target_language = language_prompts.get(language, "Türkçe")
+            
+            # LlmChat instance oluştur
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=session_id,
+                system_message=f"""Sen deneyimli bir astrologsun. {target_language} dilinde günlük burç yorumları yazıyorsun.
+
+Günlük burç yorumu kuralları:
+- Kısa bir paragraf (50-80 kelime) olmalı
+- Pozitif ve motive edici olmalı
+- Bugüne özel tavsiyeler içermeli
+- Aşk, kariyer, sağlık konularından birini vurgula
+- {target_language} dilinde doğal ve akıcı olmalı
+- Genel geçer ifadeler kullanma, spesifik ol
+- Umut verici ve ilham dolu bir ton kullan
+
+Çıktı: Sadece burç yorumu paragrafını yaz, başlık veya ekstra açıklama ekleme."""
+            ).with_model("gemini", "gemini-2.0-flash")
+            
+            # Mesaj gönder
+            user_message = UserMessage(
+                text=f"{zodiac_info.get('name', zodiac_sign)} burcu için {date} tarihine özel günlük burç yorumu yaz. Element: {zodiac_info.get('element', '')}, Yöneten Gezegen: {zodiac_info.get('ruling_planet', '')}. Bugün için özel motivasyon ve rehberlik içeren bir yorum hazırla."
+            )
+            
+            # AI'dan cevap al
+            response = await chat.send_message(user_message)
+            return response.strip()
+            
+        except Exception as e:
+            logging.error(f"Daily horoscope generation error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Günlük burç yorumu oluşturma hatası: {str(e)}")
+
+    async def generate_all_daily_horoscopes(self, date: str, language: str = "tr") -> List[dict]:
+        """Tüm burçlar için günlük yorumlar oluştur"""
+        horoscopes = []
+        
+        for zodiac_key, zodiac_data in ZODIAC_SIGNS.items():
+            try:
+                content = await self.generate_daily_horoscope(zodiac_key, date, language)
+                horoscope = {
+                    "zodiac_sign": zodiac_key,
+                    "date": date,
+                    "content": content,
+                    "language": language,
+                    "zodiac_name": zodiac_data.get("name", zodiac_key)
+                }
+                horoscopes.append(horoscope)
+                
+                # Rate limiting için kısa bekleme
+                await asyncio.sleep(1)
+                
+            except Exception as e:
+                logging.error(f"Error generating horoscope for {zodiac_key}: {str(e)}")
+                # Hata durumunda varsayılan mesaj
+                horoscope = {
+                    "zodiac_sign": zodiac_key,
+                    "date": date,
+                    "content": f"Bugün {zodiac_data.get('name', zodiac_key)} burcu için özel bir gün. Enerjinizi doğru kanalize edin.",
+                    "language": language,
+                    "zodiac_name": zodiac_data.get("name", zodiac_key)
+                }
+                horoscopes.append(horoscope)
+        
+        return horoscopes
+
 # Initialize services
 coffee_service = CoffeeAnalysisService()
 tarot_service = TarotAnalysisService()
