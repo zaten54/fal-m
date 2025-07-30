@@ -156,9 +156,11 @@ export const AuthProvider = ({ children }) => {
     user,
     isLoading,
     isAuthenticated,
+    token: getToken(),
     register,
     login,
     logout,
+    updateUser,
     verifyEmail,
     resendVerification
   };
