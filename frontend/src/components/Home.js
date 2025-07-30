@@ -182,6 +182,126 @@ const Home = () => {
         </div>
       </section>
       
+      {/* Daily Horoscopes Section */}
+      <section className="apple-section bg-apple-gray-25">
+        <div className="apple-container">
+          <div className="text-center mb-apple-3xl">
+            <h2 className="apple-text-display mb-apple-lg">
+              🌟 Günlük Burç Yorumları
+            </h2>
+            <p className="apple-text-headline text-apple-gray-600">
+              Bugün yıldızlar sizin için ne diyor?
+            </p>
+          </div>
+
+          {/* Favorite Horoscope (Authenticated Users) */}
+          {isAuthenticated && favoriteHoroscope && (
+            <div className="mb-apple-2xl">
+              <div className="apple-card-elevated max-w-2xl mx-auto text-center bg-gradient-to-br from-apple-purple/5 to-apple-pink/5 border border-apple-purple/10">
+                <div className="flex items-center justify-center mb-apple-md">
+                  <span className="text-4xl mr-3">
+                    {zodiacSigns[favoriteHoroscope.zodiac_sign]?.icon}
+                  </span>
+                  <div>
+                    <h3 className="apple-text-headline text-apple-purple">
+                      Sizin Burcunuz: {zodiacSigns[favoriteHoroscope.zodiac_sign]?.name}
+                    </h3>
+                    <p className="apple-text-caption text-apple-gray-500">
+                      Bugüne özel yorumunuz
+                    </p>
+                  </div>
+                </div>
+                <p className="apple-text-body text-apple-gray-700 leading-relaxed">
+                  {favoriteHoroscope.content}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* All Horoscopes Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-apple-md">
+            {isLoadingHoroscopes ? (
+              // Loading state
+              Array.from({ length: 12 }).map((_, index) => (
+                <div key={index} className="apple-card animate-pulse">
+                  <div className="flex items-center mb-apple-sm">
+                    <div className="w-8 h-8 bg-apple-gray-200 rounded mr-3"></div>
+                    <div className="h-4 bg-apple-gray-200 rounded w-20"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-apple-gray-200 rounded"></div>
+                    <div className="h-3 bg-apple-gray-200 rounded w-5/6"></div>
+                    <div className="h-3 bg-apple-gray-200 rounded w-4/6"></div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              todayHoroscopes.map((horoscope, index) => {
+                const zodiacInfo = zodiacSigns[horoscope.zodiac_sign] || {};
+                const isUserFavorite = user?.favorite_zodiac_sign === horoscope.zodiac_sign;
+                
+                return (
+                  <div
+                    key={horoscope.zodiac_sign}
+                    className={`apple-card apple-hover-lift apple-transition group cursor-pointer ${
+                      isUserFavorite ? 'ring-2 ring-apple-purple ring-opacity-50' : ''
+                    }`}
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <div className="flex items-center mb-apple-sm">
+                      <span className={`text-2xl mr-3 text-${zodiacInfo.color}`}>
+                        {zodiacInfo.icon}
+                      </span>
+                      <div>
+                        <h4 className="apple-text-subheadline font-semibold">
+                          {zodiacInfo.name}
+                        </h4>
+                        {isUserFavorite && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-apple font-medium bg-apple-purple/10 text-apple-purple">
+                            ⭐ Favoriniz
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="apple-text-caption text-apple-gray-600 leading-relaxed line-clamp-4">
+                      {horoscope.content}
+                    </p>
+                    <div className="mt-apple-sm">
+                      <button className="text-apple-blue text-apple-caption font-semibold group-hover:text-apple-blue-dark apple-transition">
+                        Devamını Oku →
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Set Favorite Zodiac CTA */}
+          {isAuthenticated && !user?.favorite_zodiac_sign && (
+            <div className="text-center mt-apple-2xl">
+              <div className="apple-card-elevated max-w-md mx-auto">
+                <div className="text-center">
+                  <div className="text-4xl mb-apple-md">⭐</div>
+                  <h3 className="apple-text-headline mb-apple-sm">
+                    Favori Burcunuzu Seçin
+                  </h3>
+                  <p className="apple-text-body mb-apple-md text-apple-gray-600">
+                    Favori burcunuzu belirleyerek kişisel günlük yorumlarınızı takip edin
+                  </p>
+                  <Link 
+                    to="/profile"
+                    className="apple-button-secondary"
+                  >
+                    Burç Seçimi Yap
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+      
       {/* Fortune Types Grid */}
       <section className="apple-section">
         <div className="apple-container">
