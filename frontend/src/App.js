@@ -12,6 +12,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import VerifyEmail from "./components/VerifyEmail";
 import TermsOfService from "./components/TermsOfService";
+import Profile from "./components/Profile";
 import Navigation from "./components/Navigation";
 import AppleBackground from "./components/AppleBackground";
 import ProtectedRoute from "./components/ProtectedRoute";
