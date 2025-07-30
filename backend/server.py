@@ -1056,8 +1056,49 @@ async def get_me(current_user: User = Depends(get_current_user)):
         email=current_user.email,
         is_verified=current_user.is_verified,
         terms_accepted=current_user.terms_accepted,
+        favorite_zodiac_sign=current_user.favorite_zodiac_sign,
         created_at=current_user.created_at
     )
+
+@api_router.put("/auth/profile", response_model=UserResponse)
+async def update_profile(profile_data: UserProfileUpdate, current_user: User = Depends(get_current_user)):
+    """Kullanıcı profilini güncelle (favori burç vb.)"""
+    try:
+        update_data = {}
+        
+        # Favori burç güncellemesi
+        if profile_data.favorite_zodiac_sign:
+            if profile_data.favorite_zodiac_sign not in ZODIAC_SIGNS:
+                raise HTTPException(status_code=400, detail="Geçersiz burç seçimi")
+            update_data["favorite_zodiac_sign"] = profile_data.favorite_zodiac_sign
+        
+        # Güncelleme var ise veritabanına kaydet
+        if update_data:
+            update_data["updated_at"] = datetime.utcnow()
+            await db.users.update_one(
+                {"id": current_user.id},
+                {"$set": update_data}
+            )
+        
+        # Güncellenmiş kullanıcıyı al
+        updated_user = await db.users.find_one({"id": current_user.id})
+        if not updated_user:
+            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+        
+        return UserResponse(
+            id=updated_user["id"],
+            email=updated_user["email"],
+            is_verified=updated_user["is_verified"],
+            terms_accepted=updated_user.get("terms_accepted", False),
+            favorite_zodiac_sign=updated_user.get("favorite_zodiac_sign"),
+            created_at=updated_user["created_at"]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Profile update error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Profil güncelleme hatası: {str(e)}")
 
 @api_router.post("/auth/resend-verification")
 async def resend_verification_email(user_data: UserLogin, background_tasks: BackgroundTasks):
