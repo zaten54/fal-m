@@ -139,6 +139,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Kullanıcı bilgilerini güncelle
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData);
+  };
+
   // Çıkış yap
   const logout = () => {
     removeToken();
