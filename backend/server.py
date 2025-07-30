@@ -1551,6 +1551,190 @@ async def get_zodiac_signs():
         logging.error(f"Get zodiac signs error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Burç bilgileri getirme hatası: {str(e)}")
 
+# Daily Horoscope Endpoints
+@api_router.get("/daily-horoscope/today", response_model=List[DailyHoroscopeResponse])
+async def get_today_horoscopes(language: str = "tr"):
+    """Bugünün tüm burç yorumlarını getir"""
+    try:
+        today = datetime.utcnow().strftime("%Y-%m-%d")
+        
+        # Bugünün yorumlarını veritabanından al
+        horoscopes = await db.daily_horoscopes.find({
+            "date": today,
+            "language": language
+        }).to_list(12)
+        
+        # Eğer bugünün yorumları yoksa oluştur
+        if len(horoscopes) < 12:
+            # Eksik olan burçların yorumlarını oluştur
+            existing_signs = [h["zodiac_sign"] for h in horoscopes]
+            missing_signs = [sign for sign in ZODIAC_SIGNS.keys() if sign not in existing_signs]
+            
+            if missing_signs:
+                for zodiac_sign in missing_signs:
+                    try:
+                        content = await astrology_service.generate_daily_horoscope(zodiac_sign, today, language)
+                        
+                        # Veritabanına kaydet
+                        horoscope = DailyHoroscope(
+                            zodiac_sign=zodiac_sign,
+                            date=today,
+                            content=content,
+                            language=language
+                        )
+                        await db.daily_horoscopes.insert_one(horoscope.dict())
+                        horoscopes.append(horoscope.dict())
+                        
+                        # Rate limiting
+                        await asyncio.sleep(0.5)
+                        
+                    except Exception as e:
+                        logging.error(f"Error generating horoscope for {zodiac_sign}: {str(e)}")
+        
+        # Response oluştur
+        return [
+            DailyHoroscopeResponse(
+                id=h["id"],
+                zodiac_sign=h["zodiac_sign"],
+                date=h["date"],
+                content=h["content"],
+                language=h["language"],
+                timestamp=h["timestamp"]
+            ) for h in horoscopes
+        ]
+        
+    except Exception as e:
+        logging.error(f"Get today horoscopes error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Günlük yorumları getirme hatası: {str(e)}")
+
+@api_router.get("/daily-horoscope/{zodiac_sign}", response_model=DailyHoroscopeResponse)
+async def get_horoscope_by_sign(zodiac_sign: str, date: Optional[str] = None, language: str = "tr"):
+    """Belirli bir burç için günlük yorum getir"""
+    try:
+        # Burç kontrolü
+        if zodiac_sign not in ZODIAC_SIGNS:
+            raise HTTPException(status_code=404, detail="Geçersiz burç")
+        
+        # Tarih kontrolü (varsayılan bugün)
+        target_date = date or datetime.utcnow().strftime("%Y-%m-%d")
+        
+        # Veritabanından al
+        horoscope = await db.daily_horoscopes.find_one({
+            "zodiac_sign": zodiac_sign,
+            "date": target_date,
+            "language": language
+        })
+        
+        # Yoksa oluştur
+        if not horoscope:
+            content = await astrology_service.generate_daily_horoscope(zodiac_sign, target_date, language)
+            
+            horoscope_obj = DailyHoroscope(
+                zodiac_sign=zodiac_sign,
+                date=target_date,
+                content=content,
+                language=language
+            )
+            
+            await db.daily_horoscopes.insert_one(horoscope_obj.dict())
+            horoscope = horoscope_obj.dict()
+        
+        return DailyHoroscopeResponse(
+            id=horoscope["id"],
+            zodiac_sign=horoscope["zodiac_sign"],
+            date=horoscope["date"],
+            content=horoscope["content"],
+            language=horoscope["language"],
+            timestamp=horoscope["timestamp"]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Get horoscope by sign error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Burç yorumu getirme hatası: {str(e)}")
+
+@api_router.get("/daily-horoscope/history/{zodiac_sign}", response_model=List[DailyHoroscopeResponse])
+async def get_horoscope_history(zodiac_sign: str, language: str = "tr", limit: int = 30):
+    """Belirli bir burç için geçmiş yorumları getir"""
+    try:
+        # Burç kontrolü
+        if zodiac_sign not in ZODIAC_SIGNS:
+            raise HTTPException(status_code=404, detail="Geçersiz burç")
+        
+        # Geçmiş yorumları al (en yeni önce)
+        horoscopes = await db.daily_horoscopes.find({
+            "zodiac_sign": zodiac_sign,
+            "language": language
+        }).sort("timestamp", -1).limit(limit).to_list(limit)
+        
+        return [
+            DailyHoroscopeResponse(
+                id=h["id"],
+                zodiac_sign=h["zodiac_sign"],
+                date=h["date"],
+                content=h["content"],
+                language=h["language"],
+                timestamp=h["timestamp"]
+            ) for h in horoscopes
+        ]
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Get horoscope history error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Burç geçmişi getirme hatası: {str(e)}")
+
+@api_router.post("/admin/generate-daily-horoscopes")
+async def generate_daily_horoscopes_admin(date: Optional[str] = None, language: str = "tr"):
+    """Admin: Tüm burçlar için günlük yorumlar oluştur (Manuel tetikleme)"""
+    try:
+        target_date = date or datetime.utcnow().strftime("%Y-%m-%d")
+        
+        # Mevcut yorumları kontrol et
+        existing_count = await db.daily_horoscopes.count_documents({
+            "date": target_date,
+            "language": language
+        })
+        
+        if existing_count >= 12:
+            return {"message": f"{target_date} için {language} dilinde yorumlar zaten mevcut", "generated": 0}
+        
+        # Tüm yorumları oluştur
+        horoscopes = await astrology_service.generate_all_daily_horoscopes(target_date, language)
+        
+        # Veritabanına kaydet
+        saved_count = 0
+        for horoscope_data in horoscopes:
+            # Mevcut olup olmadığını kontrol et
+            existing = await db.daily_horoscopes.find_one({
+                "zodiac_sign": horoscope_data["zodiac_sign"],
+                "date": horoscope_data["date"],
+                "language": horoscope_data["language"]
+            })
+            
+            if not existing:
+                horoscope = DailyHoroscope(
+                    zodiac_sign=horoscope_data["zodiac_sign"],
+                    date=horoscope_data["date"],
+                    content=horoscope_data["content"],
+                    language=horoscope_data["language"]
+                )
+                
+                await db.daily_horoscopes.insert_one(horoscope.dict())
+                saved_count += 1
+        
+        return {
+            "message": f"{target_date} için {saved_count} adet {language} dilinde yorum oluşturuldu",
+            "generated": saved_count,
+            "date": target_date,
+            "language": language
+        }
+        
+    except Exception as e:
+        logging.error(f"Generate daily horoscopes error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Günlük yorumları oluşturma hatası: {str(e)}")
+
 # Health check endpoint
 @api_router.get("/health")
 async def health_check():
