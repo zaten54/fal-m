@@ -1751,10 +1751,107 @@ async def health_check():
                 "coffee_reading": True,
                 "tarot_reading": True,
                 "palm_reading": True,
-                "astrology": True
+                "astrology": True,
+                "daily_horoscope": True
             }
         }
     }
+
+# Daily Horoscope Scheduler Functions
+class DailyHoroscopeScheduler:
+    def __init__(self):
+        self.astrology_service = AstrologyAnalysisService()
+    
+    async def generate_daily_horoscopes_task(self, languages: List[str] = ["tr", "en", "de", "fr", "es"]):
+        """Günlük burç yorumlarını oluşturan scheduled task"""
+        try:
+            today = datetime.utcnow().strftime("%Y-%m-%d")
+            logging.info(f"Starting daily horoscope generation for {today}")
+            
+            for language in languages:
+                try:
+                    # Mevcut yorumları kontrol et
+                    existing_count = await db.daily_horoscopes.count_documents({
+                        "date": today,
+                        "language": language
+                    })
+                    
+                    if existing_count >= 12:
+                        logging.info(f"Daily horoscopes for {today} in {language} already exist")
+                        continue
+                    
+                    # Eksik yorumları oluştur
+                    existing_horoscopes = await db.daily_horoscopes.find({
+                        "date": today,
+                        "language": language
+                    }).to_list(12)
+                    
+                    existing_signs = [h["zodiac_sign"] for h in existing_horoscopes]
+                    missing_signs = [sign for sign in ZODIAC_SIGNS.keys() if sign not in existing_signs]
+                    
+                    generated_count = 0
+                    for zodiac_sign in missing_signs:
+                        try:
+                            content = await self.astrology_service.generate_daily_horoscope(
+                                zodiac_sign, today, language
+                            )
+                            
+                            horoscope = DailyHoroscope(
+                                zodiac_sign=zodiac_sign,
+                                date=today,
+                                content=content,
+                                language=language
+                            )
+                            
+                            await db.daily_horoscopes.insert_one(horoscope.dict())
+                            generated_count += 1
+                            
+                            # Rate limiting
+                            await asyncio.sleep(1)
+                            
+                        except Exception as e:
+                            logging.error(f"Error generating horoscope for {zodiac_sign} in {language}: {str(e)}")
+                    
+                    logging.info(f"Generated {generated_count} horoscopes for {today} in {language}")
+                    
+                except Exception as e:
+                    logging.error(f"Error generating horoscopes for language {language}: {str(e)}")
+            
+            logging.info(f"Daily horoscope generation completed for {today}")
+            
+        except Exception as e:
+            logging.error(f"Daily horoscope generation error: {str(e)}")
+    
+    def run_scheduled_task(self):
+        """Scheduled task'ı çalıştır (sync wrapper)"""
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(self.generate_daily_horoscopes_task())
+        finally:
+            loop.close()
+    
+    def start_scheduler(self):
+        """Scheduler'ı başlat"""
+        # Her gün saat 06:00'da çalış
+        schedule.every().day.at("06:00").do(self.run_scheduled_task)
+        
+        # İlk çalıştırmayı hemen yap (test için)
+        # self.run_scheduled_task()
+        
+        def run_pending():
+            while True:
+                schedule.run_pending()
+                time.sleep(60)  # Her dakika kontrol et
+        
+        # Background thread'de çalıştır
+        scheduler_thread = threading.Thread(target=run_pending, daemon=True)
+        scheduler_thread.start()
+        
+        logging.info("Daily horoscope scheduler started - runs every day at 06:00")
+
+# Scheduler instance oluştur
+horoscope_scheduler = DailyHoroscopeScheduler()
 
 # Include the router in the main app
 app.include_router(api_router)
