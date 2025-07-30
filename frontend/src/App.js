@@ -31,6 +31,11 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
               <Route path="/coffee-reading" element={
                 <ProtectedRoute>
                   <CoffeeReading />
