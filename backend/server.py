@@ -332,6 +332,33 @@ class AstrologyReading(BaseModel):
     birth_chart: dict = {}
     interpretation: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+# Daily Horoscope Models
+class DailyHoroscopeCreate(BaseModel):
+    zodiac_sign: str
+    date: str  # YYYY-MM-DD format
+    content: str
+    language: str = "tr"
+
+class DailyHoroscopeResponse(BaseModel):
+    id: str
+    zodiac_sign: str
+    date: str
+    content: str
+    language: str
+    timestamp: datetime
+
+class DailyHoroscope(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    zodiac_sign: str
+    date: str  # YYYY-MM-DD format
+    content: str
+    language: str = "tr"
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+# User Profile Update Models (for favorite zodiac)
+class UserProfileUpdate(BaseModel):
+    favorite_zodiac_sign: Optional[str] = None
 # Tarot Deck Data (Major Arcana + Minor Arcana sample)
 TAROT_DECK = [
     # Major Arcana
