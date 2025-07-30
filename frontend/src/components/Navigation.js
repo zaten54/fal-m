@@ -113,6 +113,15 @@ const Navigation = () => {
                       </p>
                     </div>
                     
+                    <Link
+                      to="/profile"
+                      onClick={() => setShowUserMenu(false)}
+                      className="w-full flex items-center space-x-3 px-apple-md py-apple-sm text-left apple-transition font-apple text-apple-gray-700 hover:bg-apple-gray-50"
+                    >
+                      <span className="text-lg">⚙️</span>
+                      <span className="font-apple text-apple-sm">Profil Ayarları</span>
+                    </Link>
+                    
                     <button
                       onClick={() => {
                         logout();
