@@ -56,6 +56,7 @@ class User(BaseModel):
     verification_token: Optional[str] = None
     terms_accepted: bool = False
     terms_accepted_at: Optional[datetime] = None
+    favorite_zodiac_sign: Optional[str] = None  # Favorite zodiac for daily horoscope
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
