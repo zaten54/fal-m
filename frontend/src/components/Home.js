@@ -10,6 +10,9 @@ const API = `${BACKEND_URL}/api`;
 const Home = () => {
   const { t } = useLanguage();
   const { isAuthenticated, user } = useAuth();
+  const [todayHoroscopes, setTodayHoroscopes] = useState([]);
+  const [favoriteHoroscope, setFavoriteHoroscope] = useState(null);
+  const [isLoadingHoroscopes, setIsLoadingHoroscopes] = useState(false);
   
   const helloWorldApi = async () => {
     try {
@@ -18,6 +21,42 @@ const Home = () => {
     } catch (e) {
       console.error(e, `errored out requesting / api`);
     }
+  };
+
+  // Günlük burç yorumlarını getir
+  const fetchTodayHoroscopes = async () => {
+    try {
+      setIsLoadingHoroscopes(true);
+      const response = await axios.get(`${API}/daily-horoscope/today?language=tr`);
+      setTodayHoroscopes(response.data);
+      
+      // Kullanıcının favori burcu varsa o yorumu ayrıca getir
+      if (isAuthenticated && user?.favorite_zodiac_sign) {
+        const favoriteResponse = await axios.get(
+          `${API}/daily-horoscope/${user.favorite_zodiac_sign}?language=tr`
+        );
+        setFavoriteHoroscope(favoriteResponse.data);
+      }
+    } catch (e) {
+      console.error("Error fetching horoscopes:", e);
+    } finally {
+      setIsLoadingHoroscopes(false);
+    }
+  };
+
+  const zodiacSigns = {
+    aries: { name: "Koç", icon: "♈", color: "apple-red" },
+    taurus: { name: "Boğa", icon: "♉", color: "apple-green" },
+    gemini: { name: "İkizler", icon: "♊", color: "apple-yellow" },
+    cancer: { name: "Yengeç", icon: "♋", color: "apple-blue" },
+    leo: { name: "Aslan", icon: "♌", color: "apple-orange" },
+    virgo: { name: "Başak", icon: "♍", color: "apple-green" },
+    libra: { name: "Terazi", icon: "♎", color: "apple-pink" },
+    scorpio: { name: "Akrep", icon: "♏", color: "apple-purple" },
+    sagittarius: { name: "Yay", icon: "♐", color: "apple-orange" },
+    capricorn: { name: "Oğlak", icon: "♑", color: "apple-gray" },
+    aquarius: { name: "Kova", icon: "♒", color: "apple-blue" },
+    pisces: { name: "Balık", icon: "♓", color: "apple-teal" }
   };
 
   useEffect(() => {
