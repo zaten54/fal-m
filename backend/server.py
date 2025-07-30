@@ -1871,6 +1871,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@app.on_event("startup")
+async def startup_event():
+    """Uygulama başladığında çalışacak fonksiyonlar"""
+    # Scheduler'ı başlat
+    horoscope_scheduler.start_scheduler()
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
