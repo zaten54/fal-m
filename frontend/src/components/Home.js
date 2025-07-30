@@ -61,7 +61,8 @@ const Home = () => {
 
   useEffect(() => {
     helloWorldApi();
-  }, []);
+    fetchTodayHoroscopes();
+  }, [isAuthenticated, user]);
 
   const fortuneTypes = [
     {
