@@ -1484,6 +1484,18 @@ class BackendTester:
         astrology_creation_ok, astrology_data = self.test_astrology_reading_creation()
         astrology_session_ok = self.test_astrology_session_readings()
         
+        # DAILY HOROSCOPE TESTS
+        print("\n🌟 DAILY HOROSCOPE TESTS")
+        print("-" * 30)
+        horoscope_today_ok = self.test_daily_horoscope_today()
+        horoscope_specific_ok = self.test_daily_horoscope_specific_zodiac()
+        horoscope_history_ok = self.test_daily_horoscope_history()
+        admin_generate_ok = self.test_admin_generate_daily_horoscopes()
+        profile_update_ok = self.test_user_profile_update_favorite_zodiac()
+        multilingual_ok = self.test_multilingual_horoscope_support()
+        gemini_quality_ok = self.test_gemini_horoscope_generation_quality()
+        scheduler_health_ok = self.test_scheduled_task_system_health()
+        
         # SYSTEM TESTS
         print("\n🔧 SYSTEM TESTS")
         print("-" * 30)
