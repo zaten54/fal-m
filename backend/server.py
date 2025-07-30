@@ -74,6 +74,7 @@ class UserResponse(BaseModel):
     email: str
     is_verified: bool
     terms_accepted: bool
+    favorite_zodiac_sign: Optional[str] = None
     created_at: datetime
 
 class Token(BaseModel):
