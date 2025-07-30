@@ -17,7 +17,7 @@ import random
 import string
 
 # Get backend URL from environment
-BACKEND_URL = "https://6c821355-5472-40cc-b89c-2c3ef6ee838c.preview.emergentagent.com/api"
+BACKEND_URL = "https://bb17d0e0-22cc-4e35-999a-d1ceaa9efaa2.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
