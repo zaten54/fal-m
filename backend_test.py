@@ -1547,13 +1547,20 @@ class BackendTester:
         astrology_passed = sum(astrology_tests)
         print(f"⭐ Astrology: {astrology_passed}/3 tests passed")
         
+        # Daily Horoscope
+        horoscope_tests = [horoscope_today_ok, horoscope_specific_ok, horoscope_history_ok, 
+                          admin_generate_ok, profile_update_ok, multilingual_ok, 
+                          gemini_quality_ok, scheduler_health_ok]
+        horoscope_passed = sum(horoscope_tests)
+        print(f"🌟 Daily Horoscope: {horoscope_passed}/8 tests passed")
+        
         # System
         system_tests = [health_ok, mongodb_ok, error_handling_ok]
         system_passed = sum(system_tests)
         print(f"🔧 System: {system_passed}/3 tests passed")
         
         # Overall critical functionality
-        all_critical_tests = coffee_tests + tarot_tests + palm_tests + astrology_tests + [health_ok]
+        all_critical_tests = coffee_tests + tarot_tests + palm_tests + astrology_tests + horoscope_tests + [health_ok]
         critical_passed = sum(all_critical_tests)
         total_critical = len(all_critical_tests)
         
