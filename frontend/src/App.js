@@ -57,6 +57,11 @@ function App() {
                   <AstrologyReading />
                 </ProtectedRoute>
               } />
+              <Route path="/falname-reading" element={
+                <ProtectedRoute>
+                  <FalnameReading />
+                </ProtectedRoute>
+              } />
             </Routes>
           </BrowserRouter>
         </div>
