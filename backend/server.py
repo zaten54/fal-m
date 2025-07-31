@@ -1083,6 +1083,7 @@ coffee_service = CoffeeAnalysisService()
 tarot_service = TarotAnalysisService()
 palm_service = PalmAnalysisService()
 astrology_service = AstrologyAnalysisService()
+falname_service = FalnameAnalysisService()
 
 # Authentication Endpoints
 @api_router.post("/auth/register", response_model=UserResponse)
