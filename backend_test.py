@@ -1867,7 +1867,7 @@ class BackendTester:
         print(f"🔧 System: {system_passed}/3 tests passed")
         
         # Overall critical functionality
-        all_critical_tests = coffee_tests + tarot_tests + palm_tests + astrology_tests + horoscope_tests + [health_ok]
+        all_critical_tests = coffee_tests + tarot_tests + palm_tests + astrology_tests + horoscope_tests + falname_tests + [health_ok]
         critical_passed = sum(all_critical_tests)
         total_critical = len(all_critical_tests)
         
