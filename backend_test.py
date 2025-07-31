@@ -1855,6 +1855,12 @@ class BackendTester:
         horoscope_passed = sum(horoscope_tests)
         print(f"🌟 Daily Horoscope: {horoscope_passed}/8 tests passed")
         
+        # Falname
+        falname_tests = [falname_health_ok, falname_auth_ok, falname_creation_ok, 
+                        falname_session_ok, falname_individual_ok, falname_ai_quality_ok]
+        falname_passed = sum(falname_tests)
+        print(f"📜 Falname: {falname_passed}/6 tests passed")
+        
         # System
         system_tests = [health_ok, mongodb_ok, error_handling_ok]
         system_passed = sum(system_tests)
