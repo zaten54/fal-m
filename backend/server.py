@@ -1894,6 +1894,106 @@ async def generate_daily_horoscopes_admin(date: Optional[str] = None, language: 
         logging.error(f"Generate daily horoscopes error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Günlük yorumları oluşturma hatası: {str(e)}")
 
+# Falname Reading Endpoints
+@api_router.post("/falname-reading", response_model=FalnameReadingResponse)
+async def create_falname_reading(reading_data: FalnameReadingCreate, current_user: User = Depends(get_current_user)):
+    """Yeni Falname okuma oluştur - Sadece kayıtlı kullanıcılar"""
+    try:
+        # Session ID oluştur eğer yoksa (kullanıcı ID'si ile bağlantılı)
+        session_id = reading_data.session_id or f"{current_user.id}_{uuid.uuid4()}"
+        
+        # AI analizi yap
+        analysis = await falname_service.generate_falname_reading(
+            reading_data.intention,
+            session_id
+        )
+        
+        # Reading objesi oluştur
+        falname_reading = FalnameReading(
+            session_id=session_id,
+            intention=reading_data.intention,
+            verse_or_poem=analysis["verse_or_poem"],
+            interpretation=analysis["interpretation"],
+            advice=analysis["advice"],
+            full_response=analysis["full_response"]
+        )
+        
+        # MongoDB'ye kaydet (kullanıcı ID'si de eklenir)
+        reading_dict = falname_reading.dict()
+        reading_dict["user_id"] = current_user.id
+        await db.falname_readings.insert_one(reading_dict)
+        
+        # Response oluştur
+        return FalnameReadingResponse(
+            id=falname_reading.id,
+            session_id=falname_reading.session_id,
+            intention=falname_reading.intention,
+            verse_or_poem=falname_reading.verse_or_poem,
+            interpretation=falname_reading.interpretation,
+            advice=falname_reading.advice,
+            full_response=falname_reading.full_response,
+            timestamp=falname_reading.timestamp
+        )
+        
+    except Exception as e:
+        logging.error(f"Falname reading creation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Falname okuma hatası: {str(e)}")
+
+@api_router.get("/falname-reading/{session_id}", response_model=List[FalnameReadingResponse])
+async def get_falname_readings(session_id: str, current_user: User = Depends(get_current_user)):
+    """Belirli bir session'a ait Falname okumalarını getir - Sadece kullanıcının kendi okumalarını"""
+    try:
+        readings = await db.falname_readings.find(
+            {"session_id": session_id, "user_id": current_user.id}
+        ).sort("timestamp", -1).to_list(100)
+        
+        return [
+            FalnameReadingResponse(
+                id=reading["id"],
+                session_id=reading["session_id"],
+                intention=reading["intention"],
+                verse_or_poem=reading["verse_or_poem"],
+                interpretation=reading["interpretation"],
+                advice=reading["advice"],
+                full_response=reading["full_response"],
+                timestamp=reading["timestamp"]
+            ) for reading in readings
+        ]
+        
+    except Exception as e:
+        logging.error(f"Get falname readings error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Falname geçmişi getirme hatası: {str(e)}")
+
+@api_router.get("/falname-reading/{session_id}/{reading_id}", response_model=FalnameReadingResponse)
+async def get_falname_reading(session_id: str, reading_id: str, current_user: User = Depends(get_current_user)):
+    """Belirli bir Falname okumasını getir - Sadece kullanıcının kendi okumalarını"""
+    try:
+        reading = await db.falname_readings.find_one({
+            "id": reading_id,
+            "session_id": session_id,
+            "user_id": current_user.id
+        })
+        
+        if not reading:
+            raise HTTPException(status_code=404, detail="Falname okuma bulunamadı")
+        
+        return FalnameReadingResponse(
+            id=reading["id"],
+            session_id=reading["session_id"],
+            intention=reading["intention"],
+            verse_or_poem=reading["verse_or_poem"],
+            interpretation=reading["interpretation"],
+            advice=reading["advice"],
+            full_response=reading["full_response"],
+            timestamp=reading["timestamp"]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Get falname reading error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Falname okuma getirme hatası: {str(e)}")
+
 # Health check endpoint
 @api_router.get("/health")
 async def health_check():
