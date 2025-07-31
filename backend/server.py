@@ -1908,7 +1908,8 @@ async def health_check():
                 "tarot_reading": True,
                 "palm_reading": True,
                 "astrology": True,
-                "daily_horoscope": True
+                "daily_horoscope": True,
+                "falname": True
             }
         }
     }
