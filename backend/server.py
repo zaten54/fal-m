@@ -364,6 +364,31 @@ class DailyHoroscope(BaseModel):
 # User Profile Update Models (for favorite zodiac)
 class UserProfileUpdate(BaseModel):
     favorite_zodiac_sign: Optional[str] = None
+
+# Falname Models
+class FalnameReadingCreate(BaseModel):
+    intention: str  # User's intention/wish
+    session_id: Optional[str] = None
+
+class FalnameReadingResponse(BaseModel):
+    id: str
+    session_id: str
+    intention: str
+    verse_or_poem: str  # Ayet veya şiir
+    interpretation: str  # Yorum
+    advice: str  # Tavsiye
+    full_response: str  # Tam AI yanıtı
+    timestamp: datetime
+
+class FalnameReading(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    intention: str
+    verse_or_poem: str
+    interpretation: str
+    advice: str
+    full_response: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
 # Tarot Deck Data (Major Arcana + Minor Arcana sample)
 TAROT_DECK = [
     # Major Arcana
