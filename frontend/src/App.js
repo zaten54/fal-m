@@ -8,6 +8,7 @@ import CoffeeReading from "./components/CoffeeReading";
 import TarotReading from "./components/TarotReading";
 import PalmReading from "./components/PalmReading";
 import AstrologyReading from "./components/AstrologyReading";
+import FalnameReading from "./components/FalnameReading";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import VerifyEmail from "./components/VerifyEmail";
