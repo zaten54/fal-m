@@ -228,7 +228,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Falname Backend API"
     - "Falname Frontend Component"
   stuck_tasks: []
   test_all: false
