@@ -1894,6 +1894,7 @@ class BackendTester:
                 "palm": {"passed": palm_passed, "total": len(palm_tests)},
                 "astrology": {"passed": astrology_passed, "total": len(astrology_tests)},
                 "daily_horoscope": {"passed": horoscope_passed, "total": len(horoscope_tests)},
+                "falname": {"passed": falname_passed, "total": len(falname_tests)},
                 "system": {"passed": system_passed, "total": len(system_tests)}
             },
             "test_results": self.test_results
