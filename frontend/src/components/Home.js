@@ -100,6 +100,15 @@ const Home = () => {
       descKey: 'comingSoon',
       color: 'apple-yellow',
       available: true
+    },
+    {
+      id: 'falname',
+      icon: '📜',
+      path: '/falname-reading',
+      titleKey: 'falname',
+      descKey: 'falnameDesc',
+      color: 'amber-600',
+      available: true
     }
   ];
 
