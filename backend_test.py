@@ -1394,6 +1394,297 @@ class BackendTester:
             self.log_test("Updated Health Check", False, "", e)
             return False
 
+    # ==================== FALNAME TESTS ====================
+    
+    def test_falname_reading_creation(self):
+        """Test POST /api/falname-reading endpoint"""
+        try:
+            payload = {
+                "intention": "Aşk hayatım hakkında rehberlik istiyorum",
+                "session_id": self.test_session_id
+            }
+            
+            response = self.session.post(
+                f"{self.backend_url}/falname-reading",
+                json=payload,
+                timeout=30,  # Longer timeout for AI processing
+                headers=self.get_auth_headers()
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required response fields
+                required_fields = ["id", "session_id", "intention", "verse_or_poem", "interpretation", "advice", "full_response", "timestamp"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Falname Reading Creation", False, 
+                                f"Missing response fields: {missing_fields}", None)
+                    return False, None
+                
+                # Verify session_id matches
+                if data["session_id"] != self.test_session_id:
+                    self.log_test("Falname Reading Creation", False, 
+                                "Session ID mismatch", None)
+                    return False, None
+                
+                # Verify intention matches
+                if data["intention"] != payload["intention"]:
+                    self.log_test("Falname Reading Creation", False, 
+                                "Intention mismatch", None)
+                    return False, None
+                
+                # Check if AI analysis worked - 3-part structure
+                verse_or_poem = data.get("verse_or_poem", "")
+                interpretation = data.get("interpretation", "")
+                advice = data.get("advice", "")
+                full_response = data.get("full_response", "")
+                
+                if not verse_or_poem or not interpretation or not advice:
+                    self.log_test("Falname Reading Creation", False, 
+                                "AI analysis failed - missing verse/interpretation/advice", None)
+                    return False, None
+                
+                details = f"ID: {data['id'][:8]}..., Verse length: {len(verse_or_poem)}, Interpretation: {len(interpretation)}, Advice: {len(advice)}"
+                self.log_test("Falname Reading Creation", True, details)
+                return True, data
+                
+            elif response.status_code in [401, 403]:
+                self.log_test("Falname Reading Creation", False, 
+                            "Authentication required - test without proper auth token", response.text)
+                return False, None
+            else:
+                self.log_test("Falname Reading Creation", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False, None
+                
+        except Exception as e:
+            self.log_test("Falname Reading Creation", False, "", e)
+            return False, None
+
+    def test_falname_session_readings(self):
+        """Test GET /api/falname-reading/{session_id} endpoint"""
+        try:
+            response = self.session.get(
+                f"{self.backend_url}/falname-reading/{self.test_session_id}",
+                timeout=10,
+                headers=self.get_auth_headers()
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not isinstance(data, list):
+                    self.log_test("Falname Session Readings", False, 
+                                "Response is not a list", None)
+                    return False
+                
+                # Check if we have readings (might be empty if creation failed)
+                if len(data) > 0:
+                    # Check first reading structure
+                    first_reading = data[0]
+                    required_fields = ["id", "session_id", "intention", "verse_or_poem", "interpretation", "advice", "timestamp"]
+                    missing_fields = [field for field in required_fields if field not in first_reading]
+                    
+                    if missing_fields:
+                        self.log_test("Falname Session Readings", False, 
+                                    f"Missing fields in reading: {missing_fields}", None)
+                        return False
+                
+                details = f"Found {len(data)} falname readings for session"
+                self.log_test("Falname Session Readings", True, details)
+                return True
+                
+            elif response.status_code in [401, 403]:
+                self.log_test("Falname Session Readings", False, 
+                            "Authentication required - test without proper auth token", response.text)
+                return False
+            else:
+                self.log_test("Falname Session Readings", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Falname Session Readings", False, "", e)
+            return False
+
+    def test_falname_individual_reading(self, reading_data):
+        """Test GET /api/falname-reading/{session_id}/{reading_id} endpoint"""
+        if not reading_data:
+            self.log_test("Falname Individual Reading", False, 
+                        "No reading data available for test", None)
+            return False
+            
+        try:
+            reading_id = reading_data["id"]
+            response = self.session.get(
+                f"{self.backend_url}/falname-reading/{self.test_session_id}/{reading_id}",
+                timeout=10,
+                headers=self.get_auth_headers()
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ["id", "session_id", "intention", "verse_or_poem", "interpretation", "advice", "timestamp"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Falname Individual Reading", False, 
+                                f"Missing fields: {missing_fields}", None)
+                    return False
+                
+                # Verify IDs match
+                if data["id"] != reading_id or data["session_id"] != self.test_session_id:
+                    self.log_test("Falname Individual Reading", False, 
+                                "ID mismatch in response", None)
+                    return False
+                
+                details = f"Retrieved falname reading {reading_id[:8]}..."
+                self.log_test("Falname Individual Reading", True, details)
+                return True
+                
+            elif response.status_code in [401, 403]:
+                self.log_test("Falname Individual Reading", False, 
+                            "Authentication required - test without proper auth token", response.text)
+                return False
+            else:
+                self.log_test("Falname Individual Reading", False, 
+                            f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Falname Individual Reading", False, "", e)
+            return False
+
+    def test_falname_ai_quality(self, reading_data):
+        """Test Falname AI integration quality - Ottoman style mystical fortune telling"""
+        if not reading_data:
+            self.log_test("Falname AI Quality", False, 
+                        "No reading data available for test", None)
+            return False
+            
+        try:
+            verse_or_poem = reading_data.get("verse_or_poem", "")
+            interpretation = reading_data.get("interpretation", "")
+            advice = reading_data.get("advice", "")
+            full_response = reading_data.get("full_response", "")
+            
+            quality_score = 0
+            
+            # Check 3-part structure exists
+            if verse_or_poem and interpretation and advice:
+                quality_score += 1
+            
+            # Check for Ottoman/Turkish mystical context
+            mystical_terms = ["ayet", "kehanet", "şiir", "yorum", "tavsiye", "tevekkül", "sabır", "dua", "allah", "ilahi"]
+            has_mystical_context = any(term in full_response.lower() for term in mystical_terms)
+            if has_mystical_context:
+                quality_score += 1
+            
+            # Check content quality (substantial content)
+            if len(verse_or_poem) > 20 and len(interpretation) > 50 and len(advice) > 20:
+                quality_score += 1
+            
+            # Check for proper Turkish language
+            turkish_indicators = ["için", "olan", "bir", "bu", "şu", "ile", "ve", "da", "de"]
+            has_turkish = any(indicator in full_response.lower() for indicator in turkish_indicators)
+            if has_turkish:
+                quality_score += 1
+            
+            if quality_score >= 3:
+                details = f"Quality score: {quality_score}/4, Verse: {len(verse_or_poem)} chars, Interpretation: {len(interpretation)} chars, Advice: {len(advice)} chars"
+                self.log_test("Falname AI Quality", True, details)
+                return True
+            else:
+                details = f"Low quality score: {quality_score}/4 - AI response quality insufficient"
+                self.log_test("Falname AI Quality", False, details, None)
+                return False
+                
+        except Exception as e:
+            self.log_test("Falname AI Quality", False, "", e)
+            return False
+
+    def test_falname_authentication_protection(self):
+        """Test that Falname endpoints require authentication"""
+        try:
+            # Test POST without auth
+            payload = {
+                "intention": "Test intention without auth"
+            }
+            
+            response = self.session.post(
+                f"{self.backend_url}/falname-reading",
+                json=payload,
+                timeout=10
+            )
+            
+            if response.status_code not in [401, 403]:
+                self.log_test("Falname Auth Protection", False, 
+                            f"POST endpoint not protected - expected 401/403, got {response.status_code}", None)
+                return False
+            
+            # Test GET session without auth
+            response = self.session.get(
+                f"{self.backend_url}/falname-reading/{self.test_session_id}",
+                timeout=10
+            )
+            
+            if response.status_code not in [401, 403]:
+                self.log_test("Falname Auth Protection", False, 
+                            f"GET session endpoint not protected - expected 401/403, got {response.status_code}", None)
+                return False
+            
+            # Test GET individual without auth
+            response = self.session.get(
+                f"{self.backend_url}/falname-reading/{self.test_session_id}/test-id",
+                timeout=10
+            )
+            
+            if response.status_code not in [401, 403]:
+                self.log_test("Falname Auth Protection", False, 
+                            f"GET individual endpoint not protected - expected 401/403, got {response.status_code}", None)
+                return False
+            
+            self.log_test("Falname Auth Protection", True, 
+                        "All falname endpoints properly protected with authentication")
+            return True
+                
+        except Exception as e:
+            self.log_test("Falname Auth Protection", False, "", e)
+            return False
+
+    def test_falname_health_check_feature(self):
+        """Test that health check includes falname: true"""
+        try:
+            response = self.session.get(f"{self.backend_url}/health", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check if falname feature is listed as active
+                features = data.get("services", {}).get("features", {})
+                falname_active = features.get("falname", False)
+                
+                if falname_active:
+                    details = f"Falname feature active in health check: {falname_active}"
+                    self.log_test("Falname Health Check Feature", True, details)
+                    return True
+                else:
+                    self.log_test("Falname Health Check Feature", False, 
+                                f"Falname feature not active in health check: {features}", None)
+                    return False
+            else:
+                self.log_test("Falname Health Check Feature", False, 
+                            f"Health check failed: HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Falname Health Check Feature", False, "", e)
+            return False
+
     def test_error_handling(self):
         """Test error handling scenarios"""
         try:
