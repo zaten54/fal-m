@@ -948,6 +948,136 @@ Günlük burç yorumu kuralları:
         
         return horoscopes
 
+# Falname Analysis Service
+class FalnameAnalysisService:
+    def __init__(self):
+        self.gemini_api_key = os.environ.get('GEMINI_API_KEY')
+        if not self.gemini_api_key:
+            raise ValueError("Gemini API key not found in environment variables")
+    
+    async def generate_falname_reading(self, intention: str, session_id: str) -> dict:
+        """Falname okuma oluştur - Osmanlı tarzı mistik fal"""
+        try:
+            # LlmChat instance oluştur
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=session_id,
+                system_message="""Sen klasik Osmanlı tarzında konuşan, kadim bilgelik sahibi bir Falname kahinisin. 
+Kullanıcı niyetini tutmuş ve sendan mistik bir kehanet almak istiyor.
+
+FALNAME KURALLARI:
+1. Osmanlı havası olsun ama anlaşılır Türkçeyle sadeleştir
+2. İlahi bir işaret gibi yorumla, kesin kehanet gibi "kesinlikle olacak" deme
+3. Yorumlayıcı ol, umut verici ama gerçekçi yaklaş
+4. Her seferinde farklı ayet veya şiir seç
+
+YANITINI ŞÖYLE YAPISALLAŞTIR:
+
+📜 AYET/KEHANET:
+[Kur'an ayeti veya klasik şiir - önce klasik dilde, sonra parantez içinde sadeleştir]
+
+🕯️ YORUM:
+[Bu kişinin hayatı, ruh hali veya dileğiyle ilgili mesaj - 2-3 cümle]
+
+🌿 TAVSİYE:
+[Manevi ve etik yönlendirme: sabır, tevekkül, tedbir, dua vs. - 1-2 cümle]
+
+TON: Osmanlı mistik kahini, bilge, merhametli, rehber niteliğinde"""
+            ).with_model("gemini", "gemini-2.0-flash")
+            
+            # Mesaj gönder
+            user_message = UserMessage(
+                text=f"Bir kişi şu niyetle Falname'ye başvuruyor: '{intention}'. Ona Osmanlı tarzı mistik bir fal sun. Ayet veya kehanet şiiri ile başla, yorumla, sonra tavsiye ver."
+            )
+            
+            # AI'dan cevap al
+            response = await chat.send_message(user_message)
+            
+            # Response'u parse et
+            parsed_response = self._parse_falname_response(response)
+            
+            return {
+                "verse_or_poem": parsed_response["verse_or_poem"],
+                "interpretation": parsed_response["interpretation"], 
+                "advice": parsed_response["advice"],
+                "full_response": response
+            }
+            
+        except Exception as e:
+            logging.error(f"Falname analysis error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Falname analizi sırasında hata oluştu: {str(e)}")
+    
+    def _parse_falname_response(self, ai_response: str) -> dict:
+        """AI cevabından bölümleri çıkar"""
+        try:
+            lines = ai_response.split('\n')
+            verse_or_poem = ""
+            interpretation = ""
+            advice = ""
+            current_section = None
+            
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+                    
+                # Bölüm başlıklarını tespit et
+                if "📜" in line or "AYET" in line.upper() or "KEHANET" in line.upper():
+                    current_section = "verse"
+                    # Başlık satırındaki metni de al
+                    if ":" in line:
+                        verse_text = line.split(":", 1)[1].strip()
+                        if verse_text:
+                            verse_or_poem = verse_text
+                elif "🕯️" in line or "YORUM" in line.upper():
+                    current_section = "interpretation"
+                    if ":" in line:
+                        interp_text = line.split(":", 1)[1].strip()
+                        if interp_text:
+                            interpretation = interp_text
+                elif "🌿" in line or "TAVSİYE" in line.upper():
+                    current_section = "advice"
+                    if ":" in line:
+                        advice_text = line.split(":", 1)[1].strip()
+                        if advice_text:
+                            advice = advice_text
+                else:
+                    # İçerik satırları
+                    if current_section == "verse":
+                        verse_or_poem += " " + line
+                    elif current_section == "interpretation":
+                        interpretation += " " + line
+                    elif current_section == "advice":
+                        advice += " " + line
+            
+            # Temizle
+            verse_or_poem = verse_or_poem.strip()
+            interpretation = interpretation.strip()
+            advice = advice.strip()
+            
+            # Fallback değerler
+            if not verse_or_poem:
+                verse_or_poem = "Her güçlükte bir kolaylık vardır. (Inşirah, 94:6)"
+            if not interpretation:
+                interpretation = "Şu an içinde bulunduğun durum geçicidir. Sabırla bekle, çünkü zor zamanların ardından rahatlık gelir."
+            if not advice:
+                advice = "Tevekkül et ve dua etmeyi ihmal etme. Her işin hayırlısı Allah'tandır."
+            
+            return {
+                "verse_or_poem": verse_or_poem,
+                "interpretation": interpretation,
+                "advice": advice
+            }
+            
+        except Exception as e:
+            logging.error(f"Falname response parsing error: {str(e)}")
+            # Fallback response
+            return {
+                "verse_or_poem": "Her güçlükte bir kolaylık vardır. (İnşirah, 94:6)",
+                "interpretation": "Niyetinle ilgili olarak, sabırla beklemen gerekiyor. Zor zamanların ardından rahatlık gelecek.",
+                "advice": "Tevekkül et ve dua etmeyi ihmal etme. Allah'a güven."
+            }
+
 # Initialize services
 coffee_service = CoffeeAnalysisService()
 tarot_service = TarotAnalysisService()
