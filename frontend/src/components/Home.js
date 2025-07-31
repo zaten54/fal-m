@@ -334,6 +334,7 @@ const Home = () => {
                      type.id === 'tarot' ? 'Kartlarla geleceği keşfedin' : 
                      type.id === 'palm' ? 'El çizgilerinizi analiz edin' : 
                      type.id === 'astrology' ? 'Yıldızlardan mesajınızı alın' : 
+                     type.id === 'falname' ? 'İlahi kehanetler ve kadim bilgelik' :
                      t('comingSoon')}
                   </p>
                   
