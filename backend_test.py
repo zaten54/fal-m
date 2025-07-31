@@ -1787,6 +1787,16 @@ class BackendTester:
         gemini_quality_ok = self.test_gemini_horoscope_generation_quality()
         scheduler_health_ok = self.test_scheduled_task_system_health()
         
+        # FALNAME TESTS
+        print("\n📜 FALNAME TESTS (Ottoman Style Fortune Telling)")
+        print("-" * 30)
+        falname_health_ok = self.test_falname_health_check_feature()
+        falname_auth_ok = self.test_falname_authentication_protection()
+        falname_creation_ok, falname_data = self.test_falname_reading_creation()
+        falname_session_ok = self.test_falname_session_readings()
+        falname_individual_ok = self.test_falname_individual_reading(falname_data)
+        falname_ai_quality_ok = self.test_falname_ai_quality(falname_data)
+        
         # SYSTEM TESTS
         print("\n🔧 SYSTEM TESTS")
         print("-" * 30)
