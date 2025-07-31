@@ -80,6 +80,17 @@ const Navigation = () => {
               {t('astrology')}
             </Link>
             
+            <Link 
+              to="/falname-reading"
+              className={`apple-transition px-apple-md py-apple-sm rounded-apple font-apple font-medium ${
+                location.pathname === "/falname-reading" 
+                  ? "text-amber-600 bg-amber-100" 
+                  : "text-apple-gray-600 hover:text-apple-gray-900 hover:bg-apple-gray-100"
+              }`}
+            >
+              📜 Falname
+            </Link>
+            
             {/* Authentication Buttons */}
             {isAuthenticated ? (
               /* User Menu */
